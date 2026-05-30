@@ -1,6 +1,10 @@
 use chumsky::{IterParser, Parser, prelude::just};
 
-use crate::{ast::Block, lexing::token::Token, parsing::statement::stmt, parsing_rule};
+use crate::{
+    ast::Block,
+    lexing::token::Token,
+    parsing::{parsing_rule, statement::stmt},
+};
 
 parsing_rule! {
     block -> Block {

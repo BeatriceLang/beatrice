@@ -1,15 +1,6 @@
-use chumsky::{
-    IterParser, Parser,
-    prelude::{choice, end, just},
-    primitive::select,
-    select,
-};
+use chumsky::Parser;
 
-use crate::{
-    ast::{Block, Function, Program, Type, expresion::Expression, statement::Statement},
-    lexing::token::Token,
-    parsing::{expr::expr, function::function, program::program, statement::stmt},
-};
+use crate::{ast::Program, lexing::token::Token};
 
 mod block;
 mod expr;
@@ -19,7 +10,6 @@ mod program;
 mod statement;
 mod ty;
 
-#[macro_export]
 macro_rules! parsing_rule {
     {
         $name:ident -> $ret:ty $body:block
@@ -28,7 +18,9 @@ macro_rules! parsing_rule {
     };
 }
 
+pub(crate) use parsing_rule;
+
 // Parser takes &[Token] as input, outputs a Program
 pub fn parser<'a>() -> impl Parser<'a, &'a [Token], Program> {
-    program()
+    program::program()
 }

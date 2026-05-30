@@ -1,6 +1,6 @@
 use chumsky::select;
 
-use crate::{ast::expresion::Expression, lexing::token::Token, parsing_rule};
+use crate::{ast::expression::Expression, lexing::token::Token, parsing::parsing_rule};
 
 parsing_rule! {
     expr -> Expression {

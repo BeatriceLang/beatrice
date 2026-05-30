@@ -1,6 +1,6 @@
 use chumsky::select;
 
-use crate::{ast::Type, lexing::token::Token, parsing_rule};
+use crate::{ast::Type, lexing::token::Token, parsing::parsing_rule};
 
 parsing_rule! {
     ty -> Type {

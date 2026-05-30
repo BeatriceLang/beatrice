@@ -1,6 +1,6 @@
 use crate::ast::statement::Statement;
 
-pub mod expresion;
+pub mod expression;
 pub mod statement;
 
 #[derive(Debug)]

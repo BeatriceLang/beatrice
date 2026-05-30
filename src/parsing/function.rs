@@ -5,10 +5,10 @@ use crate::{
     lexing::token::Token,
     parsing::{
         block::block,
-        ident::{self, ident},
-        ty::{self, ty},
+        ident::ident,
+        parsing_rule,
+        ty::ty,
     },
-    parsing_rule,
 };
 
 parsing_rule! {

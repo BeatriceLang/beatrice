@@ -1,4 +1,4 @@
-use crate::ast::expresion::Expression;
+use crate::ast::expression::Expression;
 
 // Statements will proform an action (aka do something)
 #[derive(Debug)]

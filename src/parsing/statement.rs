@@ -1,10 +1,13 @@
 use chumsky::{
     Parser,
-    extra::State,
     prelude::{choice, just},
 };
 
-use crate::{ast::statement::Statement, lexing::token::Token, parsing::expr::expr, parsing_rule};
+use crate::{
+    ast::statement::Statement,
+    lexing::token::Token,
+    parsing::{expr::expr, parsing_rule},
+};
 
 parsing_rule! {
     return_stmt -> Statement {
