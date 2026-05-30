@@ -2,6 +2,7 @@ use logos::Logos;
 
 use crate::lexing::token::Token;
 
+mod ast;
 mod lexing;
 
 fn main() {
