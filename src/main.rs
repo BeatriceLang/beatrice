@@ -1,19 +1,18 @@
+use chumsky::Parser;
 use logos::Logos;
 
-use crate::lexing::token::Token;
+use crate::{lexing::token::Token, parsing::parser};
 
 mod ast;
 mod lexing;
+mod parsing;
 
 fn main() {
     let mut lexer = Token::lexer(input());
 
-    while let Some(token) = lexer.next() {
-        match token {
-            Ok(token) => println!("{:?}", token),
-            Err(_) => println!("error"),
-        }
-    }
+    let tokens: Vec<Token> = lexer.map(|f| f.clone().unwrap()).collect();
+
+    println!("{:?}", parser().parse(&tokens).unwrap().functions);
 }
 
 // Input code
