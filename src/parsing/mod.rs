@@ -24,3 +24,42 @@ pub(crate) use parsing_rule;
 pub fn parser<'a>() -> impl Parser<'a, &'a [Token], Program> {
     program::program()
 }
+
+#[cfg(test)]
+mod tests {
+    use chumsky::Parser as _;
+    use logos::Logos;
+
+    use crate::{
+        ast::{
+            Block, Function, Program, Type,
+            expression::Expression,
+            statement::Statement,
+        },
+        lexing::token::Token,
+        parsing::parser,
+    };
+
+    #[test]
+    fn parses_return_number_function() {
+        let input = "fn main() -> i32 { return 42; }";
+        let tokens: Vec<_> = Token::lexer(input)
+            .map(|token| token.unwrap())
+            .collect();
+
+        let program = parser().parse(&tokens).unwrap();
+
+        assert_eq!(
+            program,
+            Program {
+                functions: vec![Function {
+                    name: "main".into(),
+                    return_type: Type::I32,
+                    body: Block {
+                        statements: vec![Statement::Return(Expression::Number(42))],
+                    },
+                }],
+            }
+        );
+    }
+}
