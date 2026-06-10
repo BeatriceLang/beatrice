@@ -36,3 +36,36 @@ pub enum Token {
     #[regex(r"[0-9]+", |lex| lex.slice().parse::<i64>().ok())]
     Number(i64),
 }
+
+#[cfg(test)]
+mod tests {
+    use logos::Logos;
+
+    use super::Token;
+
+    #[test]
+    fn lexes_return_number_function() {
+        let input = "fn main() -> i32 { return 42; }";
+
+        let tokens: Vec<_> = Token::lexer(input)
+            .map(|token| token.unwrap())
+            .collect();
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::Fn,
+                Token::Ident("main".into()),
+                Token::LeftParen,
+                Token::RightParen,
+                Token::RetArrow,
+                Token::I32,
+                Token::LeftBrace,
+                Token::Return,
+                Token::Number(42),
+                Token::Semicolon,
+                Token::RightBrace,
+            ]
+        );
+    }
+}
