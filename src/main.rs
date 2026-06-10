@@ -1,9 +1,11 @@
 use chumsky::Parser;
+use inkwell::context::Context;
 use logos::Logos;
 
-use crate::{lexing::token::Token, parsing::parser};
+use crate::{codegen::Codegen, lexing::token::Token, parsing::parser};
 
 mod ast;
+mod codegen;
 mod lexing;
 mod parsing;
 
@@ -12,7 +14,12 @@ fn main() {
 
     let tokens: Vec<Token> = lexer.map(|f| f.clone().unwrap()).collect();
 
-    println!("{:?}", parser().parse(&tokens).unwrap().functions);
+    let program_ast = parser().parse(&tokens).unwrap();
+
+    let context = Context::create();
+    let codegen = Codegen::new(&context, "main", program_ast);
+
+    codegen.generate();
 }
 
 // Input code
