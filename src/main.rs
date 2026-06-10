@@ -1,16 +1,24 @@
-use chumsky::Parser;
+use std::{fs, str::from_utf8};
+
+use anyhow::Result;
+use chumsky::Parser as _;
+use clap::{Parser as _, builder::Str};
 use inkwell::context::Context;
 use logos::Logos;
 
-use crate::{codegen::Codegen, lexing::token::Token, parsing::parser};
+use crate::{cli_args::Args, codegen::Codegen, lexing::token::Token, parsing::parser};
 
 mod ast;
+mod cli_args;
 mod codegen;
 mod lexing;
 mod parsing;
 
-fn main() {
-    let mut lexer = Token::lexer(input());
+fn main() -> Result<()> {
+    let args = Args::parse();
+    let input = fs::read_to_string(args.input)?;
+
+    let mut lexer = Token::lexer(input.as_str());
 
     let tokens: Vec<Token> = lexer.map(|f| f.clone().unwrap()).collect();
 
@@ -20,14 +28,6 @@ fn main() {
     let codegen = Codegen::new(&context, "main", program_ast);
 
     codegen.generate();
-}
 
-// Input code
-fn input() -> &'static str {
-    const TEST_CODE: &str = "
-    fn main() -> i32 {
-        return 42;
-    }
-    ";
-    TEST_CODE
+    Ok(())
 }
