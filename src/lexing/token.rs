@@ -35,6 +35,18 @@ pub enum Token {
 
     #[regex(r"[0-9]+", |lex| lex.slice().parse::<i64>().ok())]
     Number(i64),
+
+    #[token("+")]
+    Add,
+
+    #[token("-")]
+    Minus,
+
+    #[token("/")]
+    Devide,
+
+    #[token("*")]
+    Multiply,
 }
 
 #[cfg(test)]
@@ -47,9 +59,7 @@ mod tests {
     fn lexes_return_number_function() {
         let input = "fn main() -> i32 { return 42; }";
 
-        let tokens: Vec<_> = Token::lexer(input)
-            .map(|token| token.unwrap())
-            .collect();
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
 
         assert_eq!(
             tokens,
