@@ -2,6 +2,7 @@ use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::ast::Program;
 
+mod emit_obj;
 mod expr;
 mod function;
 mod statement;
@@ -28,7 +29,5 @@ impl<'a> Codegen<'a> {
         for function in &self.program.functions {
             self.compile_function(function);
         }
-
-        self.module.print_to_stderr();
     }
 }
