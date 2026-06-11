@@ -24,6 +24,9 @@ pub enum Token {
     #[token(";")]
     Semicolon,
 
+    #[token(",")]
+    Comma,
+
     #[token("->")]
     RetArrow,
 
