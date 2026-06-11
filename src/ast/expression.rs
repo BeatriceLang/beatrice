@@ -4,8 +4,8 @@ pub enum Expression {
     Ident(String),
     Number(i64),
     MathOp {
-        kind: MathOpKind,
         lhs: Box<Expression>,
+        kind: MathOpKind,
         rhs: Box<Expression>,
     },
 }
