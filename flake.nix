@@ -3,10 +3,12 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    rust-overlay.url = "github:oxalica/rust-overlay";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { nixpkgs, ... }:
+    { nixpkgs, rust-overlay, ... }:
     let
       supportedSystems = [
         "x86_64-linux"
@@ -19,14 +21,17 @@
       devShells = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ rust-overlay.overlays.default ];
+          };
+          rustToolchain = pkgs.rust-bin.fromRustupToolchainFile ./rust-toolchain.toml;
           llvm = pkgs.llvmPackages_22.llvm;
         in
         {
           default = pkgs.mkShell {
             packages = [
-              pkgs.cargo
-              pkgs.rustc
+              rustToolchain
               llvm
               pkgs.libffi
               pkgs.libxml2
