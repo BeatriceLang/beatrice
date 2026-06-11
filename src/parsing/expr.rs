@@ -1,8 +1,4 @@
-use chumsky::{
-    Parser,
-    prelude::choice,
-    select,
-};
+use chumsky::{Parser, prelude::choice, select};
 
 use crate::{
     ast::expression::{Expression, MathOpKind},
@@ -55,10 +51,10 @@ parsing_rule! {
 
 parsing_rule! {
     math_op_expr -> Expression {
-        base_expr()
-            .then(math_op_kind())
-            .then(base_expr())
-            .map(|((lhs, op_kind), rhs)| Expression::MathOp {
+        base_expr().foldl(
+            math_op_kind()
+            .then(base_expr()).repeated(),
+            |lhs, (op_kind, rhs)| Expression::MathOp {
                 lhs: lhs.into(),
                 kind: op_kind,
                 rhs: rhs.into()
@@ -69,6 +65,13 @@ parsing_rule! {
         use chumsky::Parser as _;
 
         let tokens = [Token::Number(8), Token::Divide, Token::Number(2)];
+        let chained_tokens = [
+            Token::Number(1),
+            Token::Add,
+            Token::Number(2),
+            Token::Add,
+            Token::Number(3),
+        ];
 
         assert_eq!(
             math_op_expr().parse(&tokens).unwrap(),
@@ -76,6 +79,20 @@ parsing_rule! {
                 lhs: Expression::Number(8).into(),
                 kind: MathOpKind::Divide,
                 rhs: Expression::Number(2).into(),
+            }
+        );
+
+        assert_eq!(
+            math_op_expr().parse(&chained_tokens).unwrap(),
+            Expression::MathOp {
+                lhs: Expression::MathOp {
+                    lhs: Expression::Number(1).into(),
+                    kind: MathOpKind::Add,
+                    rhs: Expression::Number(2).into(),
+                }
+                .into(),
+                kind: MathOpKind::Add,
+                rhs: Expression::Number(3).into(),
             }
         );
     }
