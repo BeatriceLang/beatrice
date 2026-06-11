@@ -78,4 +78,26 @@ mod tests {
             ]
         );
     }
+
+    #[test]
+    fn lexes_arithmetic_operators() {
+        let input = "1 + 2 - 3 * 4 / 5";
+
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::Number(1),
+                Token::Add,
+                Token::Number(2),
+                Token::Minus,
+                Token::Number(3),
+                Token::Multiply,
+                Token::Number(4),
+                Token::Divide,
+                Token::Number(5),
+            ]
+        );
+    }
 }
