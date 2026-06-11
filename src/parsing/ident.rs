@@ -6,8 +6,14 @@ parsing_rule! {
             Token::Ident(name) => name.clone()
         }
     }
+}
 
-    test {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_ident() {
         use chumsky::Parser as _;
 
         let tokens = [Token::Ident("main".into())];

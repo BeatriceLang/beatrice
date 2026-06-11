@@ -8,8 +8,14 @@ parsing_rule! {
             Token::I32 => Type::I32
         }
     }
+}
 
-    test {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_ty() {
         use chumsky::Parser as _;
 
         let tokens = [Token::I32];

@@ -13,8 +13,14 @@ parsing_rule! {
         .then_ignore(end())
         .map(|functions| Program { functions })
     }
+}
 
-    test {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_program() {
         use chumsky::Parser as _;
 
         let tokens = [

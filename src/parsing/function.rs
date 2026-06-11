@@ -26,8 +26,14 @@ parsing_rule! {
                 body,
             })
     }
+}
 
-    test {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_function() {
         use chumsky::Parser as _;
 
         let tokens = [

@@ -14,8 +14,14 @@ parsing_rule! {
             .delimited_by(just(Token::LeftBrace), just(Token::RightBrace))
             .map(|statements| Block { statements })
     }
+}
 
-    test {
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_block() {
         use chumsky::Parser as _;
 
         let tokens = [

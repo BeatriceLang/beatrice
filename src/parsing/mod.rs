@@ -13,25 +13,9 @@ mod ty;
 macro_rules! parsing_rule {
     {
         $name:ident -> $ret:ty $body:block
-
-        $(
-            test $test_body:block
-        )?
     } => {
         pub fn $name<'a>() -> impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret> $body
-
-        $crate::parsing::parsing_rule!(@test $name $($test_body)?);
     };
-
-    (@test $name:ident $test_body:block) => {
-        paste::paste! {
-            #[cfg(test)]
-            #[test]
-            fn [<parses_ $name>]() $test_body
-        }
-    };
-
-    (@test $name:ident) => {};
 }
 
 pub(crate) use parsing_rule;
