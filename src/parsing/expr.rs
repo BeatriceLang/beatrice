@@ -21,7 +21,9 @@ parsing_rule! {
         ident()
             .then_ignore(just(Token::LeftParen))
             .then_ignore(just(Token::RightParen))
-            .map(|func_name| Expression::FunctionCall(func_name))
+            .map(|name| Expression::FunctionCall {
+                name, args: vec![]
+            })
     }
 }
 
@@ -84,7 +86,10 @@ mod tests {
 
         assert_eq!(
             expr().parse(&call_tokens).unwrap(),
-            Expression::FunctionCall("test".into())
+            Expression::FunctionCall {
+                name: "test".into(),
+                args: vec![]
+            }
         );
     }
 
@@ -100,7 +105,10 @@ mod tests {
 
         assert_eq!(
             function_call_expr().parse(&tokens).unwrap(),
-            Expression::FunctionCall("test".into())
+            Expression::FunctionCall {
+                name: "test".into(),
+                args: vec![]
+            }
         );
     }
 

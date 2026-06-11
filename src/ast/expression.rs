@@ -8,7 +8,10 @@ pub enum Expression {
         kind: MathOpKind,
         rhs: Box<Expression>,
     },
-    FunctionCall(String),
+    FunctionCall {
+        name: String,
+        args: Vec<Expression>,
+    },
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
