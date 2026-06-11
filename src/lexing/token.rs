@@ -43,7 +43,7 @@ pub enum Token {
     Minus,
 
     #[token("/")]
-    Devide,
+    Divide,
 
     #[token("*")]
     Multiply,
