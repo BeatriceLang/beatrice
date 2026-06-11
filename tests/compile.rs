@@ -17,22 +17,13 @@ fn temp_test_dir() -> PathBuf {
     dir
 }
 
-#[test]
-fn compiles_return_42_to_executable() {
+fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
     let dir = temp_test_dir();
-    let source = dir.join("return_42.bt");
-    let object = dir.join("return_42.o");
-    let executable = dir.join("return_42");
+    let source = dir.join(format!("{test_name}.bt"));
+    let object = dir.join(format!("{test_name}.o"));
+    let executable = dir.join(test_name);
 
-    fs::write(
-        &source,
-        "
-        fn main() -> i32 {
-            return 42;
-        }
-        ",
-    )
-    .unwrap();
+    fs::write(&source, source_code).unwrap();
 
     let compiler_output = Command::new(env!("CARGO_BIN_EXE_beatrice"))
         .arg(&source)
@@ -65,8 +56,37 @@ fn compiles_return_42_to_executable() {
     );
 
     let status = Command::new(&executable).status().unwrap();
-
-    assert_eq!(status.code(), Some(42));
+    let code = status.code();
 
     fs::remove_dir_all(dir).unwrap();
+
+    code
+}
+
+#[test]
+fn compiles_return_42_to_executable() {
+    let code = compile_and_run(
+        "return_42",
+        "
+        fn main() -> i32 {
+            return 42;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
+fn compiles_return_math_op_to_executable() {
+    let code = compile_and_run(
+        "return_math_op",
+        "
+        fn main() -> i32 {
+            return 40 + 2;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
 }
