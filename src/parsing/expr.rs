@@ -1,20 +1,29 @@
-use chumsky::{Parser, prelude::choice, select};
+use chumsky::{
+    Parser,
+    prelude::{choice, just},
+    select,
+};
 
 use crate::{
     ast::expression::{Expression, MathOpKind},
     lexing::token::Token,
-    parsing::parsing_rule,
+    parsing::{ident::ident, parsing_rule},
 };
 
 parsing_rule! {
     expr -> Expression {
-        choice((math_op_expr(), base_expr()))
+        choice((function_call_expr(), math_op_expr(), base_expr()))
     }
 
     test {
         use chumsky::Parser as _;
 
         let tokens = [Token::Number(1), Token::Add, Token::Number(2)];
+        let call_tokens = [
+            Token::Ident("test".into()),
+            Token::LeftParen,
+            Token::RightParen,
+        ];
 
         assert_eq!(
             expr().parse(&tokens).unwrap(),
@@ -23,6 +32,35 @@ parsing_rule! {
                 kind: MathOpKind::Add,
                 rhs: Expression::Number(2).into(),
             }
+        );
+
+        assert_eq!(
+            expr().parse(&call_tokens).unwrap(),
+            Expression::FunctionCall("test".into())
+        );
+    }
+}
+
+parsing_rule! {
+    function_call_expr -> Expression {
+        ident()
+            .then_ignore(just(Token::LeftParen))
+            .then_ignore(just(Token::RightParen))
+            .map(|ident| Expression::FunctionCall(ident))
+    }
+
+    test {
+        use chumsky::Parser as _;
+
+        let tokens = [
+            Token::Ident("test".into()),
+            Token::LeftParen,
+            Token::RightParen,
+        ];
+
+        assert_eq!(
+            function_call_expr().parse(&tokens).unwrap(),
+            Expression::FunctionCall("test".into())
         );
     }
 }
