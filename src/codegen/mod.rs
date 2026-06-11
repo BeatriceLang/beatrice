@@ -27,6 +27,10 @@ impl<'a> Codegen<'a> {
 
     pub fn generate(&self) {
         for function in &self.program.functions {
+            self.declare_function(function);
+        }
+
+        for function in &self.program.functions {
             self.compile_function(function);
         }
     }
