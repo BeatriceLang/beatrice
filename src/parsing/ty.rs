@@ -8,4 +8,12 @@ parsing_rule! {
             Token::I32 => Type::I32
         }
     }
+
+    test {
+        use chumsky::Parser as _;
+
+        let tokens = [Token::I32];
+
+        assert_eq!(ty().parse(&tokens).unwrap(), Type::I32);
+    }
 }

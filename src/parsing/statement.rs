@@ -16,6 +16,17 @@ parsing_rule! {
             .then_ignore(just(Token::Semicolon))
             .map(Statement::Return)
     }
+
+    test {
+        use chumsky::Parser as _;
+
+        let tokens = [Token::Return, Token::Number(42), Token::Semicolon];
+
+        assert_eq!(
+            return_stmt().parse(&tokens).unwrap(),
+            Statement::Return(crate::ast::expression::Expression::Number(42))
+        );
+    }
 }
 
 parsing_rule! {
@@ -23,6 +34,17 @@ parsing_rule! {
         expr()
             .then_ignore(just(Token::Semicolon))
             .map(Statement::Expression)
+    }
+
+    test {
+        use chumsky::Parser as _;
+
+        let tokens = [Token::Number(42), Token::Semicolon];
+
+        assert_eq!(
+            expr_stmt().parse(&tokens).unwrap(),
+            Statement::Expression(crate::ast::expression::Expression::Number(42))
+        );
     }
 }
 
@@ -32,5 +54,16 @@ parsing_rule! {
                 return_stmt(),
                 expr_stmt()
         ))
+    }
+
+    test {
+        use chumsky::Parser as _;
+
+        let tokens = [Token::Return, Token::Number(42), Token::Semicolon];
+
+        assert_eq!(
+            stmt().parse(&tokens).unwrap(),
+            Statement::Return(crate::ast::expression::Expression::Number(42))
+        );
     }
 }
