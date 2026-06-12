@@ -81,4 +81,26 @@ mod tests {
             }
         );
     }
+
+    #[test]
+    fn parses_function_params() {
+        let input = "fn add(lhs: i32, rhs: i32) -> i32 { return 42; }";
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        let program = parser().parse(&tokens).unwrap();
+
+        assert_eq!(
+            program,
+            Program {
+                functions: vec![Function {
+                    name: "add".into(),
+                    params: vec![("lhs".into(), Type::I32), ("rhs".into(), Type::I32)],
+                    return_type: Type::I32,
+                    body: Block {
+                        statements: vec![Statement::Return(Expression::Number(42))],
+                    },
+                }],
+            }
+        );
+    }
 }
