@@ -1,6 +1,6 @@
 use chumsky::{
-    Parser,
-    prelude::{choice, just},
+    IterParser, Parser,
+    prelude::{choice, just, recursive},
     select,
 };
 
@@ -11,14 +11,15 @@ use crate::{
 };
 
 pub fn expr<'a>() -> parser_type!(Expression) {
-    choice((function_call_expr(), math_op_expr(), base_expr()))
+    recursive(|expr| choice((function_call_expr(expr), math_op_expr(), base_expr())))
 }
 
-pub fn function_call_expr<'a>() -> parser_type!(Expression) {
+pub fn function_call_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     ident()
         .then_ignore(just(Token::LeftParen))
+        .then(expr.separated_by(just(Token::Comma)).collect())
         .then_ignore(just(Token::RightParen))
-        .map(|name| Expression::FunctionCall { name, args: vec![] })
+        .map(|(name, args)| Expression::FunctionCall { name, args })
 }
 
 pub fn base_expr<'a>() -> parser_type!(Expression) {
@@ -92,7 +93,7 @@ mod tests {
         ];
 
         assert_eq!(
-            function_call_expr().parse(&tokens).unwrap(),
+            function_call_expr(expr()).parse(&tokens).unwrap(),
             Expression::FunctionCall {
                 name: "test".into(),
                 args: vec![]
