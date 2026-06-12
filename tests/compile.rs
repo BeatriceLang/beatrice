@@ -90,3 +90,21 @@ fn compiles_return_math_op_to_executable() {
 
     assert_eq!(code, Some(42));
 }
+
+#[test]
+fn compiles_return_function_call_to_executable() {
+    let code = compile_and_run(
+        "return_function_call",
+        "
+        fn test() -> i32 {
+            return 42;
+        }
+
+        fn main() -> i32 {
+            return test();
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
