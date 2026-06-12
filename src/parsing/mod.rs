@@ -10,7 +10,7 @@ mod program;
 mod statement;
 mod ty;
 
-pub(crate) type BeatriceParser<'a, T> = Boxed<'a, 'a, &'a [Token], T>;
+pub type BeatriceParser<'a, T> = Boxed<'a, 'a, &'a [Token], T>;
 
 // Parser takes &[Token] as input, outputs a Program
 pub fn parser<'a>() -> BeatriceParser<'a, Program> {
