@@ -37,6 +37,7 @@ mod tests {
             Program {
                 functions: vec![crate::ast::Function {
                     name: "main".into(),
+                    params: vec![],
                     return_type: crate::ast::Type::I32,
                     body: crate::ast::Block {
                         statements: vec![crate::ast::statement::Statement::Return(

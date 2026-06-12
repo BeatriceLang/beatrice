@@ -1,4 +1,4 @@
-use chumsky::{Parser, prelude::just};
+use chumsky::{IterParser, Parser, prelude::just};
 
 use crate::{
     ast::Function,
@@ -10,12 +10,20 @@ pub fn function<'a>() -> parser_type!(Function) {
     just(Token::Fn)
         .ignore_then(ident())
         .then_ignore(just(Token::LeftParen))
+        .then(
+            ident()
+                .then_ignore(just(Token::Colon))
+                .then(ty())
+                .separated_by(just(Token::Comma))
+                .collect(),
+        )
         .then_ignore(just(Token::RightParen))
         .then_ignore(just(Token::RetArrow))
         .then(ty())
         .then(block())
-        .map(|((name, return_type), body)| Function {
+        .map(|(((name, params), return_type), body)| Function {
             name,
+            params,
             return_type,
             body,
         })
@@ -47,6 +55,7 @@ mod tests {
             function().parse(&tokens).unwrap(),
             Function {
                 name: "main".into(),
+                params: vec![],
                 return_type: crate::ast::Type::I32,
                 body: crate::ast::Block {
                     statements: vec![crate::ast::statement::Statement::Return(

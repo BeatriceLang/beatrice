@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use crate::ast::statement::Statement;
 
 pub mod expression;
@@ -11,6 +13,7 @@ pub struct Program {
 #[derive(Debug, PartialEq, Eq)]
 pub struct Function {
     pub name: String,
+    pub params: Vec<(String, Type)>,
     pub return_type: Type,
     pub body: Block,
 }

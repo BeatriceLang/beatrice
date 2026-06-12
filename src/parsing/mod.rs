@@ -46,6 +46,7 @@ mod tests {
             Program {
                 functions: vec![Function {
                     name: "main".into(),
+                    params: vec![],
                     return_type: Type::I32,
                     body: Block {
                         statements: vec![Statement::Return(Expression::Number(42))],
@@ -67,6 +68,7 @@ mod tests {
             Program {
                 functions: vec![Function {
                     name: "main".into(),
+                    params: vec![],
                     return_type: Type::I32,
                     body: Block {
                         statements: vec![Statement::Return(Expression::MathOp {
