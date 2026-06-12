@@ -2,7 +2,7 @@ use crate::ast::Program;
 
 macro_rules! parser_type {
     ($ret:ty) => {
-        impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret>
+        impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret> + Clone
     };
 }
 
