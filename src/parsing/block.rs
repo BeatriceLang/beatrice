@@ -1,18 +1,13 @@
 use chumsky::{IterParser, Parser, prelude::just};
 
-use crate::{
-    ast::Block,
-    lexing::token::Token,
-    parsing::{BeatriceParser, statement::stmt},
-};
+use crate::{ast::Block, lexing::token::Token, parsing::statement::stmt};
 
-pub fn block<'a>() -> BeatriceParser<'a, Block> {
+pub fn block<'a>() -> parser_type!(Block) {
     stmt()
         .repeated()
         .collect()
         .delimited_by(just(Token::LeftBrace), just(Token::RightBrace))
         .map(|statements| Block { statements })
-        .boxed()
 }
 
 #[cfg(test)]

@@ -1,12 +1,11 @@
-use chumsky::prelude::{Parser, select};
+use chumsky::prelude::select;
 
-use crate::{lexing::token::Token, parsing::BeatriceParser};
+use crate::lexing::token::Token;
 
-pub fn ident<'a>() -> BeatriceParser<'a, String> {
+pub fn ident<'a>() -> parser_type!(String) {
     select! {
         Token::Ident(name) => name.clone()
     }
-    .boxed()
 }
 
 #[cfg(test)]

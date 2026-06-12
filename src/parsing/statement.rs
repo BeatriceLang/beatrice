@@ -3,29 +3,23 @@ use chumsky::{
     prelude::{choice, just},
 };
 
-use crate::{
-    ast::statement::Statement,
-    lexing::token::Token,
-    parsing::{BeatriceParser, expr::expr},
-};
+use crate::{ast::statement::Statement, lexing::token::Token, parsing::expr::expr};
 
-pub fn return_stmt<'a>() -> BeatriceParser<'a, Statement> {
+pub fn return_stmt<'a>() -> parser_type!(Statement) {
     just(Token::Return)
         .ignore_then(expr())
         .then_ignore(just(Token::Semicolon))
         .map(Statement::Return)
-        .boxed()
 }
 
-pub fn expr_stmt<'a>() -> BeatriceParser<'a, Statement> {
+pub fn expr_stmt<'a>() -> parser_type!(Statement) {
     expr()
         .then_ignore(just(Token::Semicolon))
         .map(Statement::Expression)
-        .boxed()
 }
 
-pub fn stmt<'a>() -> BeatriceParser<'a, Statement> {
-    choice((return_stmt(), expr_stmt())).boxed()
+pub fn stmt<'a>() -> parser_type!(Statement) {
+    choice((return_stmt(), expr_stmt()))
 }
 
 #[cfg(test)]

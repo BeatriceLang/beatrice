@@ -1,17 +1,13 @@
 use chumsky::{IterParser, Parser, prelude::end};
 
-use crate::{
-    ast::Program,
-    parsing::{BeatriceParser, function::function},
-};
+use crate::{ast::Program, parsing::function::function};
 
-pub fn program<'a>() -> BeatriceParser<'a, Program> {
+pub fn program<'a>() -> parser_type!(Program) {
     function()
         .repeated()
         .collect()
         .then_ignore(end())
         .map(|functions| Program { functions })
-        .boxed()
 }
 
 #[cfg(test)]

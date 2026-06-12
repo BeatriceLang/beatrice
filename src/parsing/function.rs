@@ -3,10 +3,10 @@ use chumsky::{Parser, prelude::just};
 use crate::{
     ast::Function,
     lexing::token::Token,
-    parsing::{BeatriceParser, block::block, ident::ident, ty::ty},
+    parsing::{block::block, ident::ident, ty::ty},
 };
 
-pub fn function<'a>() -> BeatriceParser<'a, Function> {
+pub fn function<'a>() -> parser_type!(Function) {
     just(Token::Fn)
         .ignore_then(ident())
         .then_ignore(just(Token::LeftParen))
@@ -19,7 +19,6 @@ pub fn function<'a>() -> BeatriceParser<'a, Function> {
             return_type,
             body,
         })
-        .boxed()
 }
 
 #[cfg(test)]

@@ -7,50 +7,45 @@ use chumsky::{
 use crate::{
     ast::expression::{Expression, MathOpKind},
     lexing::token::Token,
-    parsing::{BeatriceParser, ident::ident},
+    parsing::ident::ident,
 };
 
-pub fn expr<'a>() -> BeatriceParser<'a, Expression> {
-    choice((function_call_expr(), math_op_expr(), base_expr())).boxed()
+pub fn expr<'a>() -> parser_type!(Expression) {
+    choice((function_call_expr(), math_op_expr(), base_expr()))
 }
 
-pub fn function_call_expr<'a>() -> BeatriceParser<'a, Expression> {
+pub fn function_call_expr<'a>() -> parser_type!(Expression) {
     ident()
         .then_ignore(just(Token::LeftParen))
         .then_ignore(just(Token::RightParen))
         .map(|name| Expression::FunctionCall { name, args: vec![] })
-        .boxed()
 }
 
-pub fn base_expr<'a>() -> BeatriceParser<'a, Expression> {
+pub fn base_expr<'a>() -> parser_type!(Expression) {
     select! {
         Token::Number(value) => Expression::Number(value),
         Token::Ident(name) => Expression::Ident(name.clone()),
     }
-    .boxed()
 }
 
-pub fn math_op_expr<'a>() -> BeatriceParser<'a, Expression> {
-    base_expr()
-        .foldl(
-            math_op_kind().then(base_expr()).repeated(),
-            |lhs, (op_kind, rhs)| Expression::MathOp {
-                lhs: lhs.into(),
-                kind: op_kind,
-                rhs: rhs.into(),
-            },
-        )
-        .boxed()
+pub fn math_op_expr<'a>() -> parser_type!(Expression) {
+    base_expr().foldl(
+        math_op_kind().then(base_expr()).repeated(),
+        |lhs, (op_kind, rhs)| Expression::MathOp {
+            lhs: lhs.into(),
+            kind: op_kind,
+            rhs: rhs.into(),
+        },
+    )
 }
 
-pub fn math_op_kind<'a>() -> BeatriceParser<'a, MathOpKind> {
+pub fn math_op_kind<'a>() -> parser_type!(MathOpKind) {
     select! {
         Token::Add => MathOpKind::Add,
         Token::Minus => MathOpKind::Subtract,
         Token::Divide => MathOpKind::Divide,
         Token::Multiply => MathOpKind::Multiply
     }
-    .boxed()
 }
 
 #[cfg(test)]

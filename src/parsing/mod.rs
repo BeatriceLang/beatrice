@@ -1,6 +1,10 @@
-use chumsky::prelude::Boxed;
+use crate::ast::Program;
 
-use crate::{ast::Program, lexing::token::Token};
+macro_rules! parser_type {
+    ($ret:ty) => {
+        impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret>
+    };
+}
 
 mod block;
 mod expr;
@@ -10,10 +14,8 @@ mod program;
 mod statement;
 mod ty;
 
-pub type BeatriceParser<'a, T> = Boxed<'a, 'a, &'a [Token], T>;
-
 // Parser takes &[Token] as input, outputs a Program
-pub fn parser<'a>() -> BeatriceParser<'a, Program> {
+pub fn parser<'a>() -> parser_type!(Program) {
     program::program()
 }
 
