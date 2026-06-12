@@ -1,12 +1,16 @@
 use chumsky::container::Seq;
-use inkwell::{types::FunctionType, values::FunctionValue};
+use inkwell::{
+    types::{BasicMetadataTypeEnum, FunctionType},
+    values::{BasicValueEnum, FunctionValue},
+};
 
 use crate::{ast::Function, codegen::Codegen};
 
 impl<'a> Codegen<'a> {
     pub(super) fn declare_function(&self, function: &Function) {
+        let function_type = self.function_type(function);
         self.module
-            .add_function(&function.name, self.stub_function_args(), None);
+            .add_function(&function.name, function_type, None);
     }
 
     pub(super) fn compile_function(&self, function: &Function) {
@@ -20,7 +24,18 @@ impl<'a> Codegen<'a> {
         }
     }
 
-    fn stub_function_args(&self) -> FunctionType<'a> {
-        self.ctx.i32_type().fn_type(&[], false)
+    fn function_type(&self, function: &Function) -> FunctionType<'a> {
+        let params = self.function_params(function);
+        let return_type = self.into_llvm_type(&function.return_type);
+
+        return_type.fn_type(&params, false)
+    }
+
+    fn function_params(&self, function: &Function) -> Vec<BasicMetadataTypeEnum<'a>> {
+        function
+            .params
+            .iter()
+            .map(|(_, ty)| self.into_llvm_type(ty).into())
+            .collect()
     }
 }
