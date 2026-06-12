@@ -18,6 +18,9 @@ pub enum Token {
     #[token("}")]
     RightBrace,
 
+    #[token(":")]
+    Colon,
+
     #[token("return")]
     Return,
 
