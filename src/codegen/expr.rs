@@ -23,11 +23,12 @@ impl<'a> Codegen<'a> {
                 }
                 .into()
             }
-            Expression::FunctionCall { name, .. } => {
+            Expression::FunctionCall { name, args } => {
                 let function = self.module.get_function(name).unwrap();
+                let args: Vec<_> = args.iter().map(|f| self.compile_expr(f).into()).collect();
 
                 self.builder
-                    .build_call(function, &[], "_")
+                    .build_call(function, &args, "_")
                     .unwrap()
                     .try_as_basic_value()
                     .unwrap_basic()
