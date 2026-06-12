@@ -1,8 +1,4 @@
-use chumsky::container::Seq;
-use inkwell::{
-    types::{BasicMetadataTypeEnum, FunctionType},
-    values::{BasicValueEnum, FunctionValue},
-};
+use inkwell::types::{BasicMetadataTypeEnum, FunctionType};
 
 use crate::{ast::Function, codegen::Codegen};
 

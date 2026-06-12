@@ -19,7 +19,7 @@ fn main() -> Result<()> {
 
     let input = fs::read_to_string(args.input)?;
 
-    let mut lexer = Token::lexer(input.as_str());
+    let lexer = Token::lexer(input.as_str());
 
     let tokens: Vec<Token> = lexer.map(|f| f.clone().unwrap()).collect();
 
