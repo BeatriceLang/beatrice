@@ -83,6 +83,37 @@ mod tests {
     }
 
     #[test]
+    fn parses_expr_function_call_with_args() {
+        use chumsky::Parser as _;
+
+        let tokens = [
+            Token::Ident("test".into()),
+            Token::LeftParen,
+            Token::Number(1),
+            Token::Comma,
+            Token::Number(2),
+            Token::Add,
+            Token::Number(3),
+            Token::RightParen,
+        ];
+
+        assert_eq!(
+            expr().parse(&tokens).unwrap(),
+            Expression::FunctionCall {
+                name: "test".into(),
+                args: vec![
+                    Expression::Number(1),
+                    Expression::MathOp {
+                        lhs: Expression::Number(2).into(),
+                        kind: MathOpKind::Add,
+                        rhs: Expression::Number(3).into(),
+                    },
+                ],
+            }
+        );
+    }
+
+    #[test]
     fn parses_function_call_expr() {
         use chumsky::Parser as _;
 
@@ -97,6 +128,45 @@ mod tests {
             Expression::FunctionCall {
                 name: "test".into(),
                 args: vec![]
+            }
+        );
+    }
+
+    #[test]
+    fn parses_function_call_expr_with_args() {
+        use chumsky::Parser as _;
+
+        let single_arg_tokens = [
+            Token::Ident("test".into()),
+            Token::LeftParen,
+            Token::Number(42),
+            Token::RightParen,
+        ];
+        let multiple_arg_tokens = [
+            Token::Ident("test".into()),
+            Token::LeftParen,
+            Token::Number(1),
+            Token::Comma,
+            Token::Ident("x".into()),
+            Token::RightParen,
+        ];
+
+        assert_eq!(
+            function_call_expr(expr())
+                .parse(&single_arg_tokens)
+                .unwrap(),
+            Expression::FunctionCall {
+                name: "test".into(),
+                args: vec![Expression::Number(42)]
+            }
+        );
+        assert_eq!(
+            function_call_expr(expr())
+                .parse(&multiple_arg_tokens)
+                .unwrap(),
+            Expression::FunctionCall {
+                name: "test".into(),
+                args: vec![Expression::Number(1), Expression::Ident("x".into())]
             }
         );
     }
