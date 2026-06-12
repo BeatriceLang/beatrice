@@ -7,57 +7,50 @@ use chumsky::{
 use crate::{
     ast::expression::{Expression, MathOpKind},
     lexing::token::Token,
-    parsing::{ident::ident, parsing_rule},
+    parsing::{BeatriceParser, ident::ident},
 };
 
-parsing_rule! {
-    expr -> Expression {
-        choice((function_call_expr(), math_op_expr(), base_expr()))
-    }
+pub fn expr<'a>() -> BeatriceParser<'a, Expression> {
+    choice((function_call_expr(), math_op_expr(), base_expr())).boxed()
 }
 
-parsing_rule! {
-    function_call_expr -> Expression {
-        ident()
-            .then_ignore(just(Token::LeftParen))
-            .then_ignore(just(Token::RightParen))
-            .map(|name| Expression::FunctionCall {
-                name, args: vec![]
-            })
-    }
+pub fn function_call_expr<'a>() -> BeatriceParser<'a, Expression> {
+    ident()
+        .then_ignore(just(Token::LeftParen))
+        .then_ignore(just(Token::RightParen))
+        .map(|name| Expression::FunctionCall { name, args: vec![] })
+        .boxed()
 }
 
-parsing_rule! {
-    base_expr -> Expression {
-        select! {
-            Token::Number(value) => Expression::Number(value),
-            Token::Ident(name) => Expression::Ident(name.clone()),
-        }
+pub fn base_expr<'a>() -> BeatriceParser<'a, Expression> {
+    select! {
+        Token::Number(value) => Expression::Number(value),
+        Token::Ident(name) => Expression::Ident(name.clone()),
     }
+    .boxed()
 }
 
-parsing_rule! {
-    math_op_expr -> Expression {
-        base_expr().foldl(
-            math_op_kind()
-            .then(base_expr()).repeated(),
+pub fn math_op_expr<'a>() -> BeatriceParser<'a, Expression> {
+    base_expr()
+        .foldl(
+            math_op_kind().then(base_expr()).repeated(),
             |lhs, (op_kind, rhs)| Expression::MathOp {
                 lhs: lhs.into(),
                 kind: op_kind,
-                rhs: rhs.into()
-            })
-    }
+                rhs: rhs.into(),
+            },
+        )
+        .boxed()
 }
 
-parsing_rule! {
-    math_op_kind -> MathOpKind {
-        select! {
-            Token::Add => MathOpKind::Add,
-            Token::Minus => MathOpKind::Subtract,
-            Token::Divide => MathOpKind::Divide,
-            Token::Multiply => MathOpKind::Multiply
-        }
+pub fn math_op_kind<'a>() -> BeatriceParser<'a, MathOpKind> {
+    select! {
+        Token::Add => MathOpKind::Add,
+        Token::Minus => MathOpKind::Subtract,
+        Token::Divide => MathOpKind::Divide,
+        Token::Multiply => MathOpKind::Multiply
     }
+    .boxed()
 }
 
 #[cfg(test)]

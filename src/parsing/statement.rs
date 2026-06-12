@@ -6,33 +6,26 @@ use chumsky::{
 use crate::{
     ast::statement::Statement,
     lexing::token::Token,
-    parsing::{expr::expr, parsing_rule},
+    parsing::{BeatriceParser, expr::expr},
 };
 
-parsing_rule! {
-    return_stmt -> Statement {
-        just(Token::Return)
-            .ignore_then(expr())
-            .then_ignore(just(Token::Semicolon))
-            .map(Statement::Return)
-    }
+pub fn return_stmt<'a>() -> BeatriceParser<'a, Statement> {
+    just(Token::Return)
+        .ignore_then(expr())
+        .then_ignore(just(Token::Semicolon))
+        .map(Statement::Return)
+        .boxed()
 }
 
-parsing_rule! {
-    expr_stmt -> Statement {
-        expr()
-            .then_ignore(just(Token::Semicolon))
-            .map(Statement::Expression)
-    }
+pub fn expr_stmt<'a>() -> BeatriceParser<'a, Statement> {
+    expr()
+        .then_ignore(just(Token::Semicolon))
+        .map(Statement::Expression)
+        .boxed()
 }
 
-parsing_rule! {
-    stmt -> Statement {
-        choice((
-                return_stmt(),
-                expr_stmt()
-        ))
-    }
+pub fn stmt<'a>() -> BeatriceParser<'a, Statement> {
+    choice((return_stmt(), expr_stmt())).boxed()
 }
 
 #[cfg(test)]

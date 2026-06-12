@@ -1,13 +1,12 @@
-use chumsky::select;
+use chumsky::prelude::{Parser, select};
 
-use crate::{ast::Type, lexing::token::Token, parsing::parsing_rule};
+use crate::{ast::Type, lexing::token::Token, parsing::BeatriceParser};
 
-parsing_rule! {
-    ty -> Type {
-        select! {
-            Token::I32 => Type::I32
-        }
+pub fn ty<'a>() -> BeatriceParser<'a, Type> {
+    select! {
+        Token::I32 => Type::I32
     }
+    .boxed()
 }
 
 #[cfg(test)]

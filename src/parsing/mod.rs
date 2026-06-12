@@ -1,4 +1,4 @@
-use chumsky::Parser;
+use chumsky::prelude::Boxed;
 
 use crate::{ast::Program, lexing::token::Token};
 
@@ -10,18 +10,10 @@ mod program;
 mod statement;
 mod ty;
 
-macro_rules! parsing_rule {
-    {
-        $name:ident -> $ret:ty $body:block
-    } => {
-        pub fn $name<'a>() -> impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret> $body
-    };
-}
-
-pub(crate) use parsing_rule;
+pub(crate) type BeatriceParser<'a, T> = Boxed<'a, 'a, &'a [Token], T>;
 
 // Parser takes &[Token] as input, outputs a Program
-pub fn parser<'a>() -> impl Parser<'a, &'a [Token], Program> {
+pub fn parser<'a>() -> BeatriceParser<'a, Program> {
     program::program()
 }
 
@@ -43,9 +35,7 @@ mod tests {
     #[test]
     fn parses_return_number_function() {
         let input = "fn main() -> i32 { return 42; }";
-        let tokens: Vec<_> = Token::lexer(input)
-            .map(|token| token.unwrap())
-            .collect();
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
 
         let program = parser().parse(&tokens).unwrap();
 
@@ -66,9 +56,7 @@ mod tests {
     #[test]
     fn parses_return_math_op_function() {
         let input = "fn main() -> i32 { return 1 + 2; }";
-        let tokens: Vec<_> = Token::lexer(input)
-            .map(|token| token.unwrap())
-            .collect();
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
 
         let program = parser().parse(&tokens).unwrap();
 
