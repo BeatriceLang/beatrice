@@ -8,7 +8,9 @@ use crate::{
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> BasicValueEnum<'a> {
         match expr {
-            Expression::Number(number) => self.ctx.i32_type().const_int(*number as u64, false),
+            Expression::Number(number) => {
+                self.ctx.i32_type().const_int(*number as u64, false).into()
+            }
             Expression::MathOp { lhs, kind, rhs } => {
                 let lhs = self.compile_expr(lhs).into_int_value();
                 let rhs = self.compile_expr(rhs).into_int_value();
@@ -19,9 +21,18 @@ impl<'a> Codegen<'a> {
                     MathOpKind::Divide => self.builder.build_int_signed_div(lhs, rhs, "_").unwrap(),
                     MathOpKind::Multiply => self.builder.build_int_mul(lhs, rhs, "_").unwrap(),
                 }
+                .into()
+            }
+            Expression::FunctionCall { name, .. } => {
+                let function = self.module.get_function(name).unwrap();
+
+                self.builder
+                    .build_call(function, &[], "_")
+                    .unwrap()
+                    .try_as_basic_value()
+                    .unwrap_basic()
             }
             _ => todo!(),
         }
-        .into()
     }
 }
