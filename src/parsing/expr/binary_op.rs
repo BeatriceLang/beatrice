@@ -42,6 +42,7 @@ mod tests {
     #[test]
     fn parses_binary_op_expr() {
         let tokens = [Token::Number(8), Token::Divide, Token::Number(2)];
+        let condition_tokens = [Token::Ident("n".into()), Token::LessThan, Token::Number(2)];
         let chained_tokens = [
             Token::Number(1),
             Token::Add,
@@ -55,6 +56,15 @@ mod tests {
             Expression::BinaryOp {
                 lhs: Expression::Number(8).into(),
                 kind: BinaryOpKind::Divide,
+                rhs: Expression::Number(2).into(),
+            }
+        );
+
+        assert_eq!(
+            binary_op_expr().parse(&condition_tokens).unwrap(),
+            Expression::BinaryOp {
+                lhs: Expression::Ident("n".into()).into(),
+                kind: BinaryOpKind::LessThan,
                 rhs: Expression::Number(2).into(),
             }
         );
@@ -91,6 +101,18 @@ mod tests {
         assert_eq!(
             binary_op_kind().parse(&[Token::Multiply]).unwrap(),
             BinaryOpKind::Multiply
+        );
+        assert_eq!(
+            binary_op_kind().parse(&[Token::LessThan]).unwrap(),
+            BinaryOpKind::LessThan
+        );
+        assert_eq!(
+            binary_op_kind().parse(&[Token::GreaterThan]).unwrap(),
+            BinaryOpKind::GreaterThan
+        );
+        assert_eq!(
+            binary_op_kind().parse(&[Token::Equal]).unwrap(),
+            BinaryOpKind::EqualTo
         );
     }
 }
