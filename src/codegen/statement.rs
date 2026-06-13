@@ -36,7 +36,13 @@ impl<'a> Codegen<'a> {
                 }
 
                 // Force jump to end_block if then_block dont have a return
-                if then_block.get_terminator().is_none() {
+                if self
+                    .builder
+                    .get_insert_block()
+                    .unwrap()
+                    .get_terminator()
+                    .is_none()
+                {
                     self.builder.build_unconditional_branch(end_block).unwrap();
                 }
 
