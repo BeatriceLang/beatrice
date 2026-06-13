@@ -126,3 +126,25 @@ fn compiles_function_params_as_idents() {
 
     assert_eq!(code, Some(42));
 }
+
+#[test]
+fn compiles_recursive_fibonacci_to_executable() {
+    let code = compile_and_run(
+        "recursive_fibonacci",
+        "
+        fn fib(n: i32) -> i32 {
+            if n < 2 {
+                return n;
+            }
+
+            return fib(n - 1) + fib(n - 2);
+        }
+
+        fn main() -> i32 {
+            return fib(10);
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(55));
+}

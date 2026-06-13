@@ -12,7 +12,13 @@ mod binary_op;
 mod function_call;
 
 pub fn expr<'a>() -> parser_type!(Expression) {
-    recursive(|expr| choice((function_call_expr(expr), binary_op_expr(), base_expr())))
+    recursive(|expr| {
+        choice((
+            function_call_expr(expr.clone()),
+            binary_op_expr(expr.clone()),
+            base_expr(),
+        ))
+    })
 }
 
 #[cfg(test)]

@@ -6,9 +6,9 @@ use crate::{
     parsing::expr::base::base_expr,
 };
 
-pub fn binary_op_expr<'a>() -> parser_type!(Expression) {
+pub fn binary_op_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     base_expr().foldl(
-        binary_op_kind().then(base_expr()).repeated(),
+        binary_op_kind().then(expr).repeated(),
         |lhs, (op_kind, rhs)| Expression::BinaryOp {
             lhs: lhs.into(),
             kind: op_kind,
@@ -36,7 +36,10 @@ mod tests {
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
-        parsing::expr::binary_op::{binary_op_expr, binary_op_kind},
+        parsing::expr::{
+            binary_op::{binary_op_expr, binary_op_kind},
+            expr,
+        },
     };
 
     #[test]
@@ -52,7 +55,7 @@ mod tests {
         ];
 
         assert_eq!(
-            binary_op_expr().parse(&tokens).unwrap(),
+            binary_op_expr(expr()).parse(&tokens).unwrap(),
             Expression::BinaryOp {
                 lhs: Expression::Number(8).into(),
                 kind: BinaryOpKind::Divide,
@@ -61,7 +64,7 @@ mod tests {
         );
 
         assert_eq!(
-            binary_op_expr().parse(&condition_tokens).unwrap(),
+            binary_op_expr(expr()).parse(&condition_tokens).unwrap(),
             Expression::BinaryOp {
                 lhs: Expression::Ident("n".into()).into(),
                 kind: BinaryOpKind::LessThan,
@@ -70,16 +73,16 @@ mod tests {
         );
 
         assert_eq!(
-            binary_op_expr().parse(&chained_tokens).unwrap(),
+            binary_op_expr(expr()).parse(&chained_tokens).unwrap(),
             Expression::BinaryOp {
-                lhs: Expression::BinaryOp {
-                    lhs: Expression::Number(1).into(),
+                lhs: Expression::Number(1).into(),
+                kind: BinaryOpKind::Add,
+                rhs: Expression::BinaryOp {
+                    lhs: Expression::Number(2).into(),
                     kind: BinaryOpKind::Add,
-                    rhs: Expression::Number(2).into(),
+                    rhs: Expression::Number(3).into(),
                 }
                 .into(),
-                kind: BinaryOpKind::Add,
-                rhs: Expression::Number(3).into(),
             }
         );
     }
