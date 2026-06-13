@@ -108,3 +108,21 @@ fn compiles_return_function_call_to_executable() {
 
     assert_eq!(code, Some(42));
 }
+
+#[test]
+fn compiles_function_params_as_idents() {
+    let code = compile_and_run(
+        "function_params_as_idents",
+        "
+        fn add(lhs: i32, rhs: i32) -> i32 {
+            return lhs + rhs;
+        }
+
+        fn main() -> i32 {
+            return add(40, 2);
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
