@@ -3,6 +3,9 @@ use logos::Logos;
 #[derive(Logos, Debug, Clone, PartialEq, Eq)]
 #[logos(skip r"[ \t\n\f]+")]
 pub enum Token {
+    #[token("if")]
+    If,
+
     #[token("fn")]
     Fn,
 
