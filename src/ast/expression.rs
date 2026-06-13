@@ -12,6 +12,18 @@ pub enum Expression {
         name: String,
         args: Vec<Expression>,
     },
+    Condition {
+        lhs: Box<Expression>,
+        kind: ConditionOpKind,
+        rhs: Box<Expression>,
+    },
+}
+
+#[derive(PartialEq, Eq, Debug)]
+pub enum ConditionOpKind {
+    MoreThen,
+    LessThen,
+    EqualTo,
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]

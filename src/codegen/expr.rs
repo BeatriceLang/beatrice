@@ -34,6 +34,7 @@ impl<'a> Codegen<'a> {
                     .unwrap_basic()
             }
             Expression::Ident(ident) => *self.idents.get(ident).unwrap(),
+            Expression::Condition { lhs, kind, rhs } => todo!(),
         }
     }
 }

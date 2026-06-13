@@ -16,6 +16,7 @@ impl<'a> Codegen<'a> {
             Statement::Expression(expr) => {
                 _ = self.compile_expr(expr);
             }
+            Statement::If { cond, body } => todo!(),
         };
     }
 }
