@@ -21,8 +21,8 @@ pub enum Expression {
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum ConditionOpKind {
-    MoreThen,
-    LessThen,
+    GreaterThan,
+    LessThan,
     EqualTo,
 }
 

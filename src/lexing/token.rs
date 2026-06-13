@@ -55,10 +55,10 @@ pub enum Token {
     Multiply,
 
     #[token(">")]
-    MoreThen,
+    GreaterThan,
 
     #[token("<")]
-    LessThen,
+    LessThan,
 
     #[token("==")]
     Equal,
