@@ -2,15 +2,17 @@ use chumsky::prelude::{choice, recursive};
 
 use crate::{
     ast::expression::Expression,
-    parsing::expr::{base::base_expr, function_call::function_call_expr, math_op::math_op_expr},
+    parsing::expr::{
+        base::base_expr, binary_op::binary_op_expr, function_call::function_call_expr,
+    },
 };
 
 mod base;
+mod binary_op;
 mod function_call;
-mod math_op;
 
 pub fn expr<'a>() -> parser_type!(Expression) {
-    recursive(|expr| choice((function_call_expr(expr), math_op_expr(), base_expr())))
+    recursive(|expr| choice((function_call_expr(expr), binary_op_expr(), base_expr())))
 }
 
 #[cfg(test)]
@@ -18,7 +20,7 @@ mod tests {
     use chumsky::Parser as _;
 
     use crate::{
-        ast::expression::{Expression, MathOpKind},
+        ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
         parsing::expr::expr,
     };
@@ -34,9 +36,9 @@ mod tests {
 
         assert_eq!(
             expr().parse(&tokens).unwrap(),
-            Expression::MathOp {
+            Expression::BinaryOp {
                 lhs: Expression::Number(1).into(),
-                kind: MathOpKind::Add,
+                kind: BinaryOpKind::Add,
                 rhs: Expression::Number(2).into(),
             }
         );
@@ -69,9 +71,9 @@ mod tests {
                 name: "test".into(),
                 args: vec![
                     Expression::Number(1),
-                    Expression::MathOp {
+                    Expression::BinaryOp {
                         lhs: Expression::Number(2).into(),
-                        kind: MathOpKind::Add,
+                        kind: BinaryOpKind::Add,
                         rhs: Expression::Number(3).into(),
                     },
                 ],

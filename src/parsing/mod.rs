@@ -27,7 +27,7 @@ mod tests {
     use crate::{
         ast::{
             Block, Function, Program, Type,
-            expression::{Expression, MathOpKind},
+            expression::{BinaryOpKind, Expression},
             statement::Statement,
         },
         lexing::token::Token,
@@ -57,7 +57,7 @@ mod tests {
     }
 
     #[test]
-    fn parses_return_math_op_function() {
+    fn parses_return_binary_op_function() {
         let input = "fn main() -> i32 { return 1 + 2; }";
         let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
 
@@ -71,9 +71,9 @@ mod tests {
                     params: vec![],
                     return_type: Type::I32,
                     body: Block {
-                        statements: vec![Statement::Return(Expression::MathOp {
+                        statements: vec![Statement::Return(Expression::BinaryOp {
                             lhs: Expression::Number(1).into(),
-                            kind: MathOpKind::Add,
+                            kind: BinaryOpKind::Add,
                             rhs: Expression::Number(2).into(),
                         })],
                     },

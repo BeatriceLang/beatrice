@@ -78,9 +78,9 @@ fn compiles_return_42_to_executable() {
 }
 
 #[test]
-fn compiles_return_math_op_to_executable() {
+fn compiles_return_binary_op_to_executable() {
     let code = compile_and_run(
-        "return_math_op",
+        "return_binary_op",
         "
         fn main() -> i32 {
             return 40 + 2;

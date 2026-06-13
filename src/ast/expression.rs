@@ -3,33 +3,24 @@
 pub enum Expression {
     Ident(String),
     Number(i64),
-    MathOp {
+    BinaryOp {
         lhs: Box<Expression>,
-        kind: MathOpKind,
+        kind: BinaryOpKind,
         rhs: Box<Expression>,
     },
     FunctionCall {
         name: String,
         args: Vec<Expression>,
     },
-    Condition {
-        lhs: Box<Expression>,
-        kind: ConditionOpKind,
-        rhs: Box<Expression>,
-    },
-}
-
-#[derive(PartialEq, Eq, Debug)]
-pub enum ConditionOpKind {
-    GreaterThan,
-    LessThan,
-    EqualTo,
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
-pub enum MathOpKind {
+pub enum BinaryOpKind {
     Add,
     Subtract,
     Divide,
     Multiply,
+    GreaterThan,
+    LessThan,
+    EqualTo,
 }
