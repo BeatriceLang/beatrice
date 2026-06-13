@@ -22,7 +22,10 @@ pub fn binary_op_kind<'a>() -> parser_type!(BinaryOpKind) {
         Token::Add => BinaryOpKind::Add,
         Token::Minus => BinaryOpKind::Subtract,
         Token::Divide => BinaryOpKind::Divide,
-        Token::Multiply => BinaryOpKind::Multiply
+        Token::Multiply => BinaryOpKind::Multiply,
+        Token::LessThan => BinaryOpKind::LessThan,
+        Token::GreaterThan => BinaryOpKind::GreaterThan,
+        Token::Equal => BinaryOpKind::EqualTo,
     }
 }
 
