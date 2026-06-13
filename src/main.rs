@@ -26,7 +26,7 @@ fn main() -> Result<()> {
     let program_ast = parser().parse(&tokens).unwrap();
 
     let context = Context::create();
-    let codegen = Codegen::new(&context, "main", program_ast);
+    let mut codegen = Codegen::new(&context, "main", program_ast);
 
     codegen.generate();
     codegen.emit_object(&args.output)?;

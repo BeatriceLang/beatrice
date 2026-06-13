@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, mem::take};
 
 use inkwell::{builder::Builder, context::Context, module::Module, values::BasicValueEnum};
 
@@ -29,13 +29,15 @@ impl<'a> Codegen<'a> {
         }
     }
 
-    pub fn generate(&self) {
+    pub fn generate(&mut self) {
         for function in &self.program.functions {
             self.declare_function(function);
         }
 
-        for function in &self.program.functions {
+        let functions = take(&mut self.program.functions);
+        for function in &functions {
             self.compile_function(function);
         }
+        self.program.functions = functions;
     }
 }
