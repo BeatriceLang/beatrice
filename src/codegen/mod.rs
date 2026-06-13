@@ -15,14 +15,14 @@ pub struct Codegen<'a> {
     module: Module<'a>,
     builder: Builder<'a>,
     program: Program,
-    values: HashMap<String, BasicValueEnum<'a>>,
+    idents: HashMap<String, BasicValueEnum<'a>>,
 }
 
 impl<'a> Codegen<'a> {
     pub fn new(ctx: &'a Context, module_name: &str, program: Program) -> Self {
         Self {
             ctx,
-            values: HashMap::new(),
+            idents: HashMap::new(),
             module: ctx.create_module(module_name),
             builder: ctx.create_builder(),
             program,

@@ -33,7 +33,7 @@ impl<'a> Codegen<'a> {
                     .try_as_basic_value()
                     .unwrap_basic()
             }
-            Expression::Ident(ident) => *self.values.get(ident).unwrap(),
+            Expression::Ident(ident) => *self.idents.get(ident).unwrap(),
         }
     }
 }
