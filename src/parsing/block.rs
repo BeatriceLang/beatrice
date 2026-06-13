@@ -1,13 +1,15 @@
-use chumsky::{IterParser, Parser, prelude::just};
+use chumsky::{IterParser, Parser, prelude::just, recursive::recursive};
 
 use crate::{ast::Block, lexing::token::Token, parsing::statement::stmt};
 
 pub fn block<'a>() -> parser_type!(Block) {
-    stmt()
-        .repeated()
-        .collect()
-        .delimited_by(just(Token::LeftBrace), just(Token::RightBrace))
-        .map(|statements| Block { statements })
+    recursive(|block| {
+        stmt(block)
+            .repeated()
+            .collect()
+            .delimited_by(just(Token::LeftBrace), just(Token::RightBrace))
+            .map(|statements| Block { statements })
+    })
 }
 
 #[cfg(test)]
