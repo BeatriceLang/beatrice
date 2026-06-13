@@ -53,6 +53,15 @@ pub enum Token {
 
     #[token("*")]
     Multiply,
+
+    #[token(">")]
+    MoreThen,
+
+    #[token("<")]
+    LessThen,
+
+    #[token("==")]
+    Equal,
 }
 
 #[cfg(test)]
