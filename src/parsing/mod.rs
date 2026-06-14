@@ -8,7 +8,8 @@ use crate::{
 
 macro_rules! parser_type {
     ($ret:ty) => {
-        impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret> + Clone
+        impl chumsky::Parser<'a, &'a [$crate::lexing::token::Token], $ret,
+            chumsky::extra::Err<chumsky::error::Rich<'a, $crate::lexing::token::Token>>> + Clone
     };
 }
 
