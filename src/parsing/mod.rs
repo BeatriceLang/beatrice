@@ -39,9 +39,6 @@ pub fn parser<'a>() -> parser_type!(Program) {
 
 #[cfg(test)]
 mod tests {
-    use chumsky::Parser as _;
-    use logos::Logos;
-
     use crate::{
         ast::{
             Block, Function, Program, Type,
@@ -51,6 +48,8 @@ mod tests {
         lexing::token::Token,
         parsing::parser,
     };
+    use chumsky::Parser as _;
+    use logos::Logos;
 
     #[test]
     fn parses_return_number_function() {

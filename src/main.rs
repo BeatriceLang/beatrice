@@ -1,19 +1,6 @@
-use std::{fs, path::PathBuf};
-
 use anyhow::Result;
-use chumsky::Parser as _;
-use clap::Parser as _;
-use inkwell::context::Context;
-use logos::{Lexer, Logos};
 
-use crate::{
-    cli_args::Args,
-    codegen::Codegen,
-    diagnostic::{Diagnostic, Diagnostics},
-    lexing::token::Token,
-    parsing::parser,
-    state::Compiler,
-};
+use crate::state::Compiler;
 
 mod ast;
 mod cli_args;

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, mem::take, ops::Deref};
+use std::{collections::HashMap, mem::take};
 
 use anyhow::{Context as _, Result};
 use inkwell::{builder::Builder, context::Context, module::Module, values::BasicValueEnum};

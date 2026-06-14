@@ -48,7 +48,7 @@ impl<'a> Codegen<'a> {
 
                 self.builder.position_at_end(end_block);
             }
-            Statement::Let { name, ty, value } => {
+            Statement::Let { name, ty: _, value } => {
                 let value = self.compile_expr(value);
 
                 self.idents.insert(name.clone(), value);

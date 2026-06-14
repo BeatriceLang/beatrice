@@ -6,7 +6,7 @@ use chumsky::{
 use crate::{
     ast::{Block, statement::Statement},
     lexing::token::Token,
-    parsing::{block::block, expr::expr, ident::ident, ty::ty},
+    parsing::{expr::expr, ident::ident, ty::ty},
 };
 
 pub fn return_stmt<'a>() -> parser_type!(Statement) {
@@ -47,6 +47,7 @@ pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::parsing::block::block;
 
     #[test]
     fn parses_return_stmt() {

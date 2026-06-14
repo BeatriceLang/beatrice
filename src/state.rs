@@ -1,7 +1,7 @@
 use std::{fs, path::PathBuf};
 
 use anyhow::{Context, Result};
-use clap::{Parser, builder::Str};
+use clap::Parser;
 
 use crate::{ast::Program, cli_args::Args, diagnostic::Diagnostics, lexing::token::Token};
 

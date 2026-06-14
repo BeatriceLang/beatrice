@@ -2,8 +2,6 @@ use std::{ops::Range, path::PathBuf, process::exit};
 
 use anyhow::{Context, Result};
 use ariadne::{Label, Report, ReportKind, Source};
-use chumsky::{select, span::SpanWrap};
-use inkwell::AddressSpace;
 
 #[derive(Debug)]
 pub struct Diagnostic {
