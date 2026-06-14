@@ -11,7 +11,7 @@ pub struct Diagnostic {
     pub label: String,
 }
 
-#[derive(Clone, Copy, Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum DiagnosticKind {
     Error,
     Warning,
