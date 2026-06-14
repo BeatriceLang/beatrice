@@ -3,11 +3,11 @@ use chumsky::{Parser, select};
 use crate::{
     ast::expression::{BinaryOpKind, Expression},
     lexing::token::Token,
-    parsing::expr::base::base_expr,
+    parsing::expr::primary::primary_expr,
 };
 
 pub fn binary_op_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    base_expr().foldl(
+    primary_expr(expr.clone()).foldl(
         binary_op_kind().then(expr).repeated(),
         |lhs, (op_kind, rhs)| Expression::BinaryOp {
             lhs: lhs.into(),

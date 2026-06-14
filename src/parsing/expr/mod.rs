@@ -3,22 +3,16 @@ use chumsky::prelude::{choice, recursive};
 use crate::{
     ast::expression::Expression,
     parsing::expr::{
-        base::base_expr, binary_op::binary_op_expr, function_call::function_call_expr,
+        binary_op::binary_op_expr, function_call::function_call_expr, primary::primary_expr,
     },
 };
 
-mod base;
 mod binary_op;
 mod function_call;
+mod primary;
 
 pub fn expr<'a>() -> parser_type!(Expression) {
-    recursive(|expr| {
-        choice((
-            function_call_expr(expr.clone()),
-            binary_op_expr(expr.clone()),
-            base_expr(),
-        ))
-    })
+    recursive(|expr| choice((binary_op_expr(expr.clone()), primary_expr(expr.clone()))))
 }
 
 #[cfg(test)]
