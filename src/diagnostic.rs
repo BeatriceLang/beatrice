@@ -93,3 +93,66 @@ impl Diagnostics {
         Ok(())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use std::path::PathBuf;
+
+    use super::{Diagnostic, DiagnosticKind, Diagnostics};
+
+    fn diagnostic() -> Diagnostic {
+        Diagnostic {
+            span: 3..4,
+            kind: DiagnosticKind::Error,
+            message: "Unexpected token".into(),
+            label: "Unexpected character `@`".into(),
+        }
+    }
+
+    #[test]
+    fn diagnostic_ariadne_span_uses_source_file_name() {
+        let diagnostic = diagnostic();
+
+        let span = diagnostic
+            .ariadne_span(PathBuf::from("/tmp/main.bea"))
+            .unwrap();
+
+        assert_eq!(span, ("main.bea".into(), 3..4));
+    }
+
+    #[test]
+    fn diagnostic_source_file_name_errors_without_file_name() {
+        let diagnostic = diagnostic();
+
+        let error = diagnostic.source_file_name(PathBuf::from("/")).unwrap_err();
+
+        assert!(
+            error
+                .to_string()
+                .contains("Failed to parse source file name")
+        );
+    }
+
+    #[test]
+    fn diagnostics_new_starts_empty() {
+        let diagnostics = Diagnostics::new("fn main() -> i32 {}".into(), "main.bea".into());
+
+        assert!(diagnostics.inner.is_empty());
+    }
+
+    #[test]
+    fn diagnostics_push_records_diagnostic() {
+        let mut diagnostics = Diagnostics::new("@".into(), "main.bea".into());
+
+        diagnostics.push(diagnostic());
+
+        assert_eq!(diagnostics.inner.len(), 1);
+    }
+
+    #[test]
+    fn diagnostics_process_empty_diagnostics_succeeds() {
+        let diagnostics = Diagnostics::new("fn main() -> i32 {}".into(), "main.bea".into());
+
+        diagnostics.process().unwrap();
+    }
+}
