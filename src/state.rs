@@ -15,6 +15,7 @@ pub enum CompilerState {
     Lex(String),
     Parse(Vec<Token>),
     Codegen(Program),
+    Error,
 }
 
 impl Compiler {
