@@ -38,7 +38,7 @@ fn display_rich_pattern(pattern: &RichPattern<'_, Token>) -> String {
         RichPattern::Label(label) => label.to_string(),
         RichPattern::Identifier(ident) => ident.clone(),
         RichPattern::SomethingElse => "Something else".into(),
-        RichPattern::EndOfInput => "End of input".into(),
+        RichPattern::EndOfInput => "EOF".into(),
         RichPattern::Any => "Any".into(),
         _ => todo!(),
     }
