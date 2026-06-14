@@ -48,6 +48,7 @@ impl<'a> Codegen<'a> {
 
                 self.builder.position_at_end(end_block);
             }
+            Statement::Let { name, ty, value } => todo!(),
         };
     }
 }
