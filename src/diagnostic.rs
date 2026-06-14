@@ -74,6 +74,10 @@ impl Diagnostics {
         self.inner.push(diagnostic);
     }
 
+    pub fn iter(&self) -> impl Iterator<Item = &Diagnostic> {
+        self.inner.iter()
+    }
+
     /// Processes the diagnostics.
     ///
     /// Exits if there is any diagnostic.
