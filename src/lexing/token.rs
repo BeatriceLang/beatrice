@@ -65,6 +65,9 @@ pub enum Token {
 
     #[token("==")]
     Equal,
+
+    #[token("let")]
+    Let,
 }
 
 #[cfg(test)]
