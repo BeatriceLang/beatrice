@@ -14,6 +14,7 @@ macro_rules! parser_type {
 }
 
 mod block;
+mod diagnostic;
 mod expr;
 mod function;
 mod ident;
@@ -27,9 +28,18 @@ impl Compiler {
             panic!("Unexpected compiler state")
         };
 
-        let program = parser().parse(tokens).unwrap();
+        let parse_result = parser().parse(tokens).into_result();
 
-        self.advance_to(CompilerState::Codegen(program))
+        match parse_result {
+            Ok(program) => self.advance_to(CompilerState::Codegen(program)),
+            Err(errors) => {
+                for error in errors {
+                    self.diagnostics.push(error.into());
+                }
+
+                self.advance_to(CompilerState::Error)
+            }
+        }
     }
 }
 
