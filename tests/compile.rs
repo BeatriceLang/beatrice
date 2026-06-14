@@ -155,7 +155,7 @@ fn compiles_let_value_return() {
         "let_return",
         "
         fn main() -> i32 {
-            let hello = 40;
+            let hello: i32 = 40;
             return hello;
         }
         ",
