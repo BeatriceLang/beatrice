@@ -148,3 +148,18 @@ fn compiles_recursive_fibonacci_to_executable() {
 
     assert_eq!(code, Some(55));
 }
+
+#[test]
+fn compiles_let_value_return() {
+    let code = compile_and_run(
+        "let_return",
+        "
+        fn main() -> i32 {
+            let hello = 40;
+            return hello;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(40));
+}
