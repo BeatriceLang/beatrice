@@ -17,8 +17,12 @@ impl From<Rich<'_, Token>> for Diagnostic {
                     .map(display_rich_pattern)
                     .collect::<Vec<_>>()
                     .join(", ");
+                let found = found
+                    .as_ref()
+                    .map(|t| t.to_string())
+                    .unwrap_or("EOF".into());
 
-                format!("Expected `{expected}`, found `{found:?}`")
+                format!("Expected `{expected}`, found `{found}`")
             }
             RichReason::Custom(reason) => format!("{reason:?}"),
         };
