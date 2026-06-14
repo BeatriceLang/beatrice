@@ -106,8 +106,8 @@ mod tests {
         Diagnostic {
             span: 3..4,
             kind: DiagnosticKind::Error,
-            message: "Unexpected token".into(),
-            label: "Unexpected character `@`".into(),
+            message: "Unknown character `@`".into(),
+            label: "Unknown character `@`".into(),
         }
     }
 

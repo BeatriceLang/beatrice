@@ -29,12 +29,13 @@ fn lex_inner(source: &str, diagnostics: &mut Diagnostics) -> Vec<Token> {
                 Ok(token) => tokens.push(token),
                 Err(_) => {
                     let char = source[span.clone()].to_string();
+                    let message = format!("Unknown character `{char}`");
 
                     diagnostics.push(Diagnostic {
                         span,
                         kind: DiagnosticKind::Error,
-                        message: "Unexpected token".into(),
-                        label: format!("Unexpected character `{char}`"),
+                        label: message.clone(),
+                        message,
                     });
                 }
             }
@@ -61,8 +62,8 @@ mod tests {
         assert_eq!(tokens, vec![Token::Fn]);
         assert_eq!(diagnostic.span, 3..4);
         assert_eq!(diagnostic.kind, DiagnosticKind::Error);
-        assert_eq!(diagnostic.message, "Unexpected token");
-        assert_eq!(diagnostic.label, "Unexpected character `@`");
+        assert_eq!(diagnostic.message, "Unknown character `@`");
+        assert_eq!(diagnostic.label, "Unknown character `@`");
     }
 
     #[test]
