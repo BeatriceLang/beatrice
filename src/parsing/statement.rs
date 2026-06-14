@@ -6,7 +6,7 @@ use chumsky::{
 use crate::{
     ast::{Block, statement::Statement},
     lexing::token::Token,
-    parsing::{block::block, expr::expr},
+    parsing::{block::block, expr::expr, ident::ident, ty::ty},
 };
 
 pub fn return_stmt<'a>() -> parser_type!(Statement) {
@@ -23,6 +23,17 @@ pub fn if_stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
         .map(|(cond, body)| Statement::If { cond, body })
 }
 
+pub fn let_stmt<'a>() -> parser_type!(Statement) {
+    just(Token::Let)
+        .ignore_then(ident())
+        .then_ignore(just(Token::Colon))
+        .then(ty())
+        .then_ignore(just(Token::Assign))
+        .then(expr())
+        .then_ignore(just(Token::Semicolon))
+        .map(|((name, ty), value)| Statement::Let { name, ty, value })
+}
+
 pub fn expr_stmt<'a>() -> parser_type!(Statement) {
     expr()
         .then_ignore(just(Token::Semicolon))
@@ -30,7 +41,7 @@ pub fn expr_stmt<'a>() -> parser_type!(Statement) {
 }
 
 pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
-    choice((return_stmt(), expr_stmt(), if_stmt(block)))
+    choice((let_stmt(), return_stmt(), expr_stmt(), if_stmt(block)))
 }
 
 #[cfg(test)]
@@ -58,6 +69,30 @@ mod tests {
         assert_eq!(
             expr_stmt().parse(&tokens).unwrap(),
             Statement::Expression(crate::ast::expression::Expression::Number(42))
+        );
+    }
+
+    #[test]
+    fn parses_let_stmt() {
+        use chumsky::Parser as _;
+
+        let tokens = [
+            Token::Let,
+            Token::Ident("x".into()),
+            Token::Colon,
+            Token::I32,
+            Token::Assign,
+            Token::Number(42),
+            Token::Semicolon,
+        ];
+
+        assert_eq!(
+            stmt(block()).parse(&tokens).unwrap(),
+            Statement::Let {
+                name: "x".into(),
+                ty: crate::ast::Type::I32,
+                value: crate::ast::expression::Expression::Number(42),
+            }
         );
     }
 
