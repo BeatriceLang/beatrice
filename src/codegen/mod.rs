@@ -1,8 +1,12 @@
-use std::{collections::HashMap, mem::take};
+use std::{collections::HashMap, mem::take, ops::Deref};
 
+use anyhow::{Context as _, Result};
 use inkwell::{builder::Builder, context::Context, module::Module, values::BasicValueEnum};
 
-use crate::ast::Program;
+use crate::{
+    ast::Program,
+    state::{Compiler, CompilerState},
+};
 
 mod emit_obj;
 mod expr;
@@ -39,5 +43,31 @@ impl<'a> Codegen<'a> {
             self.compile_function(function);
         }
         self.program.functions = functions;
+    }
+}
+
+impl Compiler {
+    pub fn codegen(&mut self) -> Result<()> {
+        let CompilerState::Codegen(program) = &self.state else {
+            panic!("Unexpected compiler state")
+        };
+
+        let context = Context::create();
+        let mut codegen = Codegen::new(
+            &context,
+            self.output_path
+                .file_name()
+                .context("Failed to parse output file name")?
+                .to_str()
+                .context("Failed to parse output file name")?,
+            program.clone(),
+        );
+
+        codegen.generate();
+        codegen
+            .emit_object(&self.output_path)
+            .context("Failed to emit object")?;
+
+        Ok(())
     }
 }

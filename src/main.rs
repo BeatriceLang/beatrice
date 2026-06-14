@@ -1,35 +1,34 @@
-use std::fs;
+use std::{fs, path::PathBuf};
 
 use anyhow::Result;
 use chumsky::Parser as _;
 use clap::Parser as _;
 use inkwell::context::Context;
-use logos::Logos;
+use logos::{Lexer, Logos};
 
-use crate::{cli_args::Args, codegen::Codegen, lexing::token::Token, parsing::parser};
+use crate::{
+    cli_args::Args,
+    codegen::Codegen,
+    diagnostic::{Diagnostic, Diagnostics},
+    lexing::token::Token,
+    parsing::parser,
+    state::Compiler,
+};
 
 mod ast;
 mod cli_args;
 mod codegen;
+mod diagnostic;
 mod lexing;
 mod parsing;
+mod state;
 
 fn main() -> Result<()> {
-    let args = Args::parse();
+    let mut compiler = Compiler::new()?;
 
-    let input = fs::read_to_string(args.input)?;
-
-    let lexer = Token::lexer(input.as_str());
-
-    let tokens: Vec<Token> = lexer.map(|f| f.clone().unwrap()).collect();
-
-    let program_ast = parser().parse(&tokens).unwrap();
-
-    let context = Context::create();
-    let mut codegen = Codegen::new(&context, "main", program_ast);
-
-    codegen.generate();
-    codegen.emit_object(&args.output)?;
+    compiler.lex()?;
+    compiler.parse()?;
+    compiler.codegen()?;
 
     Ok(())
 }

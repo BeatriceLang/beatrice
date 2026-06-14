@@ -5,6 +5,7 @@ edition = "2024"
 
 [dependencies]
 anyhow = "1"
+ariadne = "0.6.0"
 chumsky = "0.13"
 clap = { version = "4", features = ["derive"] }
 inkwell = { version = "0.9", features = ["llvm22-1"] }

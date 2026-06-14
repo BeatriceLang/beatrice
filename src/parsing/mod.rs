@@ -1,4 +1,10 @@
-use crate::ast::Program;
+use anyhow::Result;
+use chumsky::Parser;
+
+use crate::{
+    ast::Program,
+    state::{Compiler, CompilerState},
+};
 
 macro_rules! parser_type {
     ($ret:ty) => {
@@ -13,6 +19,18 @@ mod ident;
 mod program;
 mod statement;
 mod ty;
+
+impl Compiler {
+    pub fn parse(&mut self) -> Result<()> {
+        let CompilerState::Parse(tokens) = &self.state else {
+            panic!("Unexpected compiler state")
+        };
+
+        let program = parser().parse(tokens).unwrap();
+
+        self.advance_to(CompilerState::Codegen(program))
+    }
+}
 
 // Parser takes &[Token] as input, outputs a Program
 pub fn parser<'a>() -> parser_type!(Program) {
