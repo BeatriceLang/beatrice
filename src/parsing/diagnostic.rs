@@ -34,7 +34,7 @@ impl From<Rich<'_, Token>> for Diagnostic {
 
 fn display_rich_pattern(pattern: &RichPattern<'_, Token>) -> String {
     match pattern {
-        RichPattern::Token(token) => format!("{:?}", token),
+        RichPattern::Token(token) => token.to_string(),
         RichPattern::Label(label) => label.to_string(),
         RichPattern::Identifier(ident) => ident.clone(),
         RichPattern::SomethingElse => "Something else".into(),
