@@ -1,4 +1,4 @@
-use crate::ast::statement::Statement;
+use crate::ast::{function::ExternFunction, statement::Statement};
 
 pub mod expression;
 pub mod function;
@@ -16,6 +16,7 @@ pub struct Program {
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum Item {
     Function(Function),
+    ExternFunction(ExternFunction),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
