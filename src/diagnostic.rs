@@ -56,7 +56,7 @@ impl Diagnostic {
 
 #[derive(Debug)]
 pub struct Diagnostics {
-    inner: Vec<Diagnostic>,
+    pub inner: Vec<Diagnostic>,
     source: String,
     source_path: PathBuf,
 }
@@ -72,10 +72,6 @@ impl Diagnostics {
 
     pub fn push(&mut self, diagnostic: Diagnostic) {
         self.inner.push(diagnostic);
-    }
-
-    pub fn iter(&self) -> impl Iterator<Item = &Diagnostic> {
-        self.inner.iter()
     }
 
     /// Processes the diagnostics.

@@ -62,7 +62,7 @@ mod tests {
         let mut diagnostics = Diagnostics::new(source.into(), PathBuf::from("main.bea"));
 
         let tokens = lex_inner(source, &mut diagnostics);
-        let diagnostic = diagnostics.iter().next().unwrap();
+        let diagnostic = diagnostics.inner.first().unwrap();
 
         assert_eq!(tokens, vec![Spanned::new(Token::Fn, 0..2)]);
         assert_eq!(diagnostic.span, 3..4);
@@ -85,6 +85,6 @@ mod tests {
                 Spanned::new(Token::Ident("main".into()), 5..9),
             ]
         );
-        assert_eq!(diagnostics.iter().count(), 1);
+        assert_eq!(diagnostics.inner.len(), 1);
     }
 }

@@ -76,13 +76,15 @@ mod tests {
         };
 
         let diagnostics = check_duplicate_function(&program);
-        let diagnostics = diagnostics.iter().collect::<Vec<_>>();
 
-        assert_eq!(diagnostics.len(), 1);
-        assert_eq!(diagnostics[0].span, 20..24);
-        assert_eq!(diagnostics[0].kind, DiagnosticKind::Error);
-        assert_eq!(diagnostics[0].message, "Function `main` is already defined");
-        assert_eq!(diagnostics[0].label, diagnostics[0].message);
+        assert_eq!(diagnostics.inner.len(), 1);
+        assert_eq!(diagnostics.inner[0].span, 20..24);
+        assert_eq!(diagnostics.inner[0].kind, DiagnosticKind::Error);
+        assert_eq!(
+            diagnostics.inner[0].message,
+            "Function `main` is already defined"
+        );
+        assert_eq!(diagnostics.inner[0].label, diagnostics.inner[0].message);
     }
 
     #[test]
@@ -96,6 +98,6 @@ mod tests {
 
         let diagnostics = check_duplicate_function(&program);
 
-        assert_eq!(diagnostics.iter().count(), 0);
+        assert_eq!(diagnostics.inner.len(), 0);
     }
 }
