@@ -3,6 +3,7 @@ use anyhow::Result;
 use crate::state::Compiler;
 
 mod ast;
+mod check;
 mod cli_args;
 mod codegen;
 mod diagnostic;
@@ -15,6 +16,7 @@ fn main() -> Result<()> {
 
     compiler.lex()?;
     compiler.parse()?;
+    compiler.check()?;
     compiler.codegen()?;
 
     Ok(())

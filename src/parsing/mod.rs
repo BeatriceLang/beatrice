@@ -31,7 +31,7 @@ impl Compiler {
         let parse_result = parser().parse(tokens).into_result();
 
         match parse_result {
-            Ok(program) => self.advance_to(CompilerState::Codegen(program)),
+            Ok(program) => self.advance_to(CompilerState::Check(program)),
             Err(errors) => {
                 for error in errors {
                     self.diagnostics.push(error.into());
