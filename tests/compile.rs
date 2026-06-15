@@ -17,7 +17,7 @@ fn temp_test_dir() -> PathBuf {
     dir
 }
 
-fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
+fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::Output {
     let dir = temp_test_dir();
     let source = dir.join(format!("{test_name}.bt"));
     let object = dir.join(format!("{test_name}.o"));
@@ -55,12 +55,15 @@ fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
         String::from_utf8_lossy(&linker_output.stderr)
     );
 
-    let status = Command::new(&executable).status().unwrap();
-    let code = status.code();
+    let output = Command::new(&executable).output().unwrap();
 
     fs::remove_dir_all(dir).unwrap();
 
-    code
+    output
+}
+
+fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
+    compile_and_run_output(test_name, source_code).status.code()
 }
 
 #[test]
@@ -162,4 +165,27 @@ fn compiles_let_value_return() {
     );
 
     assert_eq!(code, Some(40));
+}
+
+#[test]
+fn compiles_puts_hello_world() {
+    let output = compile_and_run_output(
+        "puts_hello_world",
+        r#"
+        extern fn puts(value: string) -> i32;
+
+        fn main() -> i32 {
+            puts("Hello world!");
+            return 0;
+        }
+        "#,
+    );
+
+    assert!(
+        output.status.success(),
+        "executable failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "Hello world!\n");
 }
