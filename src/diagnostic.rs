@@ -7,8 +7,8 @@ use ariadne::{Label, Report, ReportKind, Source};
 pub struct Diagnostic {
     pub span: Range<usize>,
     pub kind: DiagnosticKind,
-    pub message: String,
     pub label: String,
+    pub message: String,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
