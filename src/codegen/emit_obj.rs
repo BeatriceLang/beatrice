@@ -21,7 +21,7 @@ impl<'a> Codegen<'a> {
                 "generic",
                 "",
                 OptimizationLevel::Default,
-                RelocMode::Default,
+                RelocMode::PIC,
                 CodeModel::Default,
             )
             .ok_or_else(|| anyhow!("failed to create target machine"))?;
