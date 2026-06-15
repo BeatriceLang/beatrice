@@ -76,6 +76,38 @@ pub enum Token {
 
     #[token("let")]
     Let,
+
+    #[token("string")]
+    String,
+
+    #[regex(r#""([^"\\]|\\["\\nrt])*""#, parse_string_literal)]
+    StringLiteral(String),
+}
+
+fn parse_string_literal(lex: &mut logos::Lexer<Token>) -> String {
+    let slice = lex.slice();
+    let inner = &slice[1..slice.len() - 1];
+    let mut text = String::new();
+    let mut chars = inner.chars();
+
+    while let Some(char) = chars.next() {
+        if char == '\\' {
+            let escaped = match chars.next() {
+                Some('"') => '"',
+                Some('\\') => '\\',
+                Some('n') => '\n',
+                Some('r') => '\r',
+                Some('t') => '\t',
+                Some(char) => char,
+                None => break,
+            };
+            text.push(escaped);
+        } else {
+            text.push(char);
+        }
+    }
+
+    text
 }
 
 impl Display for Token {
@@ -105,6 +137,8 @@ impl Display for Token {
             Token::Assign => f.write_str("="),
             Token::Let => f.write_str("let"),
             Token::Extern => f.write_str("extern"),
+            Token::String => f.write_str("string"),
+            Token::StringLiteral(text) => write!(f, "\"{text}\""),
         }
     }
 }
@@ -157,6 +191,23 @@ mod tests {
                 Token::Number(4),
                 Token::Divide,
                 Token::Number(5),
+            ]
+        );
+    }
+
+    #[test]
+    fn lexes_string_type_and_text() {
+        let input = r#"string "hello\nworld" "quote: \"" "slash: \\""#;
+
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::String,
+                Token::StringLiteral("hello\nworld".into()),
+                Token::StringLiteral("quote: \"".into()),
+                Token::StringLiteral("slash: \\".into()),
             ]
         );
     }
