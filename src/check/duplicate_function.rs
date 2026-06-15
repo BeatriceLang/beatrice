@@ -1,5 +1,5 @@
 use crate::{
-    ast::Ident,
+    ast::{Ident, Item},
     check::Checker,
     diagnostic::{Diagnostic, DiagnosticKind},
 };
@@ -8,7 +8,8 @@ impl<'a> Checker<'a> {
     pub fn check_duplicate_function(&mut self) {
         let mut checked = vec![];
 
-        for function in &self.program.functions {
+        for item in &self.program.items {
+            let Item::Function(function) = item;
             let name = &function.name;
 
             if checked.contains(&name.as_str()) {
@@ -35,7 +36,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Program, Type},
+        ast::{Block, Function, Ident, Item, Program, Type},
         check::Checker,
         diagnostic::{DiagnosticKind, Diagnostics},
     };
@@ -68,9 +69,9 @@ mod tests {
     #[test]
     fn duplicate_function_reports_second_function_name_span() {
         let program = Program {
-            functions: vec![
-                function(ident("main", 3..7)),
-                function(ident("main", 20..24)),
+            items: vec![
+                Item::Function(function(ident("main", 3..7))),
+                Item::Function(function(ident("main", 20..24))),
             ],
         };
 
@@ -87,9 +88,9 @@ mod tests {
     #[test]
     fn unique_functions_do_not_report_diagnostics() {
         let program = Program {
-            functions: vec![
-                function(ident("main", 3..7)),
-                function(ident("add", 20..23)),
+            items: vec![
+                Item::Function(function(ident("main", 3..7))),
+                Item::Function(function(ident("add", 20..23))),
             ],
         };
 

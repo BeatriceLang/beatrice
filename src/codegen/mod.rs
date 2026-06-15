@@ -4,7 +4,7 @@ use anyhow::{Context as _, Result};
 use inkwell::{builder::Builder, context::Context, module::Module, values::BasicValueEnum};
 
 use crate::{
-    ast::Program,
+    ast::{Item, Program},
     state::{Compiler, CompilerState},
 };
 
@@ -34,15 +34,17 @@ impl<'a> Codegen<'a> {
     }
 
     pub fn generate(&mut self) {
-        for function in &self.program.functions {
+        for item in &self.program.items {
+            let Item::Function(function) = item;
             self.declare_function(function);
         }
 
-        let functions = take(&mut self.program.functions);
-        for function in &functions {
+        let items = take(&mut self.program.items);
+        for item in &items {
+            let Item::Function(function) = item;
             self.compile_function(function);
         }
-        self.program.functions = functions;
+        self.program.items = items;
     }
 }
 

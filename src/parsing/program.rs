@@ -1,13 +1,17 @@
 use chumsky::{IterParser, Parser, prelude::end};
 
-use crate::{ast::Program, parsing::function::function};
+use crate::{
+    ast::{Item, Program},
+    parsing::function::function,
+};
 
 pub fn program<'a>() -> parser_type!(Program) {
     function()
+        .map(Item::Function)
         .repeated()
         .collect()
         .then_ignore(end())
-        .map(|functions| Program { functions })
+        .map(|items| Program { items })
 }
 
 #[cfg(test)]
@@ -38,7 +42,7 @@ mod tests {
         assert_eq!(
             test_parse(program(), &tokens),
             Program {
-                functions: vec![crate::ast::Function {
+                items: vec![crate::ast::Item::Function(crate::ast::Function {
                     name: test_ident("main"),
                     params: vec![],
                     return_type: crate::ast::Type::I32,
@@ -47,7 +51,7 @@ mod tests {
                             crate::ast::expression::Expression::Number(42)
                         )],
                     },
-                }],
+                })],
             }
         );
     }

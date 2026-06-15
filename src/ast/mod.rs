@@ -8,7 +8,12 @@ pub use ident::Ident;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Program {
-    pub functions: Vec<Function>,
+    pub items: Vec<Item>,
+}
+
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub enum Item {
+    Function(Function),
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

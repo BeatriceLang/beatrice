@@ -127,7 +127,7 @@ pub(crate) fn test_ident(name: &str) -> crate::ast::Ident {
 mod tests {
     use crate::{
         ast::{
-            Block, Function, Program, Type,
+            Block, Function, Item, Program, Type,
             expression::{BinaryOpKind, Expression},
             statement::Statement,
         },
@@ -154,14 +154,14 @@ mod tests {
         assert_eq!(
             program,
             Program {
-                functions: vec![Function {
+                items: vec![Item::Function(Function {
                     name: test_ident("main"),
                     params: vec![],
                     return_type: Type::I32,
                     body: Block {
                         statements: vec![Statement::Return(Expression::Number(42))],
                     },
-                }],
+                })],
             }
         );
     }
@@ -176,7 +176,7 @@ mod tests {
         assert_eq!(
             program,
             Program {
-                functions: vec![Function {
+                items: vec![Item::Function(Function {
                     name: test_ident("main"),
                     params: vec![],
                     return_type: Type::I32,
@@ -187,7 +187,7 @@ mod tests {
                             rhs: Expression::Number(2).into(),
                         })],
                     },
-                }],
+                })],
             }
         );
     }
@@ -202,7 +202,7 @@ mod tests {
         assert_eq!(
             program,
             Program {
-                functions: vec![Function {
+                items: vec![Item::Function(Function {
                     name: test_ident("add"),
                     params: vec![
                         (test_ident("lhs"), Type::I32),
@@ -212,7 +212,7 @@ mod tests {
                     body: Block {
                         statements: vec![Statement::Return(Expression::Number(42))],
                     },
-                }],
+                })],
             }
         );
     }
