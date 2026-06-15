@@ -12,26 +12,27 @@ pub fn function_call_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Ex
 
 #[cfg(test)]
 mod tests {
-    use chumsky::Parser as _;
-
     use crate::{
         ast::expression::Expression,
         lexing::token::Token,
-        parsing::expr::{expr, function_call::function_call_expr},
+        parsing::{
+            expr::{expr, function_call::function_call_expr},
+            test_parse, test_tokens,
+        },
     };
 
     #[test]
     fn parses_function_call_expr() {
-        let tokens = [
+        let tokens = test_tokens![
             Token::Ident("test".into()),
             Token::LeftParen,
             Token::RightParen,
         ];
 
         assert_eq!(
-            function_call_expr(expr()).parse(&tokens).unwrap(),
+            test_parse(function_call_expr(expr()), &tokens),
             Expression::FunctionCall {
-                name: "test".into(),
+                name: test_ident("test"),
                 args: vec![]
             }
         );
@@ -39,13 +40,13 @@ mod tests {
 
     #[test]
     fn parses_function_call_expr_with_args() {
-        let single_arg_tokens = [
+        let single_arg_tokens = test_tokens![
             Token::Ident("test".into()),
             Token::LeftParen,
             Token::Number(42),
             Token::RightParen,
         ];
-        let multiple_arg_tokens = [
+        let multiple_arg_tokens = test_tokens![
             Token::Ident("test".into()),
             Token::LeftParen,
             Token::Number(1),
@@ -55,21 +56,17 @@ mod tests {
         ];
 
         assert_eq!(
-            function_call_expr(expr())
-                .parse(&single_arg_tokens)
-                .unwrap(),
+            test_parse(function_call_expr(expr()), &single_arg_tokens),
             Expression::FunctionCall {
-                name: "test".into(),
+                name: test_ident("test"),
                 args: vec![Expression::Number(42)]
             }
         );
         assert_eq!(
-            function_call_expr(expr())
-                .parse(&multiple_arg_tokens)
-                .unwrap(),
+            test_parse(function_call_expr(expr()), &multiple_arg_tokens),
             Expression::FunctionCall {
-                name: "test".into(),
-                args: vec![Expression::Number(1), Expression::Ident("x".into())]
+                name: test_ident("test"),
+                args: vec![Expression::Number(1), Expression::Ident(test_ident("x"))]
             }
         );
     }

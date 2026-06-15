@@ -3,7 +3,9 @@ use std::{fs, path::PathBuf};
 use anyhow::{Context, Result};
 use clap::Parser;
 
-use crate::{ast::Program, cli_args::Args, diagnostic::Diagnostics, lexing::token::Token};
+use crate::{
+    ast::Program, cli_args::Args, diagnostic::Diagnostics, lexing::token::Token, span::Spanned,
+};
 
 pub struct Compiler {
     pub output_path: PathBuf,
@@ -13,7 +15,7 @@ pub struct Compiler {
 
 pub enum CompilerState {
     Lex(String),
-    Parse(Vec<Token>),
+    Parse(Vec<Spanned<Token>>),
     Check(Program),
     Codegen(Program),
     Error,

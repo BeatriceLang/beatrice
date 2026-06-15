@@ -38,7 +38,7 @@ impl<'a> Codegen<'a> {
                 .into()
             }
             Expression::FunctionCall { name, args } => {
-                let function = self.module.get_function(name).unwrap();
+                let function = self.module.get_function(name.as_str()).unwrap();
                 let args: Vec<_> = args.iter().map(|f| self.compile_expr(f).into()).collect();
 
                 self.builder
@@ -47,7 +47,7 @@ impl<'a> Codegen<'a> {
                     .try_as_basic_value()
                     .unwrap_basic()
             }
-            Expression::Ident(ident) => *self.idents.get(ident).unwrap(),
+            Expression::Ident(ident) => *self.idents.get(ident.as_str()).unwrap(),
         }
     }
 }

@@ -1,6 +1,6 @@
 use chumsky::{
     error::{Rich, RichPattern, RichReason},
-    input::Input,
+    span::SimpleSpan,
 };
 
 use crate::{
@@ -8,8 +8,8 @@ use crate::{
     lexing::token::Token,
 };
 
-impl From<Rich<'_, Token>> for Diagnostic {
-    fn from(error: Rich<'_, Token>) -> Self {
+impl From<Rich<'_, Token, SimpleSpan>> for Diagnostic {
+    fn from(error: Rich<'_, Token, SimpleSpan>) -> Self {
         let message = match error.reason() {
             RichReason::ExpectedFound { expected, found } => {
                 let expected = expected
@@ -59,6 +59,7 @@ mod tests {
     use crate::{
         diagnostic::{Diagnostic, DiagnosticKind},
         lexing::token::Token,
+        parsing::{test_input, test_tokens},
     };
 
     use super::display_rich_pattern;
@@ -77,7 +78,10 @@ mod tests {
 
     #[test]
     fn converts_custom_rich_error_to_diagnostic() {
-        let error = Rich::<Token>::custom((2..5).into(), "expected function declaration");
+        let error = Rich::<Token, SimpleSpan>::custom(
+            SimpleSpan::from(2..5),
+            "expected function declaration",
+        );
         let diagnostic = Diagnostic::from(error);
 
         assert_eq!(diagnostic.span, 2..5);
@@ -88,9 +92,9 @@ mod tests {
 
     #[test]
     fn converts_expected_found_error_to_diagnostic() {
-        let tokens = [Token::Ident("fasdf".into())];
-        let error = just::<_, _, chumsky::extra::Err<Rich<Token>>>(Token::Fn)
-            .parse(&tokens)
+        let tokens = test_tokens![Token::Ident("fasdf".into())];
+        let error = just::<_, _, chumsky::extra::Err<Rich<Token, SimpleSpan>>>(Token::Fn)
+            .parse(test_input(&tokens))
             .into_errors()
             .remove(0);
 
@@ -104,9 +108,9 @@ mod tests {
 
     #[test]
     fn converts_missing_token_error_to_eof_diagnostic() {
-        let tokens = [];
-        let error = just::<_, _, chumsky::extra::Err<Rich<Token>>>(Token::Fn)
-            .parse(&tokens)
+        let tokens = test_tokens![];
+        let error = just::<_, _, chumsky::extra::Err<Rich<Token, SimpleSpan>>>(Token::Fn)
+            .parse(test_input(&tokens))
             .into_errors()
             .remove(0);
 

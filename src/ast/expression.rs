@@ -1,7 +1,9 @@
+use crate::ast::Ident;
+
 // Expressions can be evaluated into a value
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Expression {
-    Ident(String),
+    Ident(Ident),
     Number(i64),
     BinaryOp {
         lhs: Box<Expression>,
@@ -9,7 +11,7 @@ pub enum Expression {
         rhs: Box<Expression>,
     },
     FunctionCall {
-        name: String,
+        name: Ident,
         args: Vec<Expression>,
     },
 }

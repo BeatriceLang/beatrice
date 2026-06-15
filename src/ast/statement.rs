@@ -1,4 +1,4 @@
-use crate::ast::{Block, Type, expression::Expression};
+use crate::ast::{Block, Ident, Type, expression::Expression};
 
 // Statements will proform an action (aka do something)
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -10,7 +10,7 @@ pub enum Statement {
         body: Block,
     },
     Let {
-        name: String,
+        name: Ident,
         ty: Type,
         value: Expression,
     },

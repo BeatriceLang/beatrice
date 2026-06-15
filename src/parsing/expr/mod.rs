@@ -15,25 +15,23 @@ pub fn expr<'a>() -> parser_type!(Expression) {
 
 #[cfg(test)]
 mod tests {
-    use chumsky::Parser as _;
-
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
-        parsing::expr::expr,
+        parsing::{expr::expr, test_parse, test_tokens},
     };
 
     #[test]
     fn parses_expr() {
-        let tokens = [Token::Number(1), Token::Add, Token::Number(2)];
-        let call_tokens = [
+        let tokens = test_tokens![Token::Number(1), Token::Add, Token::Number(2)];
+        let call_tokens = test_tokens![
             Token::Ident("test".into()),
             Token::LeftParen,
             Token::RightParen,
         ];
 
         assert_eq!(
-            expr().parse(&tokens).unwrap(),
+            test_parse(expr(), &tokens),
             Expression::BinaryOp {
                 lhs: Expression::Number(1).into(),
                 kind: BinaryOpKind::Add,
@@ -42,9 +40,9 @@ mod tests {
         );
 
         assert_eq!(
-            expr().parse(&call_tokens).unwrap(),
+            test_parse(expr(), &call_tokens),
             Expression::FunctionCall {
-                name: "test".into(),
+                name: test_ident("test"),
                 args: vec![]
             }
         );
@@ -52,7 +50,7 @@ mod tests {
 
     #[test]
     fn parses_expr_function_call_with_args() {
-        let tokens = [
+        let tokens = test_tokens![
             Token::Ident("test".into()),
             Token::LeftParen,
             Token::Number(1),
@@ -64,9 +62,9 @@ mod tests {
         ];
 
         assert_eq!(
-            expr().parse(&tokens).unwrap(),
+            test_parse(expr(), &tokens),
             Expression::FunctionCall {
-                name: "test".into(),
+                name: test_ident("test"),
                 args: vec![
                     Expression::Number(1),
                     Expression::BinaryOp {

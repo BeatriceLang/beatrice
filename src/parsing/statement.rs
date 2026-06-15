@@ -47,37 +47,31 @@ pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parsing::block::block;
+    use crate::parsing::{block::block, test_parse, test_tokens};
 
     #[test]
     fn parses_return_stmt() {
-        use chumsky::Parser as _;
-
-        let tokens = [Token::Return, Token::Number(42), Token::Semicolon];
+        let tokens = test_tokens![Token::Return, Token::Number(42), Token::Semicolon];
 
         assert_eq!(
-            return_stmt().parse(&tokens).unwrap(),
+            test_parse(return_stmt(), &tokens),
             Statement::Return(crate::ast::expression::Expression::Number(42))
         );
     }
 
     #[test]
     fn parses_expr_stmt() {
-        use chumsky::Parser as _;
-
-        let tokens = [Token::Number(42), Token::Semicolon];
+        let tokens = test_tokens![Token::Number(42), Token::Semicolon];
 
         assert_eq!(
-            expr_stmt().parse(&tokens).unwrap(),
+            test_parse(expr_stmt(), &tokens),
             Statement::Expression(crate::ast::expression::Expression::Number(42))
         );
     }
 
     #[test]
     fn parses_let_stmt() {
-        use chumsky::Parser as _;
-
-        let tokens = [
+        let tokens = test_tokens![
             Token::Let,
             Token::Ident("x".into()),
             Token::Colon,
@@ -88,9 +82,9 @@ mod tests {
         ];
 
         assert_eq!(
-            stmt(block()).parse(&tokens).unwrap(),
+            test_parse(stmt(block()), &tokens),
             Statement::Let {
-                name: "x".into(),
+                name: test_ident("x"),
                 ty: crate::ast::Type::I32,
                 value: crate::ast::expression::Expression::Number(42),
             }
@@ -99,21 +93,17 @@ mod tests {
 
     #[test]
     fn parses_stmt() {
-        use chumsky::Parser as _;
-
-        let tokens = [Token::Return, Token::Number(42), Token::Semicolon];
+        let tokens = test_tokens![Token::Return, Token::Number(42), Token::Semicolon];
 
         assert_eq!(
-            stmt(block()).parse(&tokens).unwrap(),
+            test_parse(stmt(block()), &tokens),
             Statement::Return(crate::ast::expression::Expression::Number(42))
         );
     }
 
     #[test]
     fn parses_if_stmt() {
-        use chumsky::Parser as _;
-
-        let tokens = [
+        let tokens = test_tokens![
             Token::If,
             Token::Ident("n".into()),
             Token::LessThan,
@@ -126,16 +116,16 @@ mod tests {
         ];
 
         assert_eq!(
-            if_stmt(block()).parse(&tokens).unwrap(),
+            test_parse(if_stmt(block()), &tokens),
             Statement::If {
                 cond: crate::ast::expression::Expression::BinaryOp {
-                    lhs: crate::ast::expression::Expression::Ident("n".into()).into(),
+                    lhs: crate::ast::expression::Expression::Ident(test_ident("n")).into(),
                     kind: crate::ast::expression::BinaryOpKind::LessThan,
                     rhs: crate::ast::expression::Expression::Number(2).into(),
                 },
                 body: crate::ast::Block {
                     statements: vec![Statement::Return(
-                        crate::ast::expression::Expression::Ident("n".into())
+                        crate::ast::expression::Expression::Ident(test_ident("n"))
                     )],
                 },
             }

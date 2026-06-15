@@ -1,11 +1,12 @@
 use chumsky::prelude::select;
 
-use crate::lexing::token::Token;
+use crate::{ast::Ident, lexing::token::Token};
 
-pub fn ident<'a>() -> parser_type!(String) {
+pub fn ident<'a>() -> parser_type!(Ident) {
     select! {
         Token::Ident(name) => name.clone()
     }
+    .map_with(|name, e| Ident::new(name, e.span().into_range()))
 }
 
 #[cfg(test)]
@@ -16,8 +17,11 @@ mod tests {
     fn parses_ident() {
         use chumsky::Parser as _;
 
-        let tokens = [Token::Ident("main".into())];
+        let tokens = crate::parsing::test_tokens![Token::Ident("main".into())];
 
-        assert_eq!(ident().parse(&tokens).unwrap(), "main");
+        let ident = ident().parse(crate::parsing::test_input(&tokens)).unwrap();
+
+        assert_eq!(ident, test_ident("main"));
+        assert_eq!(ident.span(), 0..1);
     }
 }

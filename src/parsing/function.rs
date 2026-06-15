@@ -35,9 +35,9 @@ mod tests {
 
     #[test]
     fn parses_function() {
-        use chumsky::Parser as _;
+        use crate::parsing::{test_parse, test_tokens};
 
-        let tokens = [
+        let tokens = test_tokens![
             Token::Fn,
             Token::Ident("main".into()),
             Token::LeftParen,
@@ -52,9 +52,9 @@ mod tests {
         ];
 
         assert_eq!(
-            function().parse(&tokens).unwrap(),
+            test_parse(function(), &tokens),
             Function {
-                name: "main".into(),
+                name: test_ident("main"),
                 params: vec![],
                 return_type: crate::ast::Type::I32,
                 body: crate::ast::Block {
@@ -68,9 +68,9 @@ mod tests {
 
     #[test]
     fn parses_function_with_params() {
-        use chumsky::Parser as _;
+        use crate::parsing::{test_parse, test_tokens};
 
-        let tokens = [
+        let tokens = test_tokens![
             Token::Fn,
             Token::Ident("add".into()),
             Token::LeftParen,
@@ -92,12 +92,12 @@ mod tests {
         ];
 
         assert_eq!(
-            function().parse(&tokens).unwrap(),
+            test_parse(function(), &tokens),
             Function {
-                name: "add".into(),
+                name: test_ident("add"),
                 params: vec![
-                    ("lhs".into(), crate::ast::Type::I32),
-                    ("rhs".into(), crate::ast::Type::I32),
+                    (test_ident("lhs"), crate::ast::Type::I32),
+                    (test_ident("rhs"), crate::ast::Type::I32),
                 ],
                 return_type: crate::ast::Type::I32,
                 body: crate::ast::Block {

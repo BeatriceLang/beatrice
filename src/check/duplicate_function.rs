@@ -1,4 +1,5 @@
 use crate::{
+    ast::Ident,
     check::Checker,
     diagnostic::{Diagnostic, DiagnosticKind},
 };
@@ -10,19 +11,18 @@ impl<'a> Checker<'a> {
         for function in &self.program.functions {
             let name = &function.name;
 
-            if checked.contains(name) {
+            if checked.contains(&name.as_str()) {
                 self.push_diagnostic(name);
             } else {
-                checked.push(name.clone());
+                checked.push(name.as_str());
             }
         }
     }
 
-    fn push_diagnostic(&mut self, name: &String) {
-        let message = format!("Function `{name}` is already defined ");
+    fn push_diagnostic(&mut self, name: &Ident) {
+        let message = format!("Function `{}` is already defined", name.as_str());
         self.diagnostics.push(Diagnostic {
-            // TODO
-            span: 0..0,
+            span: name.span(),
             kind: DiagnosticKind::Error,
             label: message.clone(),
             message,

@@ -1,7 +1,10 @@
 use crate::ast::statement::Statement;
 
 pub mod expression;
+mod ident;
 pub mod statement;
+
+pub use ident::Ident;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Program {
@@ -10,8 +13,8 @@ pub struct Program {
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Function {
-    pub name: String,
-    pub params: Vec<(String, Type)>,
+    pub name: Ident,
+    pub params: Vec<(Ident, Type)>,
     pub return_type: Type,
     pub body: Block,
 }

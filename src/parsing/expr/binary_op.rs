@@ -31,22 +31,24 @@ pub fn binary_op_kind<'a>() -> parser_type!(BinaryOpKind) {
 
 #[cfg(test)]
 mod tests {
-    use chumsky::Parser as _;
-
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
-        parsing::expr::{
-            binary_op::{binary_op_expr, binary_op_kind},
-            expr,
+        parsing::{
+            expr::{
+                binary_op::{binary_op_expr, binary_op_kind},
+                expr,
+            },
+            test_parse, test_tokens,
         },
     };
 
     #[test]
     fn parses_binary_op_expr() {
-        let tokens = [Token::Number(8), Token::Divide, Token::Number(2)];
-        let condition_tokens = [Token::Ident("n".into()), Token::LessThan, Token::Number(2)];
-        let chained_tokens = [
+        let tokens = test_tokens![Token::Number(8), Token::Divide, Token::Number(2)];
+        let condition_tokens =
+            test_tokens![Token::Ident("n".into()), Token::LessThan, Token::Number(2)];
+        let chained_tokens = test_tokens![
             Token::Number(1),
             Token::Add,
             Token::Number(2),
@@ -55,7 +57,7 @@ mod tests {
         ];
 
         assert_eq!(
-            binary_op_expr(expr()).parse(&tokens).unwrap(),
+            test_parse(binary_op_expr(expr()), &tokens),
             Expression::BinaryOp {
                 lhs: Expression::Number(8).into(),
                 kind: BinaryOpKind::Divide,
@@ -64,16 +66,16 @@ mod tests {
         );
 
         assert_eq!(
-            binary_op_expr(expr()).parse(&condition_tokens).unwrap(),
+            test_parse(binary_op_expr(expr()), &condition_tokens),
             Expression::BinaryOp {
-                lhs: Expression::Ident("n".into()).into(),
+                lhs: Expression::Ident(test_ident("n")).into(),
                 kind: BinaryOpKind::LessThan,
                 rhs: Expression::Number(2).into(),
             }
         );
 
         assert_eq!(
-            binary_op_expr(expr()).parse(&chained_tokens).unwrap(),
+            test_parse(binary_op_expr(expr()), &chained_tokens),
             Expression::BinaryOp {
                 lhs: Expression::Number(1).into(),
                 kind: BinaryOpKind::Add,
@@ -90,31 +92,31 @@ mod tests {
     #[test]
     fn parses_binary_op_kind() {
         assert_eq!(
-            binary_op_kind().parse(&[Token::Add]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::Add]),
             BinaryOpKind::Add
         );
         assert_eq!(
-            binary_op_kind().parse(&[Token::Minus]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::Minus]),
             BinaryOpKind::Subtract
         );
         assert_eq!(
-            binary_op_kind().parse(&[Token::Divide]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::Divide]),
             BinaryOpKind::Divide
         );
         assert_eq!(
-            binary_op_kind().parse(&[Token::Multiply]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::Multiply]),
             BinaryOpKind::Multiply
         );
         assert_eq!(
-            binary_op_kind().parse(&[Token::LessThan]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::LessThan]),
             BinaryOpKind::LessThan
         );
         assert_eq!(
-            binary_op_kind().parse(&[Token::GreaterThan]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::GreaterThan]),
             BinaryOpKind::GreaterThan
         );
         assert_eq!(
-            binary_op_kind().parse(&[Token::Equal]).unwrap(),
+            test_parse(binary_op_kind(), &test_tokens![Token::Equal]),
             BinaryOpKind::EqualTo
         );
     }

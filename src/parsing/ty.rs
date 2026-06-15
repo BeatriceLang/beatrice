@@ -14,10 +14,10 @@ mod tests {
 
     #[test]
     fn parses_ty() {
-        use chumsky::Parser as _;
+        use crate::parsing::{test_parse, test_tokens};
 
-        let tokens = [Token::I32];
+        let tokens = test_tokens![Token::I32];
 
-        assert_eq!(ty().parse(&tokens).unwrap(), Type::I32);
+        assert_eq!(test_parse(ty(), &tokens), Type::I32);
     }
 }

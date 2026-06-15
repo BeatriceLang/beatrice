@@ -51,7 +51,7 @@ impl<'a> Codegen<'a> {
             Statement::Let { name, ty: _, value } => {
                 let value = self.compile_expr(value);
 
-                self.idents.insert(name.clone(), value);
+                self.idents.insert(name.as_str().into(), value);
             }
         };
     }

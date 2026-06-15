@@ -5,6 +5,7 @@ use tap::Tap;
 use crate::{
     diagnostic::{Diagnostic, DiagnosticKind, Diagnostics},
     lexing::token::Token,
+    span::Spanned,
     state::{Compiler, CompilerState},
 };
 
@@ -22,11 +23,11 @@ impl Compiler {
     }
 }
 
-fn lex_inner(source: &str, diagnostics: &mut Diagnostics) -> Vec<Token> {
+fn lex_inner(source: &str, diagnostics: &mut Diagnostics) -> Vec<Spanned<Token>> {
     vec![].tap_mut(|tokens| {
         for (token, span) in Token::lexer(source).spanned() {
             match token {
-                Ok(token) => tokens.push(token),
+                Ok(token) => tokens.push(Spanned::new(token, span)),
                 Err(_) => {
                     let char = source[span.clone()].to_string();
                     let message = format!("Unknown character `{char}`");
@@ -47,9 +48,13 @@ fn lex_inner(source: &str, diagnostics: &mut Diagnostics) -> Vec<Token> {
 mod tests {
     use std::path::PathBuf;
 
-    use crate::diagnostic::{DiagnosticKind, Diagnostics};
+    use crate::{
+        diagnostic::{DiagnosticKind, Diagnostics},
+        lexing::token::Token,
+        span::Spanned,
+    };
 
-    use super::{Token, lex_inner};
+    use super::lex_inner;
 
     #[test]
     fn lex_source_collects_unexpected_character_diagnostic() {
@@ -59,7 +64,7 @@ mod tests {
         let tokens = lex_inner(source, &mut diagnostics);
         let diagnostic = diagnostics.iter().next().unwrap();
 
-        assert_eq!(tokens, vec![Token::Fn]);
+        assert_eq!(tokens, vec![Spanned::new(Token::Fn, 0..2)]);
         assert_eq!(diagnostic.span, 3..4);
         assert_eq!(diagnostic.kind, DiagnosticKind::Error);
         assert_eq!(diagnostic.message, "Unknown character `@`");
@@ -73,7 +78,13 @@ mod tests {
 
         let tokens = lex_inner(source, &mut diagnostics);
 
-        assert_eq!(tokens, vec![Token::Fn, Token::Ident("main".into())]);
+        assert_eq!(
+            tokens,
+            vec![
+                Spanned::new(Token::Fn, 0..2),
+                Spanned::new(Token::Ident("main".into()), 5..9),
+            ]
+        );
         assert_eq!(diagnostics.iter().count(), 1);
     }
 }

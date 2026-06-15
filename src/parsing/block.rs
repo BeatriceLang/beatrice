@@ -18,9 +18,9 @@ mod tests {
 
     #[test]
     fn parses_block() {
-        use chumsky::Parser as _;
+        use crate::parsing::{test_parse, test_tokens};
 
-        let tokens = [
+        let tokens = test_tokens![
             Token::LeftBrace,
             Token::Return,
             Token::Number(42),
@@ -29,7 +29,7 @@ mod tests {
         ];
 
         assert_eq!(
-            block().parse(&tokens).unwrap(),
+            test_parse(block(), &tokens),
             Block {
                 statements: vec![crate::ast::statement::Statement::Return(
                     crate::ast::expression::Expression::Number(42)

@@ -16,27 +16,30 @@ mod tests {
 
     #[test]
     fn parses_program() {
-        use chumsky::Parser as _;
+        use crate::{
+            lexing::token::Token,
+            parsing::{test_parse, test_tokens},
+        };
 
-        let tokens = [
-            crate::lexing::token::Token::Fn,
-            crate::lexing::token::Token::Ident("main".into()),
-            crate::lexing::token::Token::LeftParen,
-            crate::lexing::token::Token::RightParen,
-            crate::lexing::token::Token::RetArrow,
-            crate::lexing::token::Token::I32,
-            crate::lexing::token::Token::LeftBrace,
-            crate::lexing::token::Token::Return,
-            crate::lexing::token::Token::Number(42),
-            crate::lexing::token::Token::Semicolon,
-            crate::lexing::token::Token::RightBrace,
+        let tokens = test_tokens![
+            Token::Fn,
+            Token::Ident("main".into()),
+            Token::LeftParen,
+            Token::RightParen,
+            Token::RetArrow,
+            Token::I32,
+            Token::LeftBrace,
+            Token::Return,
+            Token::Number(42),
+            Token::Semicolon,
+            Token::RightBrace,
         ];
 
         assert_eq!(
-            program().parse(&tokens).unwrap(),
+            test_parse(program(), &tokens),
             Program {
                 functions: vec![crate::ast::Function {
-                    name: "main".into(),
+                    name: test_ident("main"),
                     params: vec![],
                     return_type: crate::ast::Type::I32,
                     body: crate::ast::Block {
