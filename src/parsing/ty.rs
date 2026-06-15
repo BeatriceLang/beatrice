@@ -21,4 +21,13 @@ mod tests {
 
         assert_eq!(test_parse(ty(), &tokens), Type::I32);
     }
+
+    #[test]
+    fn parses_string_ty() {
+        use crate::parsing::{test_parse, test_tokens};
+
+        let tokens = test_tokens![Token::String];
+
+        assert_eq!(test_parse(ty(), &tokens), Type::String);
+    }
 }
