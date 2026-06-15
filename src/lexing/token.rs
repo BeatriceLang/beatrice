@@ -5,6 +5,9 @@ use logos::Logos;
 #[derive(Logos, Debug, Clone, PartialEq, Eq)]
 #[logos(skip r"[ \t\n\f]+")]
 pub enum Token {
+    #[token("import")]
+    Import,
+
     #[token("if")]
     If,
 
@@ -113,6 +116,7 @@ fn parse_string_literal(lex: &mut logos::Lexer<Token>) -> String {
 impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
+            Token::Import => f.write_str("import"),
             Token::If => f.write_str("if"),
             Token::Fn => f.write_str("fn"),
             Token::LeftParen => f.write_str("("),
