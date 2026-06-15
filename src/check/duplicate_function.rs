@@ -9,13 +9,14 @@ impl<'a> Checker<'a> {
         let mut checked = vec![];
 
         for item in &self.program.items {
-            let Item::Function(function) = item;
-            let name = &function.name;
+            if let Item::Function(function) = item {
+                let name = &function.name;
 
-            if checked.contains(&name.as_str()) {
-                self.push_diagnostic(name);
-            } else {
-                checked.push(name.as_str());
+                if checked.contains(&name.as_str()) {
+                    self.push_diagnostic(name);
+                } else {
+                    checked.push(name.as_str());
+                }
             }
         }
     }

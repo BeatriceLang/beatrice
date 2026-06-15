@@ -35,14 +35,16 @@ impl<'a> Codegen<'a> {
 
     pub fn generate(&mut self) {
         for item in &self.program.items {
-            let Item::Function(function) = item;
-            self.declare_function(function);
+            if let Item::Function(function) = item {
+                self.declare_function(function);
+            }
         }
 
         let items = take(&mut self.program.items);
         for item in &items {
-            let Item::Function(function) = item;
-            self.compile_function(function);
+            if let Item::Function(function) = item {
+                self.compile_function(function);
+            }
         }
         self.program.items = items;
     }
