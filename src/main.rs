@@ -1,6 +1,7 @@
 use anyhow::Result;
+use clap::Parser;
 
-use crate::state::Compiler;
+use crate::{cli_args::Args, state::Compiler};
 
 mod ast;
 mod check;
@@ -13,7 +14,9 @@ mod span;
 mod state;
 
 fn main() -> Result<()> {
-    let mut compiler = Compiler::new()?;
+    let args = Args::parse();
+
+    let mut compiler = Compiler::new(args.source_path, args.output)?;
 
     compiler.lex()?;
     compiler.parse()?;

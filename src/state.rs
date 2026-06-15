@@ -22,16 +22,14 @@ pub enum CompilerState {
 }
 
 impl Compiler {
-    pub fn new() -> Result<Self> {
-        let args = Args::parse();
-        let source_path = args.source_path;
+    pub fn new(source_path: PathBuf, output_path: PathBuf) -> Result<Self> {
         let source =
             fs::read_to_string(source_path.clone()).context("Unable to read source file")?;
 
         Ok(Self {
             diagnostics: Diagnostics::new(source.clone(), source_path),
             state: CompilerState::Lex(source),
-            output_path: args.output,
+            output_path,
         })
     }
 
