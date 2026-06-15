@@ -1,11 +1,8 @@
 use std::{fs, path::PathBuf};
 
 use anyhow::{Context, Result};
-use clap::Parser;
 
-use crate::{
-    ast::Program, cli_args::Args, diagnostic::Diagnostics, lexing::token::Token, span::Spanned,
-};
+use crate::{ast::Program, diagnostic::Diagnostics, lexing::token::Token, span::Spanned};
 
 pub struct Compiler {
     pub output_path: PathBuf,
