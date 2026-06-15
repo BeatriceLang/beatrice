@@ -9,6 +9,7 @@ mod codegen;
 mod diagnostic;
 mod lexing;
 mod parsing;
+mod span;
 mod state;
 
 fn main() -> Result<()> {
