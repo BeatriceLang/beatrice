@@ -31,6 +31,7 @@ mod tests {
     fn parses_base_expr() {
         let number_tokens = test_tokens![Token::Number(42)];
         let ident_tokens = test_tokens![Token::Ident("x".into())];
+        let string_tokens = test_tokens![Token::StringLiteral("hello".into())];
 
         assert_eq!(
             test_parse(primary_expr(expr()), &number_tokens),
@@ -39,6 +40,10 @@ mod tests {
         assert_eq!(
             test_parse(primary_expr(expr()), &ident_tokens),
             Expression::Ident(test_ident("x"))
+        );
+        assert_eq!(
+            test_parse(primary_expr(expr()), &string_tokens),
+            Expression::StringLiteral("hello".into())
         );
     }
 }
