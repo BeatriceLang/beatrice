@@ -2,6 +2,7 @@ use std::ops::{Deref, Range};
 
 type Span = Range<usize>;
 
+#[derive(Clone, PartialEq, Eq, Debug, Hash)]
 pub struct Spanned<T> {
     pub inner: T,
     pub span: Span,
