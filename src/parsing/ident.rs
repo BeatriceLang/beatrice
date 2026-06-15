@@ -1,4 +1,4 @@
-use chumsky::prelude::select;
+use chumsky::{Parser, input::MapExtra, prelude::select, span::SimpleSpan};
 
 use crate::{ast::Ident, lexing::token::Token};
 
@@ -6,7 +6,15 @@ pub fn ident<'a>() -> parser_type!(Ident) {
     select! {
         Token::Ident(name) => name.clone()
     }
-    .map_with(|name, e| Ident::new(name, e.span().into_range()))
+    .map_with(
+        |name,
+         e: &mut MapExtra<
+            'a,
+            '_,
+            chumsky::input::MappedInput<'a, Token, SimpleSpan, &'a [(Token, SimpleSpan)]>,
+            chumsky::extra::Err<chumsky::error::Rich<'a, Token, SimpleSpan>>,
+        >| { Ident::new(name, e.span().into_range()) },
+    )
 }
 
 #[cfg(test)]

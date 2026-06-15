@@ -1,9 +1,8 @@
 use anyhow::Result;
-use chumsky::{Parser, input::Input};
+use chumsky::{Parser, input::Input, span::SimpleSpan};
 
 use crate::{
     ast::Program,
-    lexing::token::Token,
     state::{Compiler, CompilerState},
 };
 
@@ -31,7 +30,12 @@ impl Compiler {
 
         let tokens = tokens
             .iter()
-            .map(|token| (token.inner.clone(), token.span.clone().into()))
+            .map(|token| {
+                (
+                    token.inner.clone(),
+                    SimpleSpan::from(token.span.start..token.span.end),
+                )
+            })
             .collect::<Vec<_>>();
         let eoi = tokens
             .last()
@@ -64,7 +68,21 @@ pub fn parser<'a>() -> parser_type!(Program) {
 #[cfg(test)]
 macro_rules! test_tokens {
     ($($token:expr),* $(,)?) => {{
-        let mut index = 0;
+        let mut tokens = Vec::new();
+        let mut index = 0usize;
+        $(
+            let span = chumsky::span::SimpleSpan::from(index..index + 1);
+            tokens.push(($token, span));
+            index += 1;
+        )*
+        tokens
+    }};
+}
+
+#[cfg(test)]
+macro_rules! test_tokens_array {
+    ($($token:expr),* $(,)?) => {{
+        let mut index = 0usize;
         [
             $({
                 let span = chumsky::span::SimpleSpan::from(index..index + 1);
@@ -80,12 +98,12 @@ pub(crate) use test_tokens;
 
 #[cfg(test)]
 pub(crate) fn test_input<'a>(
-    tokens: &'a [(Token, chumsky::span::SimpleSpan)],
+    tokens: &'a [(crate::lexing::token::Token, SimpleSpan)],
 ) -> chumsky::input::MappedInput<
     'a,
-    Token,
-    chumsky::span::SimpleSpan,
-    &'a [(Token, chumsky::span::SimpleSpan)],
+    crate::lexing::token::Token,
+    SimpleSpan,
+    &'a [(crate::lexing::token::Token, SimpleSpan)],
 > {
     let eoi = tokens
         .last()
@@ -102,14 +120,14 @@ pub(crate) fn test_parse<'a, O>(
         'a,
         chumsky::input::MappedInput<
             'a,
-            Token,
-            chumsky::span::SimpleSpan,
-            &'a [(Token, chumsky::span::SimpleSpan)],
+            crate::lexing::token::Token,
+            SimpleSpan,
+            &'a [(crate::lexing::token::Token, SimpleSpan)],
         >,
         O,
-        chumsky::extra::Err<chumsky::error::Rich<'a, Token, chumsky::span::SimpleSpan>>,
+        chumsky::extra::Err<chumsky::error::Rich<'a, crate::lexing::token::Token, SimpleSpan>>,
     >,
-    tokens: &'a [(Token, chumsky::span::SimpleSpan)],
+    tokens: &'a [(crate::lexing::token::Token, SimpleSpan)],
 ) -> O {
     parser.parse(test_input(tokens)).unwrap()
 }
