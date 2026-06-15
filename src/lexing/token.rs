@@ -23,6 +23,9 @@ pub enum Token {
     #[token("}")]
     RightBrace,
 
+    #[token("extern")]
+    Extern,
+
     #[token(":")]
     Colon,
 
@@ -101,6 +104,7 @@ impl Display for Token {
             Token::Equal => f.write_str("=="),
             Token::Assign => f.write_str("="),
             Token::Let => f.write_str("let"),
+            Token::Extern => f.write_str("extern"),
         }
     }
 }
