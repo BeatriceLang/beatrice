@@ -1,6 +1,6 @@
 use std::ops::{Deref, Range};
 
-type Span = Range<usize>;
+pub type Span = Range<usize>;
 
 #[derive(Clone, PartialEq, Eq, Debug, Hash)]
 pub struct Spanned<T> {
