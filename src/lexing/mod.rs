@@ -10,6 +10,7 @@ use crate::{
 };
 
 pub mod token;
+mod token_display;
 
 impl Compiler {
     pub fn lex(&mut self) -> Result<()> {
