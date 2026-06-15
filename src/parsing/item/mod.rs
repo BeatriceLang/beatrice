@@ -33,7 +33,7 @@ mod tests {
             Token::LeftParen,
             Token::Ident("value".into()),
             Token::Colon,
-            Token::I32,
+            Token::String,
             Token::RightParen,
             Token::RetArrow,
             Token::I32,
@@ -44,7 +44,7 @@ mod tests {
             test_parse(item(), &tokens),
             Item::ExternFunction(ExternFunction {
                 name: test_ident("puts"),
-                params: vec![(test_ident("value"), Type::I32)],
+                params: vec![(test_ident("value"), Type::String)],
                 return_type: Type::I32,
             })
         );
