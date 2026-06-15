@@ -16,8 +16,8 @@ macro_rules! parser_type {
 mod block;
 mod diagnostic;
 mod expr;
-mod function;
 mod ident;
+mod item;
 mod program;
 mod statement;
 mod ty;

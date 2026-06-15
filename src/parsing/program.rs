@@ -1,13 +1,9 @@
 use chumsky::{IterParser, Parser, prelude::end};
 
-use crate::{
-    ast::{Item, Program},
-    parsing::function::function,
-};
+use crate::{ast::Program, parsing::item::item};
 
 pub fn program<'a>() -> parser_type!(Program) {
-    function()
-        .map(Item::Function)
+    item()
         .repeated()
         .collect()
         .then_ignore(end())
