@@ -54,6 +54,7 @@ mod tests {
         Parser,
         error::{Rich, RichPattern},
         prelude::just,
+        span::SimpleSpan,
     };
 
     use crate::{

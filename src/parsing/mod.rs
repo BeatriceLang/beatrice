@@ -68,28 +68,14 @@ pub fn parser<'a>() -> parser_type!(Program) {
 #[cfg(test)]
 macro_rules! test_tokens {
     ($($token:expr),* $(,)?) => {{
-        let mut tokens = Vec::new();
-        let mut index = 0usize;
-        $(
-            let span = chumsky::span::SimpleSpan::from(index..index + 1);
-            tokens.push(($token, span));
-            index += 1;
-        )*
-        tokens
-    }};
-}
-
-#[cfg(test)]
-macro_rules! test_tokens_array {
-    ($($token:expr),* $(,)?) => {{
-        let mut index = 0usize;
-        [
-            $({
+        vec![$($token),*]
+            .into_iter()
+            .enumerate()
+            .map(|(index, token)| {
                 let span = chumsky::span::SimpleSpan::from(index..index + 1);
-                index += 1;
-                ($token, span)
-            }),*
-        ]
+                (token, span)
+            })
+            .collect::<Vec<_>>()
     }};
 }
 
@@ -146,7 +132,7 @@ mod tests {
             statement::Statement,
         },
         lexing::token::Token,
-        parsing::parser,
+        parsing::{parser, test_ident, test_input},
     };
     use chumsky::Parser as _;
     use logos::Logos;

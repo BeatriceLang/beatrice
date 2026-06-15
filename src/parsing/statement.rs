@@ -47,7 +47,7 @@ pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::parsing::{block::block, test_parse, test_tokens};
+    use crate::parsing::{block::block, test_ident, test_parse, test_tokens};
 
     #[test]
     fn parses_return_stmt() {

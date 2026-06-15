@@ -35,7 +35,7 @@ mod tests {
 
     #[test]
     fn parses_function() {
-        use crate::parsing::{test_parse, test_tokens};
+        use crate::parsing::{test_ident, test_parse, test_tokens};
 
         let tokens = test_tokens![
             Token::Fn,
@@ -68,7 +68,7 @@ mod tests {
 
     #[test]
     fn parses_function_with_params() {
-        use crate::parsing::{test_parse, test_tokens};
+        use crate::parsing::{test_ident, test_parse, test_tokens};
 
         let tokens = test_tokens![
             Token::Fn,

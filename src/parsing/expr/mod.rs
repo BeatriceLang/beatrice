@@ -18,7 +18,7 @@ mod tests {
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
-        parsing::{expr::expr, test_parse, test_tokens},
+        parsing::{expr::expr, test_ident, test_parse, test_tokens},
     };
 
     #[test]

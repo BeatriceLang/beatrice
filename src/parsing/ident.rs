@@ -23,6 +23,7 @@ mod tests {
 
     #[test]
     fn parses_ident() {
+        use crate::parsing::test_ident;
         use chumsky::Parser as _;
 
         let tokens = crate::parsing::test_tokens![Token::Ident("main".into())];

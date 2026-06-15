@@ -22,7 +22,7 @@ mod tests {
         lexing::token::Token,
         parsing::{
             expr::{expr, primary::primary_expr},
-            test_parse, test_tokens,
+            test_ident, test_parse, test_tokens,
         },
     };
 

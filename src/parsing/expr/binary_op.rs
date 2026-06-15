@@ -39,7 +39,7 @@ mod tests {
                 binary_op::{binary_op_expr, binary_op_kind},
                 expr,
             },
-            test_parse, test_tokens,
+            test_ident, test_parse, test_tokens,
         },
     };
 

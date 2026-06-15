@@ -17,7 +17,7 @@ mod tests {
         lexing::token::Token,
         parsing::{
             expr::{expr, function_call::function_call_expr},
-            test_parse, test_tokens,
+            test_ident, test_parse, test_tokens,
         },
     };
 

@@ -18,7 +18,7 @@ mod tests {
     fn parses_program() {
         use crate::{
             lexing::token::Token,
-            parsing::{test_parse, test_tokens},
+            parsing::{test_ident, test_parse, test_tokens},
         };
 
         let tokens = test_tokens![
