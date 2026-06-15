@@ -1,9 +1,11 @@
 use crate::ast::statement::Statement;
 
 pub mod expression;
+pub mod function;
 mod ident;
 pub mod statement;
 
+pub use function::Function;
 pub use ident::Ident;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -14,14 +16,6 @@ pub struct Program {
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub enum Item {
     Function(Function),
-}
-
-#[derive(Clone, Debug, PartialEq, Eq)]
-pub struct Function {
-    pub name: Ident,
-    pub params: Vec<(Ident, Type)>,
-    pub return_type: Type,
-    pub body: Block,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
