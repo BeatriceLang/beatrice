@@ -19,6 +19,8 @@ pub fn item<'a>() -> parser_type!(Item) {
 
 #[cfg(test)]
 mod tests {
+    use std::path::PathBuf;
+
     use super::*;
     use crate::{
         ast::{Type, function::ExternFunction},
@@ -49,6 +51,20 @@ mod tests {
                 params: vec![(test_ident("value"), Type::String)],
                 return_type: Type::I32,
             })
+        );
+    }
+
+    #[test]
+    fn parses_import_item() {
+        let tokens = test_tokens![
+            Token::Import,
+            Token::StringLiteral("a.bt".into()),
+            Token::Semicolon
+        ];
+
+        assert_eq!(
+            test_parse(item(), &tokens),
+            Item::Import(PathBuf::from("a.bt"))
         );
     }
 }
