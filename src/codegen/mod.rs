@@ -46,6 +46,7 @@ impl<'a> Codegen<'a> {
                     &function.params,
                     function.return_type,
                 ),
+                _ => {}
             }
         }
 
