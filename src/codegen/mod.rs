@@ -41,7 +41,11 @@ impl<'a> Codegen<'a> {
                     &function.params,
                     function.return_type,
                 ),
-                _ => todo!(),
+                Item::ExternFunction(function) => self.declare_function(
+                    function.name.as_str(),
+                    &function.params,
+                    function.return_type,
+                ),
             }
         }
 
