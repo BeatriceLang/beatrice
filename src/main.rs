@@ -8,6 +8,7 @@ mod check;
 mod cli_args;
 mod codegen;
 mod diagnostic;
+mod import;
 mod lexing;
 mod parsing;
 mod span;
@@ -20,6 +21,7 @@ fn main() -> Result<()> {
 
     compiler.lex()?;
     compiler.parse()?;
+    compiler.import()?;
     compiler.check()?;
     compiler.codegen()?;
 

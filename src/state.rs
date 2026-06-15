@@ -16,6 +16,7 @@ pub struct Compiler {
 pub enum CompilerState {
     Lex(String),
     Parse(Vec<Spanned<Token>>),
+    Import(Program),
     Check(Program),
     Codegen(Program),
     Error,

@@ -48,7 +48,7 @@ impl Compiler {
             .into_result();
 
         match parse_result {
-            Ok(program) => self.advance_to(CompilerState::Check(program)),
+            Ok(program) => self.advance_to(CompilerState::Import(program)),
             Err(errors) => {
                 for error in errors {
                     self.diagnostics.push(error.into());
