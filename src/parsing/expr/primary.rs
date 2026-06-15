@@ -9,6 +9,7 @@ use crate::{
 pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     let base = select! {
         Token::Number(value) => Expression::Number(value),
+        Token::StringLiteral(string) => Expression::StringLiteral(string)
     }
     .or(ident().map(Expression::Ident));
 

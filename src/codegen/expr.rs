@@ -48,6 +48,12 @@ impl<'a> Codegen<'a> {
                     .unwrap_basic()
             }
             Expression::Ident(ident) => *self.idents.get(ident.as_str()).unwrap(),
+            Expression::StringLiteral(string) => self
+                .builder
+                .build_global_string_ptr(string.as_str(), "_")
+                .unwrap()
+                .as_pointer_value()
+                .into(),
         }
     }
 }

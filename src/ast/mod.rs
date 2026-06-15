@@ -27,4 +27,5 @@ pub struct Block {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Type {
     I32,
+    String,
 }

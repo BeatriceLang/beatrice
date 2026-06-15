@@ -4,7 +4,8 @@ use crate::{ast::Type, lexing::token::Token};
 
 pub fn ty<'a>() -> parser_type!(Type) {
     select! {
-        Token::I32 => Type::I32
+        Token::I32 => Type::I32,
+        Token::String => Type::String
     }
 }
 

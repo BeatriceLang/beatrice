@@ -5,6 +5,7 @@ use crate::ast::Ident;
 pub enum Expression {
     Ident(Ident),
     Number(i64),
+    StringLiteral(String),
     BinaryOp {
         lhs: Box<Expression>,
         kind: BinaryOpKind,

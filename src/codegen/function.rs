@@ -1,4 +1,4 @@
-use inkwell::types::{BasicMetadataTypeEnum, FunctionType};
+use inkwell::types::{BasicMetadataTypeEnum, BasicType, FunctionType};
 
 use crate::{
     ast::{Function, Ident, Type},
