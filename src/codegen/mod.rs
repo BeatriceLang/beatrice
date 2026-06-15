@@ -35,8 +35,13 @@ impl<'a> Codegen<'a> {
 
     pub fn generate(&mut self) {
         for item in &self.program.items {
-            if let Item::Function(function) = item {
-                self.declare_function(function);
+            match item {
+                Item::Function(function) => self.declare_function(
+                    function.name.as_str(),
+                    &function.params,
+                    function.return_type,
+                ),
+                _ => todo!(),
             }
         }
 

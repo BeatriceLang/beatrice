@@ -1,12 +1,19 @@
 use inkwell::types::{BasicMetadataTypeEnum, FunctionType};
 
-use crate::{ast::Function, codegen::Codegen};
+use crate::{
+    ast::{Function, Ident, Type},
+    codegen::Codegen,
+};
 
 impl<'a> Codegen<'a> {
-    pub(super) fn declare_function(&self, function: &Function) {
-        let function_type = self.function_type(function);
-        self.module
-            .add_function(function.name.as_str(), function_type, None);
+    pub(super) fn declare_function(
+        &self,
+        name: &str,
+        params: &Vec<(Ident, Type)>,
+        return_type: Type,
+    ) {
+        let function_type = self.function_type(params, return_type);
+        self.module.add_function(name, function_type, None);
     }
 
     pub(super) fn compile_function(&mut self, function: &Function) {
@@ -27,16 +34,15 @@ impl<'a> Codegen<'a> {
         }
     }
 
-    fn function_type(&self, function: &Function) -> FunctionType<'a> {
-        let params = self.function_params(function);
-        let return_type = self.into_llvm_type(&function.return_type);
+    fn function_type(&self, params: &Vec<(Ident, Type)>, return_type: Type) -> FunctionType<'a> {
+        let params = self.function_params(params);
+        let return_type = self.into_llvm_type(&return_type);
 
         return_type.fn_type(&params, false)
     }
 
-    fn function_params(&self, function: &Function) -> Vec<BasicMetadataTypeEnum<'a>> {
-        function
-            .params
+    fn function_params(&self, params: &Vec<(Ident, Type)>) -> Vec<BasicMetadataTypeEnum<'a>> {
+        params
             .iter()
             .map(|(_, ty)| self.into_llvm_type(ty).into())
             .collect()
