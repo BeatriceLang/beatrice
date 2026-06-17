@@ -234,7 +234,6 @@ fn compiles_puts_hello_world() {
 }
 
 #[test]
-#[ignore = "TODO: enable after codegen supports void calls and inserts ret void"]
 fn compiles_function_without_return_value() {
     let output = compile_and_run_output(
         "function_without_return_value",
