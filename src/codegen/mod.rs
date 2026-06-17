@@ -13,6 +13,7 @@ mod expr;
 mod function;
 mod statement;
 mod ty;
+mod utils;
 
 pub struct Codegen<'a> {
     ctx: &'a Context,
