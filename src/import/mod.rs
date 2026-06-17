@@ -4,7 +4,7 @@ use anyhow::{Context, Ok, Result};
 
 use crate::{
     ast::{Item, Program, function::ExternFunction},
-    diagnostic::{Diagnostic, DiagnosticKind, Diagnostics},
+    diagnostic::Diagnostics,
     import::visit_check::VisitState,
     state::{Compiler, CompilerState},
 };
