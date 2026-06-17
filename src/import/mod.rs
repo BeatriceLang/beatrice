@@ -110,3 +110,139 @@ fn imports_of(program: &Program) -> Vec<PathBuf> {
         })
         .collect()
 }
+
+#[cfg(test)]
+mod tests {
+    use std::path::PathBuf;
+
+    use crate::{
+        ast::{Block, Function, Ident, Item, Program, Type, function::ExternFunction},
+        diagnostic::{DiagnosticKind, Diagnostics},
+        import::{ImportProcessor, VisitState, imports_of},
+    };
+
+    fn ident(name: &str) -> Ident {
+        Ident::new(name.into(), 0..name.len())
+    }
+
+    fn function(name: &str) -> Function {
+        Function {
+            name: ident(name),
+            params: vec![(ident("value"), Type::I32)],
+            return_type: Type::I32,
+            body: Block { statements: vec![] },
+        }
+    }
+
+    fn extern_function(name: &str) -> ExternFunction {
+        ExternFunction {
+            name: ident(name),
+            params: vec![(ident("value"), Type::String)],
+            return_type: Type::I32,
+        }
+    }
+
+    fn diagnostics() -> Diagnostics {
+        Diagnostics::new("".into(), PathBuf::from("main.bt"))
+    }
+
+    #[test]
+    fn imports_of_returns_import_paths_in_order() {
+        let program = Program {
+            items: vec![
+                Item::Function(function("main")),
+                Item::Import(PathBuf::from("first.bt")),
+                Item::ExternFunction(extern_function("puts")),
+                Item::Import(PathBuf::from("second.bt")),
+            ],
+        };
+
+        assert_eq!(
+            imports_of(&program),
+            vec![PathBuf::from("first.bt"), PathBuf::from("second.bt")]
+        );
+    }
+
+    #[test]
+    fn process_imported_function_adds_extern_function() {
+        let mut program = Program { items: vec![] };
+        let mut diagnostics = diagnostics();
+        let imported = function("imported_value");
+
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+
+        processor
+            .process_imported_item(&Item::Function(imported.clone()))
+            .unwrap();
+
+        assert_eq!(
+            program.items,
+            vec![Item::ExternFunction(ExternFunction {
+                name: imported.name,
+                params: imported.params,
+                return_type: imported.return_type,
+            })]
+        );
+        assert!(diagnostics.inner.is_empty());
+    }
+
+    #[test]
+    fn process_imported_extern_function_copies_item() {
+        let mut program = Program { items: vec![] };
+        let mut diagnostics = diagnostics();
+        let imported = Item::ExternFunction(extern_function("puts"));
+
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+
+        processor.process_imported_item(&imported).unwrap();
+
+        assert_eq!(program.items, vec![imported]);
+        assert!(diagnostics.inner.is_empty());
+    }
+
+    #[test]
+    fn visit_state_processes_unseen_path() {
+        let mut program = Program { items: vec![] };
+        let mut diagnostics = diagnostics();
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+
+        assert_eq!(
+            processor.visit_state(&PathBuf::from("new.bt")),
+            VisitState::Process
+        );
+        assert!(diagnostics.inner.is_empty());
+    }
+
+    #[test]
+    fn visit_state_skips_visited_path() {
+        let mut program = Program { items: vec![] };
+        let mut diagnostics = diagnostics();
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+
+        processor.visited.insert(PathBuf::from("visited.bt"));
+
+        assert_eq!(
+            processor.visit_state(&PathBuf::from("visited.bt")),
+            VisitState::Skip
+        );
+        assert!(diagnostics.inner.is_empty());
+    }
+
+    #[test]
+    fn visit_state_skips_visiting_path_and_reports_cycle() {
+        let mut program = Program { items: vec![] };
+        let mut diagnostics = diagnostics();
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+
+        processor.visiting.push(PathBuf::from("cycle.bt"));
+
+        assert_eq!(
+            processor.visit_state(&PathBuf::from("cycle.bt")),
+            VisitState::Skip
+        );
+        assert_eq!(diagnostics.inner.len(), 1);
+        assert_eq!(diagnostics.inner[0].kind, DiagnosticKind::Error);
+        assert_eq!(diagnostics.inner[0].message, "Circular import");
+        assert_eq!(diagnostics.inner[0].span, 0..0);
+    }
+}
