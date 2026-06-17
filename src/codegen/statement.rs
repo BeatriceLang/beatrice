@@ -6,7 +6,7 @@ impl<'a> Codegen<'a> {
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
         match statement {
             Statement::Return(expr) => {
-                let value = self.compile_expr(expr);
+                let value = self.compile_expr(expr).unwrap();
 
                 _ = self
                     .builder
@@ -17,7 +17,7 @@ impl<'a> Codegen<'a> {
                 _ = self.compile_expr(expr);
             }
             Statement::If { cond, body } => {
-                let cond = self.compile_expr(cond).into_int_value();
+                let cond = self.compile_expr(cond).unwrap().into_int_value();
 
                 let current_block = self.builder.get_insert_block().unwrap();
                 let current_function = current_block.get_parent().unwrap();
@@ -49,7 +49,7 @@ impl<'a> Codegen<'a> {
                 self.builder.position_at_end(end_block);
             }
             Statement::Let { name, ty: _, value } => {
-                let value = self.compile_expr(value);
+                let value = self.compile_expr(value).unwrap();
 
                 self.idents.insert(name.as_str().into(), value);
             }
