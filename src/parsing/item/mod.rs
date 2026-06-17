@@ -49,7 +49,7 @@ mod tests {
             Item::ExternFunction(ExternFunction {
                 name: test_ident("puts"),
                 params: vec![(test_ident("value"), Type::String)],
-                return_type: Type::I32,
+                return_type: Some(Type::I32),
             })
         );
     }

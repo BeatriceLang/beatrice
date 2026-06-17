@@ -4,7 +4,7 @@ use crate::ast::{Block, Ident, Type};
 pub struct Function {
     pub name: Ident,
     pub params: Vec<(Ident, Type)>,
-    pub return_type: Type,
+    pub return_type: Option<Type>,
     pub body: Block,
 }
 
@@ -12,5 +12,5 @@ pub struct Function {
 pub struct ExternFunction {
     pub name: Ident,
     pub params: Vec<(Ident, Type)>,
-    pub return_type: Type,
+    pub return_type: Option<Type>,
 }

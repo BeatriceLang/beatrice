@@ -45,7 +45,7 @@ mod tests {
         Function {
             name: ident(name),
             params: vec![(ident("value"), Type::I32)],
-            return_type: Type::I32,
+            return_type: Some(Type::I32),
             body: Block { statements: vec![] },
         }
     }
@@ -54,7 +54,7 @@ mod tests {
         ExternFunction {
             name: ident(name),
             params: vec![(ident("value"), Type::String)],
-            return_type: Type::I32,
+            return_type: Some(Type::I32),
         }
     }
 

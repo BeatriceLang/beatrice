@@ -136,7 +136,7 @@ mod tests {
         Function {
             name: ident(name),
             params: vec![(ident("value"), Type::I32)],
-            return_type: Type::I32,
+            return_type: Some(Type::I32),
             body: Block { statements: vec![] },
         }
     }

@@ -18,8 +18,7 @@ pub fn function<'a>() -> parser_type!(Function) {
                 .collect(),
         )
         .then_ignore(just(Token::RightParen))
-        .then_ignore(just(Token::RetArrow))
-        .then(ty())
+        .then(just(Token::RetArrow).ignore_then(ty()).or_not())
         .then(block())
         .map(|(((name, params), return_type), body)| Function {
             name,
@@ -56,7 +55,7 @@ mod tests {
             Function {
                 name: test_ident("main"),
                 params: vec![],
-                return_type: crate::ast::Type::I32,
+                return_type: Some(crate::ast::Type::I32),
                 body: crate::ast::Block {
                     statements: vec![crate::ast::statement::Statement::Return(
                         crate::ast::expression::Expression::Number(42)
@@ -99,12 +98,36 @@ mod tests {
                     (test_ident("lhs"), crate::ast::Type::I32),
                     (test_ident("rhs"), crate::ast::Type::I32),
                 ],
-                return_type: crate::ast::Type::I32,
+                return_type: Some(crate::ast::Type::I32),
                 body: crate::ast::Block {
                     statements: vec![crate::ast::statement::Statement::Return(
                         crate::ast::expression::Expression::Number(42)
                     )],
                 },
+            }
+        );
+    }
+
+    #[test]
+    fn parses_function_without_return_type() {
+        use crate::parsing::{test_ident, test_parse, test_tokens};
+
+        let tokens = test_tokens![
+            Token::Fn,
+            Token::Ident("log".into()),
+            Token::LeftParen,
+            Token::RightParen,
+            Token::LeftBrace,
+            Token::RightBrace,
+        ];
+
+        assert_eq!(
+            test_parse(function(), &tokens),
+            Function {
+                name: test_ident("log"),
+                params: vec![],
+                return_type: None,
+                body: crate::ast::Block { statements: vec![] },
             }
         );
     }

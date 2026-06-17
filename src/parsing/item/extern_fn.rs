@@ -19,8 +19,7 @@ pub fn extern_function<'a>() -> parser_type!(ExternFunction) {
                 .collect(),
         )
         .then_ignore(just(Token::RightParen))
-        .then_ignore(just(Token::RetArrow))
-        .then(ty())
+        .then(just(Token::RetArrow).ignore_then(ty()).or_not())
         .then_ignore(just(Token::Semicolon))
         .map(|((name, params), return_type)| ExternFunction {
             name,
@@ -56,7 +55,30 @@ mod tests {
             ExternFunction {
                 name: test_ident("puts"),
                 params: vec![(test_ident("value"), crate::ast::Type::String)],
-                return_type: crate::ast::Type::I32,
+                return_type: Some(crate::ast::Type::I32),
+            }
+        );
+    }
+
+    #[test]
+    fn parses_extern_function_without_return_type() {
+        use crate::parsing::{test_ident, test_parse, test_tokens};
+
+        let tokens = test_tokens![
+            Token::Extern,
+            Token::Fn,
+            Token::Ident("flush".into()),
+            Token::LeftParen,
+            Token::RightParen,
+            Token::Semicolon,
+        ];
+
+        assert_eq!(
+            test_parse(extern_function(), &tokens),
+            ExternFunction {
+                name: test_ident("flush"),
+                params: vec![],
+                return_type: None,
             }
         );
     }

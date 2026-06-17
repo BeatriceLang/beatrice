@@ -157,7 +157,7 @@ mod tests {
                 items: vec![Item::Function(Function {
                     name: test_ident("main"),
                     params: vec![],
-                    return_type: Type::I32,
+                    return_type: Some(Type::I32),
                     body: Block {
                         statements: vec![Statement::Return(Expression::Number(42))],
                     },
@@ -179,7 +179,7 @@ mod tests {
                 items: vec![Item::Function(Function {
                     name: test_ident("main"),
                     params: vec![],
-                    return_type: Type::I32,
+                    return_type: Some(Type::I32),
                     body: Block {
                         statements: vec![Statement::Return(Expression::BinaryOp {
                             lhs: Expression::Number(1).into(),
@@ -208,7 +208,7 @@ mod tests {
                         (test_ident("lhs"), Type::I32),
                         (test_ident("rhs"), Type::I32)
                     ],
-                    return_type: Type::I32,
+                    return_type: Some(Type::I32),
                     body: Block {
                         statements: vec![Statement::Return(Expression::Number(42))],
                     },

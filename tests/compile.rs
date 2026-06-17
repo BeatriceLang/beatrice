@@ -234,6 +234,34 @@ fn compiles_puts_hello_world() {
 }
 
 #[test]
+#[ignore = "TODO: enable after codegen supports void calls and inserts ret void"]
+fn compiles_function_without_return_value() {
+    let output = compile_and_run_output(
+        "function_without_return_value",
+        r#"
+        extern fn puts(value: string) -> i32;
+
+        fn say_hello() {
+            puts("Hello void!");
+        }
+
+        fn main() -> i32 {
+            say_hello();
+            return 0;
+        }
+        "#,
+    );
+
+    assert!(
+        output.status.success(),
+        "executable failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "Hello void!\n");
+}
+
+#[test]
 fn compiles_imported_function_call_to_executable() {
     let output = compile_objects_and_run(
         "imported_function_call",

@@ -10,7 +10,7 @@ impl<'a> Codegen<'a> {
         &self,
         name: &str,
         params: &Vec<(Ident, Type)>,
-        return_type: Type,
+        return_type: Option<Type>,
     ) {
         let function_type = self.function_type(params, return_type);
         self.module.add_function(name, function_type, None);
@@ -32,13 +32,23 @@ impl<'a> Codegen<'a> {
         for statement in &function.body.statements {
             self.compile_statement(statement);
         }
+
+        if function.return_type.is_none() && self.current_block().get_terminator().is_none() {
+            self.builder.build_return(None).unwrap();
+        }
     }
 
-    fn function_type(&self, params: &Vec<(Ident, Type)>, return_type: Type) -> FunctionType<'a> {
+    fn function_type(
+        &self,
+        params: &Vec<(Ident, Type)>,
+        return_type: Option<Type>,
+    ) -> FunctionType<'a> {
         let params = self.function_params(params);
-        let return_type = self.into_llvm_type(&return_type);
 
-        return_type.fn_type(&params, false)
+        match return_type {
+            Some(ty) => self.into_llvm_type(&ty).fn_type(&params, false),
+            None => self.ctx.void_type().fn_type(&params, false),
+        }
     }
 
     fn function_params(&self, params: &Vec<(Ident, Type)>) -> Vec<BasicMetadataTypeEnum<'a>> {
