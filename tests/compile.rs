@@ -25,10 +25,27 @@ fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::O
 
     fs::write(&source, source_code).unwrap();
 
+    compile_to_object(&source, &object);
+
+    link_executable(&[object], &executable);
+
+    let output = Command::new(&executable).output().unwrap();
+
+    fs::remove_dir_all(dir).unwrap();
+
+    output
+}
+
+fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
+    compile_and_run_output(test_name, source_code).status.code()
+}
+
+fn compile_to_object(source: &PathBuf, object: &PathBuf) {
     let compiler_output = Command::new(env!("CARGO_BIN_EXE_beatrice"))
-        .arg(&source)
+        .current_dir(source.parent().unwrap())
+        .arg(source)
         .arg("-o")
-        .arg(&object)
+        .arg(object)
         .output()
         .unwrap();
 
@@ -40,13 +57,13 @@ fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::O
     );
 
     assert!(object.exists(), "compiler did not create object file");
+}
 
-    let linker_output = Command::new("cc")
-        .arg(&object)
-        .arg("-o")
-        .arg(&executable)
-        .output()
-        .unwrap();
+fn link_executable(objects: &[PathBuf], executable: &PathBuf) {
+    let mut command = Command::new("cc");
+    command.args(objects).arg("-o").arg(executable);
+
+    let linker_output = command.output().unwrap();
 
     assert!(
         linker_output.status.success(),
@@ -54,16 +71,39 @@ fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::O
         String::from_utf8_lossy(&linker_output.stdout),
         String::from_utf8_lossy(&linker_output.stderr)
     );
+}
+
+fn compile_objects_and_run(
+    test_name: &str,
+    sources: &[(&str, &str)],
+    objects_to_link: &[&str],
+) -> std::process::Output {
+    let dir = temp_test_dir();
+    let executable = dir.join(test_name);
+
+    for (name, source_code) in sources {
+        fs::write(dir.join(name), source_code).unwrap();
+    }
+
+    let objects = objects_to_link
+        .iter()
+        .map(|name| {
+            let source = dir.join(format!("{name}.bt"));
+            let object = dir.join(format!("{name}.o"));
+
+            compile_to_object(&source, &object);
+
+            object
+        })
+        .collect::<Vec<_>>();
+
+    link_executable(&objects, &executable);
 
     let output = Command::new(&executable).output().unwrap();
 
     fs::remove_dir_all(dir).unwrap();
 
     output
-}
-
-fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
-    compile_and_run_output(test_name, source_code).status.code()
 }
 
 #[test]
@@ -188,4 +228,105 @@ fn compiles_puts_hello_world() {
         String::from_utf8_lossy(&output.stderr)
     );
     assert_eq!(String::from_utf8_lossy(&output.stdout), "Hello world!\n");
+}
+
+#[test]
+fn compiles_imported_function_call_to_executable() {
+    let output = compile_objects_and_run(
+        "imported_function_call",
+        &[
+            (
+                "main.bt",
+                r#"
+                import "imported.bt";
+
+                fn main() -> i32 {
+                    return imported_value();
+                }
+                "#,
+            ),
+            (
+                "imported.bt",
+                r#"
+                fn imported_value() -> i32 {
+                    return 42;
+                }
+                "#,
+            ),
+        ],
+        &["main", "imported"],
+    );
+
+    assert_eq!(output.status.code(), Some(42));
+}
+
+#[test]
+fn compiles_nested_imported_function_call_to_executable() {
+    let output = compile_objects_and_run(
+        "nested_imported_function_call",
+        &[
+            (
+                "main.bt",
+                r#"
+                import "first.bt";
+
+                fn main() -> i32 {
+                    return nested_value();
+                }
+                "#,
+            ),
+            (
+                "first.bt",
+                r#"
+                import "second.bt";
+                "#,
+            ),
+            (
+                "second.bt",
+                r#"
+                fn nested_value() -> i32 {
+                    return 42;
+                }
+                "#,
+            ),
+        ],
+        &["main", "second"],
+    );
+
+    assert_eq!(output.status.code(), Some(42));
+}
+
+#[test]
+fn compiles_imported_extern_function_call_to_executable() {
+    let output = compile_objects_and_run(
+        "imported_extern_function_call",
+        &[
+            (
+                "main.bt",
+                r#"
+                import "stdio.bt";
+
+                fn main() -> i32 {
+                    puts("Hello import!");
+                    return 0;
+                }
+                "#,
+            ),
+            (
+                "stdio.bt",
+                r#"
+                extern fn puts(value: string) -> i32;
+                "#,
+            ),
+        ],
+        &["main"],
+    );
+
+    assert!(
+        output.status.success(),
+        "executable failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "Hello import!\n");
 }
