@@ -53,11 +53,15 @@ mod tests {
         Diagnostics::new("".into(), PathBuf::from("main.bt"))
     }
 
+    fn source_path() -> PathBuf {
+        PathBuf::from("main.bt")
+    }
+
     #[test]
     fn visit_state_processes_unseen_path() {
         let mut program = Program { items: vec![] };
         let mut diagnostics = diagnostics();
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics, source_path());
 
         assert_eq!(
             processor.visit_state(&PathBuf::from("new.bt")),
@@ -70,7 +74,7 @@ mod tests {
     fn visit_state_skips_visited_path() {
         let mut program = Program { items: vec![] };
         let mut diagnostics = diagnostics();
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics, source_path());
 
         processor.visited.insert(PathBuf::from("visited.bt"));
 
@@ -85,7 +89,7 @@ mod tests {
     fn visit_state_skips_visiting_path_and_reports_cycle() {
         let mut program = Program { items: vec![] };
         let mut diagnostics = diagnostics();
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics, source_path());
 
         processor.visiting.push(PathBuf::from("cycle.bt"));
 

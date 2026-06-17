@@ -62,13 +62,17 @@ mod tests {
         Diagnostics::new("".into(), PathBuf::from("main.bt"))
     }
 
+    fn source_path() -> PathBuf {
+        PathBuf::from("main.bt")
+    }
+
     #[test]
     fn process_imported_function_adds_extern_function() {
         let mut program = Program { items: vec![] };
         let mut diagnostics = diagnostics();
         let imported = function("imported_value");
 
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics, source_path());
 
         processor
             .process_imported_item(&Item::Function(imported.clone()))
@@ -91,7 +95,7 @@ mod tests {
         let mut diagnostics = diagnostics();
         let imported = Item::ExternFunction(extern_function("puts"));
 
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
+        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics, source_path());
 
         processor.process_imported_item(&imported).unwrap();
 

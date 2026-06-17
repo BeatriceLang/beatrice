@@ -14,6 +14,7 @@ mod visit_check;
 
 impl Compiler {
     pub fn import(&mut self) -> Result<()> {
+        let original_source_path = self.source_path.clone();
         let program = {
             let CompilerState::Import(program) = &mut self.state else {
                 panic!("Unexpected compiler state")
@@ -21,7 +22,8 @@ impl Compiler {
 
             let import_paths = imports_of(program);
 
-            let mut import_processor = ImportProcessor::new(program, &mut self.diagnostics);
+            let mut import_processor =
+                ImportProcessor::new(program, &mut self.diagnostics, original_source_path);
 
             for path in import_paths {
                 import_processor.process(path)?;
@@ -36,15 +38,21 @@ impl Compiler {
 
 struct ImportProcessor<'a> {
     original_program: &'a mut Program,
+    original_source_path: PathBuf,
     visited: HashSet<PathBuf>,
     visiting: Vec<PathBuf>,
     diagnostics: &'a mut Diagnostics,
 }
 
 impl<'a> ImportProcessor<'a> {
-    fn new(original_program: &'a mut Program, diagnostics: &'a mut Diagnostics) -> Self {
+    fn new(
+        original_program: &'a mut Program,
+        diagnostics: &'a mut Diagnostics,
+        original_source_path: PathBuf,
+    ) -> Self {
         Self {
             original_program,
+            original_source_path,
             diagnostics,
             visited: HashSet::new(),
             visiting: vec![],
@@ -52,6 +60,8 @@ impl<'a> ImportProcessor<'a> {
     }
 
     fn process(&mut self, path: PathBuf) -> Result<()> {
+        let path = self.resolve_import_path(path)?;
+
         match self.visit_state(&path) {
             VisitState::Process => {}
             VisitState::Skip => return Ok(()),
@@ -77,6 +87,23 @@ impl<'a> ImportProcessor<'a> {
         self.visited.insert(path);
 
         Ok(())
+    }
+
+    fn resolve_import_path(&self, path: PathBuf) -> Result<PathBuf> {
+        let path = if path.is_absolute() {
+            path
+        } else {
+            self.importing_file()
+                .parent()
+                .context("Failed to parse importing file parent directory")?
+                .join(path)
+        };
+
+        path.canonicalize().context("Failed to resolve import path")
+    }
+
+    fn importing_file(&self) -> &PathBuf {
+        self.visiting.last().unwrap_or(&self.original_source_path)
     }
 }
 

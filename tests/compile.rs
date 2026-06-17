@@ -42,7 +42,6 @@ fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
 
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {
     let compiler_output = Command::new(env!("CARGO_BIN_EXE_beatrice"))
-        .current_dir(source.parent().unwrap())
         .arg(source)
         .arg("-o")
         .arg(object)
@@ -82,7 +81,11 @@ fn compile_objects_and_run(
     let executable = dir.join(test_name);
 
     for (name, source_code) in sources {
-        fs::write(dir.join(name), source_code).unwrap();
+        let path = dir.join(name);
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent).unwrap();
+        }
+        fs::write(path, source_code).unwrap();
     }
 
     let objects = objects_to_link
@@ -255,6 +258,42 @@ fn compiles_imported_function_call_to_executable() {
             ),
         ],
         &["main", "imported"],
+    );
+
+    assert_eq!(output.status.code(), Some(42));
+}
+
+#[test]
+fn resolves_imports_relative_to_importing_file() {
+    let output = compile_objects_and_run(
+        "relative_imports",
+        &[
+            (
+                "src/main.bt",
+                r#"
+                import "lib/first.bt";
+
+                fn main() -> i32 {
+                    return nested_value();
+                }
+                "#,
+            ),
+            (
+                "src/lib/first.bt",
+                r#"
+                import "second.bt";
+                "#,
+            ),
+            (
+                "src/lib/second.bt",
+                r#"
+                fn nested_value() -> i32 {
+                    return 42;
+                }
+                "#,
+            ),
+        ],
+        &["src/main", "src/lib/second"],
     );
 
     assert_eq!(output.status.code(), Some(42));
