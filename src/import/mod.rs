@@ -1,10 +1,11 @@
-use std::path::PathBuf;
+use std::{collections::HashSet, path::PathBuf};
 
 use anyhow::{Context, Ok, Result};
 
 use crate::{
     ast::{Item, Program, function::ExternFunction},
-    diagnostic::Diagnostics,
+    diagnostic::{Diagnostic, DiagnosticKind, Diagnostics},
+    import::visit_check::VisitState,
     state::{Compiler, CompilerState},
 };
 
@@ -34,7 +35,8 @@ impl Compiler {
 
 struct ImportProcessor<'a> {
     original_program: &'a mut Program,
-    visited: Vec<PathBuf>,
+    visited: HashSet<PathBuf>,
+    visiting: Vec<PathBuf>,
     diagnostics: &'a mut Diagnostics,
 }
 
@@ -43,17 +45,20 @@ impl<'a> ImportProcessor<'a> {
         Self {
             original_program,
             diagnostics,
-            visited: vec![],
+            visited: HashSet::new(),
+            visiting: vec![],
         }
     }
 
     fn process(&mut self, path: PathBuf) -> Result<()> {
-        if self.visit_check(path.clone()) {
-            // Skip this import, quit early
-            return Ok(());
+        match self.visit_state(&path) {
+            VisitState::Process => {}
+            VisitState::Skip => return Ok(()),
         }
 
-        let mut compiler = Compiler::new(path, PathBuf::new())
+        self.visiting.push(path.clone());
+
+        let mut compiler = Compiler::new(path.clone(), PathBuf::new())
             .context("Failed to create compiler when processing imports")?;
 
         compiler.lex()?;
@@ -66,6 +71,9 @@ impl<'a> ImportProcessor<'a> {
         for imported_item in &imported_program.items {
             self.process_imported_item(imported_item)?;
         }
+
+        self.visiting.pop();
+        self.visited.insert(path);
 
         Ok(())
     }
