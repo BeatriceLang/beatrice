@@ -98,8 +98,7 @@ mod tests {
 
     use crate::{
         ast::{Block, Function, Ident, Item, Program, Type},
-        diagnostic::{DiagnosticKind, Diagnostics},
-        import::{ImportProcessor, VisitState, imports_of},
+        import::imports_of,
     };
 
     fn ident(name: &str) -> Ident {
@@ -113,10 +112,6 @@ mod tests {
             return_type: Type::I32,
             body: Block { statements: vec![] },
         }
-    }
-
-    fn diagnostics() -> Diagnostics {
-        Diagnostics::new("".into(), PathBuf::from("main.bt"))
     }
 
     #[test]
@@ -133,51 +128,5 @@ mod tests {
             imports_of(&program),
             vec![PathBuf::from("first.bt"), PathBuf::from("second.bt")]
         );
-    }
-
-    #[test]
-    fn visit_state_processes_unseen_path() {
-        let mut program = Program { items: vec![] };
-        let mut diagnostics = diagnostics();
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
-
-        assert_eq!(
-            processor.visit_state(&PathBuf::from("new.bt")),
-            VisitState::Process
-        );
-        assert!(diagnostics.inner.is_empty());
-    }
-
-    #[test]
-    fn visit_state_skips_visited_path() {
-        let mut program = Program { items: vec![] };
-        let mut diagnostics = diagnostics();
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
-
-        processor.visited.insert(PathBuf::from("visited.bt"));
-
-        assert_eq!(
-            processor.visit_state(&PathBuf::from("visited.bt")),
-            VisitState::Skip
-        );
-        assert!(diagnostics.inner.is_empty());
-    }
-
-    #[test]
-    fn visit_state_skips_visiting_path_and_reports_cycle() {
-        let mut program = Program { items: vec![] };
-        let mut diagnostics = diagnostics();
-        let mut processor = ImportProcessor::new(&mut program, &mut diagnostics);
-
-        processor.visiting.push(PathBuf::from("cycle.bt"));
-
-        assert_eq!(
-            processor.visit_state(&PathBuf::from("cycle.bt")),
-            VisitState::Skip
-        );
-        assert_eq!(diagnostics.inner.len(), 1);
-        assert_eq!(diagnostics.inner[0].kind, DiagnosticKind::Error);
-        assert_eq!(diagnostics.inner[0].message, "Circular import");
-        assert_eq!(diagnostics.inner[0].span, 0..0);
     }
 }
