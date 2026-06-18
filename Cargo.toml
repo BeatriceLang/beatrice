@@ -1,12 +1,7 @@
 [workspace]
 members = ["kawaii"]
 
-[package]
-name = "beatrice"
-version = "0.1.0"
-edition = "2024"
-
-[dependencies]
+[workspace.dependencies]
 anyhow = "1"
 ariadne = "0.6"
 chumsky = "0.13"
@@ -14,3 +9,17 @@ clap = { version = "4", features = ["derive"] }
 inkwell = { version = "0.9", features = ["llvm22-1"] }
 logos = "0.16"
 tap = "1"
+
+[package]
+name = "beatrice"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow.workspace = true
+ariadne.workspace = true
+chumsky.workspace = true
+clap.workspace = true
+inkwell.workspace = true
+logos.workspace = true
+tap.workspace = true
