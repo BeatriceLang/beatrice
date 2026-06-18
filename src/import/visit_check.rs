@@ -11,7 +11,7 @@ pub(super) enum VisitState {
     Skip,
 }
 
-impl<'a> ImportProcessor<'a> {
+impl ImportProcessor<'_> {
     #[must_use]
     pub(super) fn visit_state(&mut self, path: &PathBuf) -> VisitState {
         if self.visited.contains(path) {
@@ -50,7 +50,7 @@ mod tests {
     };
 
     fn diagnostics() -> Diagnostics {
-        Diagnostics::new("".into(), PathBuf::from("main.bt"))
+        Diagnostics::new(String::new(), PathBuf::from("main.bt"))
     }
 
     fn source_path() -> PathBuf {

@@ -7,13 +7,13 @@ pub enum Expression {
     Number(i64),
     StringLiteral(String),
     BinaryOp {
-        lhs: Box<Expression>,
+        lhs: Box<Self>,
         kind: BinaryOpKind,
-        rhs: Box<Expression>,
+        rhs: Box<Self>,
     },
     FunctionCall {
         name: Ident,
-        args: Vec<Expression>,
+        args: Vec<Self>,
     },
 }
 

@@ -5,7 +5,7 @@ use crate::{ast::Item, lexing::token::Token};
 pub(super) fn import<'a>() -> parser_type!(Item) {
     just(Token::Import)
         .ignore_then(select! {
-            Token::StringLiteral(path) => path.clone(),
+            Token::StringLiteral(path) => path,
         })
         .then_ignore(just(Token::Semicolon))
         .map(|path| Item::Import(path.into()))

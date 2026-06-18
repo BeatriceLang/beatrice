@@ -5,7 +5,7 @@ use crate::{
     import::ImportProcessor,
 };
 
-impl<'a> ImportProcessor<'a> {
+impl ImportProcessor<'_> {
     pub(super) fn process_imported_item(&mut self, imported_item: &Item) -> Result<()> {
         match imported_item {
             Item::Function(function) => {
@@ -15,7 +15,7 @@ impl<'a> ImportProcessor<'a> {
                         name: function.name.clone(),
                         params: function.params.clone(),
                         return_type: function.return_type,
-                    }))
+                    }));
             }
             Item::ExternFunction(_) => self.original_program.items.push(imported_item.clone()),
             Item::Import(path) => {
@@ -59,7 +59,7 @@ mod tests {
     }
 
     fn diagnostics() -> Diagnostics {
-        Diagnostics::new("".into(), PathBuf::from("main.bt"))
+        Diagnostics::new(String::new(), PathBuf::from("main.bt"))
     }
 
     fn source_path() -> PathBuf {

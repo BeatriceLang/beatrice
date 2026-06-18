@@ -19,15 +19,14 @@ impl From<Rich<'_, Token, SimpleSpan>> for Diagnostic {
                     .join(", ");
                 let found = found
                     .as_ref()
-                    .map(|t| t.to_string())
-                    .unwrap_or("EOF".into());
+                    .map_or("EOF".into(), |t| t.to_string());
 
                 format!("Expected `{expected}`, found `{found}`")
             }
             RichReason::Custom(reason) => format!("{reason:?}"),
         };
 
-        Diagnostic {
+        Self {
             span: error.span().into_range(),
             kind: DiagnosticKind::Error,
             label: message.clone(),

@@ -14,7 +14,7 @@ type IdentMapExtra<'a, 'parse> =
 
 pub fn ident<'a>() -> parser_type!(Ident) {
     select! {
-        Token::Ident(name) => name.clone()
+        Token::Ident(name) => name
     }
     .map_with(|name, e: &mut IdentMapExtra<'a, '_>| Ident::new(name, e.span().into_range()))
 }

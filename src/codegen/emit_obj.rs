@@ -8,7 +8,7 @@ use inkwell::{
 
 use crate::codegen::Codegen;
 
-impl<'a> Codegen<'a> {
+impl Codegen<'_> {
     pub fn emit_object(&self, path: &Path) -> Result<()> {
         Target::initialize_native(&InitializationConfig::default()).map_err(|err| anyhow!(err))?;
 

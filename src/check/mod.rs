@@ -30,7 +30,7 @@ pub struct Checker<'a> {
     program: &'a Program,
 }
 
-impl<'a> Checker<'a> {
+impl Checker<'_> {
     fn run(&mut self) {
         self.check_duplicate_function();
     }

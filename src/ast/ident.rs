@@ -6,7 +6,7 @@ use crate::span::{Span, Spanned};
 pub struct Ident(Spanned<String>);
 
 impl Ident {
-    pub fn new(name: String, span: Span) -> Self {
+    pub const fn new(name: String, span: Span) -> Self {
         Self(Spanned::new(name, span))
     }
 

@@ -17,7 +17,7 @@ pub enum DiagnosticKind {
     Warning,
 }
 
-impl<'a> From<DiagnosticKind> for ReportKind<'a> {
+impl From<DiagnosticKind> for ReportKind<'_> {
     fn from(val: DiagnosticKind) -> Self {
         match val {
             DiagnosticKind::Error => ReportKind::Error,
@@ -62,7 +62,7 @@ pub struct Diagnostics {
 }
 
 impl Diagnostics {
-    pub fn new(source: String, source_path: PathBuf) -> Self {
+    pub const fn new(source: String, source_path: PathBuf) -> Self {
         Self {
             inner: vec![],
             source,

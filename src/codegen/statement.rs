@@ -2,7 +2,7 @@ use inkwell::values::BasicValue;
 
 use crate::{ast::statement::Statement, codegen::Codegen};
 
-impl<'a> Codegen<'a> {
+impl Codegen<'_> {
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
         match statement {
             Statement::Return(expr) => {
@@ -11,7 +11,7 @@ impl<'a> Codegen<'a> {
                 _ = self
                     .builder
                     .build_return(Some(&value as &dyn BasicValue))
-                    .unwrap()
+                    .unwrap();
             }
             Statement::Expression(expr) => {
                 _ = self.compile_expr(expr);
@@ -53,6 +53,6 @@ impl<'a> Codegen<'a> {
 
                 self.idents.insert(name.as_str().into(), value);
             }
-        };
+        }
     }
 }

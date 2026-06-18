@@ -4,7 +4,7 @@ use crate::{
     diagnostic::{Diagnostic, DiagnosticKind},
 };
 
-impl<'a> Checker<'a> {
+impl Checker<'_> {
     pub fn check_duplicate_function(&mut self) {
         let mut checked = vec![];
 
@@ -58,7 +58,7 @@ mod tests {
     }
 
     fn check_duplicate_function(program: &Program) -> Diagnostics {
-        let mut diagnostics = Diagnostics::new("".into(), PathBuf::from("main.bea"));
+        let mut diagnostics = Diagnostics::new(String::new(), PathBuf::from("main.bea"));
         let mut checker = Checker {
             diagnostics: &mut diagnostics,
             program,

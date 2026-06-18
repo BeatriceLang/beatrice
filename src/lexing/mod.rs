@@ -27,19 +27,16 @@ impl Compiler {
 fn lex_inner(source: &str, diagnostics: &mut Diagnostics) -> Vec<Spanned<Token>> {
     vec![].tap_mut(|tokens| {
         for (token, span) in Token::lexer(source).spanned() {
-            match token {
-                Ok(token) => tokens.push(Spanned::new(token, span)),
-                Err(_) => {
-                    let char = source[span.clone()].to_string();
-                    let message = format!("Unknown character `{char}`");
+            if let Ok(token) = token { tokens.push(Spanned::new(token, span)) } else {
+                let char = source[span.clone()].to_string();
+                let message = format!("Unknown character `{char}`");
 
-                    diagnostics.push(Diagnostic {
-                        span,
-                        kind: DiagnosticKind::Error,
-                        label: message.clone(),
-                        message,
-                    });
-                }
+                diagnostics.push(Diagnostic {
+                    span,
+                    kind: DiagnosticKind::Error,
+                    label: message.clone(),
+                    message,
+                });
             }
         }
     })

@@ -83,13 +83,13 @@ macro_rules! test_tokens {
 pub(crate) use test_tokens;
 
 #[cfg(test)]
-pub(crate) fn test_input<'a>(
-    tokens: &'a [(crate::lexing::token::Token, SimpleSpan)],
+pub fn test_input(
+    tokens: &[(crate::lexing::token::Token, SimpleSpan)],
 ) -> chumsky::input::MappedInput<
-    'a,
+    '_,
     crate::lexing::token::Token,
     SimpleSpan,
-    &'a [(crate::lexing::token::Token, SimpleSpan)],
+    &[(crate::lexing::token::Token, SimpleSpan)],
 > {
     let eoi = tokens
         .last()
@@ -101,7 +101,7 @@ pub(crate) fn test_input<'a>(
 }
 
 #[cfg(test)]
-pub(crate) fn test_parse<'a, O>(
+pub fn test_parse<'a, O>(
     parser: impl Parser<
         'a,
         chumsky::input::MappedInput<
@@ -119,7 +119,7 @@ pub(crate) fn test_parse<'a, O>(
 }
 
 #[cfg(test)]
-pub(crate) fn test_ident(name: &str) -> crate::ast::Ident {
+pub fn test_ident(name: &str) -> crate::ast::Ident {
     crate::ast::Ident::new(name.into(), 0..0)
 }
 

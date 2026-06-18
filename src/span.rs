@@ -9,7 +9,7 @@ pub struct Spanned<T> {
 }
 
 impl<T> Spanned<T> {
-    pub fn new(inner: T, span: Span) -> Self {
+    pub const fn new(inner: T, span: Span) -> Self {
         Self { inner, span }
     }
 }
