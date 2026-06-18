@@ -41,7 +41,7 @@ fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
 }
 
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {
-    let compiler_output = Command::new(env!("CARGO_BIN_EXE_beatrice"))
+    let compiler_output = Command::new(env!("CARGO_BIN_EXE_beatricec"))
         .arg(source)
         .arg("-o")
         .arg(object)

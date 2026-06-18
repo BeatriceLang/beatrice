@@ -1,0 +1,13 @@
+[package]
+name = "beatricec"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow.workspace = true
+ariadne.workspace = true
+chumsky.workspace = true
+clap.workspace = true
+inkwell.workspace = true
+logos.workspace = true
+tap.workspace = true
