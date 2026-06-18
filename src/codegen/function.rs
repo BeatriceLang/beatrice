@@ -9,7 +9,7 @@ impl<'a> Codegen<'a> {
     pub(super) fn declare_function(
         &self,
         name: &str,
-        params: &Vec<(Ident, Type)>,
+        params: &[(Ident, Type)],
         return_type: Option<Type>,
     ) {
         let function_type = self.function_type(params, return_type);
@@ -40,7 +40,7 @@ impl<'a> Codegen<'a> {
 
     fn function_type(
         &self,
-        params: &Vec<(Ident, Type)>,
+        params: &[(Ident, Type)],
         return_type: Option<Type>,
     ) -> FunctionType<'a> {
         let params = self.function_params(params);
@@ -51,7 +51,7 @@ impl<'a> Codegen<'a> {
         }
     }
 
-    fn function_params(&self, params: &Vec<(Ident, Type)>) -> Vec<BasicMetadataTypeEnum<'a>> {
+    fn function_params(&self, params: &[(Ident, Type)]) -> Vec<BasicMetadataTypeEnum<'a>> {
         params
             .iter()
             .map(|(_, ty)| self.to_llvm_type(ty).into())
