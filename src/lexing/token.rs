@@ -85,7 +85,7 @@ pub enum Token {
     StringLiteral(String),
 }
 
-fn parse_string_literal(lex: &mut logos::Lexer<Token>) -> String {
+fn parse_string_literal(lex: &logos::Lexer<Token>) -> String {
     let slice = lex.slice();
     let inner = &slice[1..slice.len() - 1];
     let mut text = String::new();
