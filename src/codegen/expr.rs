@@ -8,9 +8,12 @@ use crate::{
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<BasicValueEnum<'a>> {
         match expr {
-            Expression::Number(number) => {
-                Some(self.ctx.i32_type().const_int(*number as u64, false).into())
-            }
+            Expression::Number(number) => Some(
+                self.ctx
+                    .i32_type()
+                    .const_int(number.cast_unsigned(), false)
+                    .into(),
+            ),
             Expression::BinaryOp { lhs, kind, rhs } => {
                 let lhs = self.compile_expr(lhs).unwrap().into_int_value();
                 let rhs = self.compile_expr(rhs).unwrap().into_int_value();

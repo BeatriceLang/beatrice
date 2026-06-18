@@ -69,7 +69,7 @@ impl<'a> ImportProcessor<'a> {
 
         self.visiting.push(path.clone());
 
-        let mut compiler = Compiler::new(path.clone(), PathBuf::new())
+        let mut compiler = Compiler::new(&path, PathBuf::new())
             .context("Failed to create compiler when processing imports")?;
 
         compiler.lex()?;

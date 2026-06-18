@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::Path;
 
 use crate::{
     diagnostic::{Diagnostic, DiagnosticKind},
@@ -13,10 +13,10 @@ pub(super) enum VisitState {
 
 impl ImportProcessor<'_> {
     #[must_use]
-    pub(super) fn visit_state(&mut self, path: &PathBuf) -> VisitState {
+    pub(super) fn visit_state(&mut self, path: &Path) -> VisitState {
         if self.visited.contains(path) {
             VisitState::Skip
-        } else if self.visiting.contains(path) {
+        } else if self.visiting.iter().any(|visiting| visiting == path) {
             self.push_cycle_diagnostic(path);
             VisitState::Skip
         } else {
@@ -24,13 +24,15 @@ impl ImportProcessor<'_> {
         }
     }
 
-    fn push_cycle_diagnostic(&mut self, path: &PathBuf) {
+    fn push_cycle_diagnostic(&mut self, path: &Path) {
         let diag = Diagnostic {
             // TODO: import items should carry spans so this can point at the import path.
             span: 0..0,
             kind: DiagnosticKind::Error,
             label: format!(
-                "{path:?} is importing [another path] while [another path] is importing {path:?}"
+                "{} is importing [another path] while [another path] is importing {}",
+                path.display(),
+                path.display()
             ),
             message: "Circular import".into(),
         };

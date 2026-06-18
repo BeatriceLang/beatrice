@@ -19,7 +19,7 @@ impl From<Rich<'_, Token, SimpleSpan>> for Diagnostic {
                     .join(", ");
                 let found = found
                     .as_ref()
-                    .map_or("EOF".into(), |t| t.to_string());
+                    .map_or_else(|| "EOF".into(), |t| t.to_string());
 
                 format!("Expected `{expected}`, found `{found}`")
             }

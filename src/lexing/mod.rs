@@ -27,7 +27,9 @@ impl Compiler {
 fn lex_inner(source: &str, diagnostics: &mut Diagnostics) -> Vec<Spanned<Token>> {
     vec![].tap_mut(|tokens| {
         for (token, span) in Token::lexer(source).spanned() {
-            if let Ok(token) = token { tokens.push(Spanned::new(token, span)) } else {
+            if let Ok(token) = token {
+                tokens.push(Spanned::new(token, span));
+            } else {
                 let char = source[span.clone()].to_string();
                 let message = format!("Unknown character `{char}`");
 

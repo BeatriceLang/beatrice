@@ -47,7 +47,7 @@ impl<'a> Codegen<'a> {
                     &function.params,
                     function.return_type,
                 ),
-                _ => {}
+                Item::Import(_) => {}
             }
         }
 
@@ -62,7 +62,7 @@ impl<'a> Codegen<'a> {
 }
 
 impl Compiler {
-    pub fn codegen(&mut self) -> Result<()> {
+    pub fn codegen(&self) -> Result<()> {
         let CompilerState::Codegen(program) = &self.state else {
             panic!("Unexpected compiler state")
         };

@@ -1,4 +1,8 @@
-use std::{ops::Range, path::PathBuf, process::exit};
+use std::{
+    ops::Range,
+    path::{Path, PathBuf},
+    process::exit,
+};
 
 use anyhow::{Context, Result};
 use ariadne::{Label, Report, ReportKind, Source};
@@ -29,22 +33,22 @@ impl From<DiagnosticKind> for ReportKind<'_> {
 type AriadneSpan = (String, Range<usize>);
 
 impl Diagnostic {
-    fn print(&self, source: String, source_path: PathBuf) -> Result<()> {
-        let span = self.ariadne_span(source_path.clone())?;
+    fn print(&self, source: &str, source_path: &Path) -> Result<()> {
+        let span = self.ariadne_span(source_path)?;
 
         Report::build(self.kind.into(), span.clone())
             .with_message(self.message.clone())
             .with_label(Label::new(span).with_message(self.label.clone()))
             .finish()
-            .eprint((self.source_file_name(source_path)?, Source::from(source)))?;
+            .eprint((Self::source_file_name(source_path)?, Source::from(source)))?;
         Ok(())
     }
 
-    fn ariadne_span(&self, source_path: PathBuf) -> Result<AriadneSpan> {
-        Ok((self.source_file_name(source_path)?, self.span.clone()))
+    fn ariadne_span(&self, source_path: &Path) -> Result<AriadneSpan> {
+        Ok((Self::source_file_name(source_path)?, self.span.clone()))
     }
 
-    fn source_file_name(&self, source_path: PathBuf) -> Result<String> {
+    fn source_file_name(source_path: &Path) -> Result<String> {
         Ok(source_path
             .file_name()
             .context("Failed to parse source file name")?
@@ -81,7 +85,7 @@ impl Diagnostics {
         if !self.inner.is_empty() {
             for diagnostic in &self.inner {
                 diagnostic
-                    .print(self.source.clone(), self.source_path.clone())
+                    .print(&self.source, &self.source_path)
                     .context("Printing diagnostic failed")?;
             }
 
@@ -94,7 +98,7 @@ impl Diagnostics {
 
 #[cfg(test)]
 mod tests {
-    use std::path::PathBuf;
+    use std::path::Path;
 
     use super::{Diagnostic, DiagnosticKind, Diagnostics};
 
@@ -111,18 +115,14 @@ mod tests {
     fn diagnostic_ariadne_span_uses_source_file_name() {
         let diagnostic = diagnostic();
 
-        let span = diagnostic
-            .ariadne_span(PathBuf::from("/tmp/main.bea"))
-            .unwrap();
+        let span = diagnostic.ariadne_span(Path::new("/tmp/main.bea")).unwrap();
 
         assert_eq!(span, ("main.bea".into(), 3..4));
     }
 
     #[test]
     fn diagnostic_source_file_name_errors_without_file_name() {
-        let diagnostic = diagnostic();
-
-        let error = diagnostic.source_file_name(PathBuf::from("/")).unwrap_err();
+        let error = Diagnostic::source_file_name(Path::new("/")).unwrap_err();
 
         assert!(
             error

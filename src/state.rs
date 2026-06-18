@@ -1,4 +1,7 @@
-use std::{fs, path::PathBuf};
+use std::{
+    fs,
+    path::{Path, PathBuf},
+};
 
 use anyhow::{Context, Result};
 
@@ -21,7 +24,7 @@ pub enum CompilerState {
 }
 
 impl Compiler {
-    pub fn new(source_path: PathBuf, output_path: PathBuf) -> Result<Self> {
+    pub fn new(source_path: &Path, output_path: PathBuf) -> Result<Self> {
         let source_path = source_path
             .canonicalize()
             .context("Unable to resolve source file path")?;

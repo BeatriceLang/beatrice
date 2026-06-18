@@ -19,7 +19,7 @@ mod state;
 fn main() -> Result<()> {
     let args = Args::parse();
 
-    let mut compiler = Compiler::new(args.source_path, args.output)?;
+    let mut compiler = Compiler::new(&args.source_path, args.output)?;
 
     compiler.lex()?;
     compiler.parse()?;

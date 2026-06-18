@@ -25,7 +25,9 @@ impl<'a> Codegen<'a> {
         self.builder.position_at_end(entry_block);
 
         for (i, (param_name, _)) in function.params.iter().enumerate() {
-            let llvm_param = llvm_function.get_nth_param(i as u32).unwrap();
+            let llvm_param = llvm_function
+                .get_nth_param(u32::try_from(i).unwrap())
+                .unwrap();
             self.idents.insert(param_name.as_str().into(), llvm_param);
         }
 
@@ -45,16 +47,16 @@ impl<'a> Codegen<'a> {
     ) -> FunctionType<'a> {
         let params = self.function_params(params);
 
-        match return_type {
-            Some(ty) => self.to_llvm_type(&ty).fn_type(&params, false),
-            None => self.ctx.void_type().fn_type(&params, false),
-        }
+        return_type.map_or_else(
+            || self.ctx.void_type().fn_type(&params, false),
+            |ty| self.to_llvm_type(ty).fn_type(&params, false),
+        )
     }
 
     fn function_params(&self, params: &[(Ident, Type)]) -> Vec<BasicMetadataTypeEnum<'a>> {
         params
             .iter()
-            .map(|(_, ty)| self.to_llvm_type(ty).into())
+            .map(|(_, ty)| self.to_llvm_type(*ty).into())
             .collect()
     }
 }
