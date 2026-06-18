@@ -1,3 +1,6 @@
+[workspace]
+members = ["kawaii"]
+
 [package]
 name = "beatrice"
 version = "0.1.0"
