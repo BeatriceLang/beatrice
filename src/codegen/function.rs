@@ -46,7 +46,7 @@ impl<'a> Codegen<'a> {
         let params = self.function_params(params);
 
         match return_type {
-            Some(ty) => self.into_llvm_type(&ty).fn_type(&params, false),
+            Some(ty) => self.to_llvm_type(&ty).fn_type(&params, false),
             None => self.ctx.void_type().fn_type(&params, false),
         }
     }
@@ -54,7 +54,7 @@ impl<'a> Codegen<'a> {
     fn function_params(&self, params: &Vec<(Ident, Type)>) -> Vec<BasicMetadataTypeEnum<'a>> {
         params
             .iter()
-            .map(|(_, ty)| self.into_llvm_type(ty).into())
+            .map(|(_, ty)| self.to_llvm_type(ty).into())
             .collect()
     }
 }

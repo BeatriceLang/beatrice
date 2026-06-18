@@ -3,7 +3,7 @@ use inkwell::{AddressSpace, types::BasicTypeEnum};
 use crate::{ast::Type, codegen::Codegen};
 
 impl<'a> Codegen<'a> {
-    pub(super) fn into_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {
+    pub(super) fn to_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {
         match ty {
             Type::I32 => self.ctx.i32_type().into(),
             Type::String => self.ctx.ptr_type(AddressSpace::default()).into(),
@@ -24,6 +24,6 @@ mod tests {
         let context = Context::create();
         let codegen = Codegen::new(&context, "test", Program { items: vec![] });
 
-        assert!(codegen.into_llvm_type(&Type::String).is_pointer_type());
+        assert!(codegen.to_llvm_type(&Type::String).is_pointer_type());
     }
 }
