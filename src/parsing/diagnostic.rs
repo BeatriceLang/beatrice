@@ -44,7 +44,7 @@ fn display_rich_pattern(pattern: &RichPattern<'_, Token>) -> String {
         RichPattern::SomethingElse => "Something else".into(),
         RichPattern::EndOfInput => "EOF".into(),
         RichPattern::Any => "Any".into(),
-        _ => todo!(),
+        _ => todo!("Handle unknown rich pattern"),
     }
 }
 
