@@ -37,8 +37,8 @@ mod tests {
 
     use crate::build::{
         KawaiiBuild, KawaiiBuildState,
-        test_support::{project, temp_test_dir, with_current_dir},
     };
+    use crate::test_utils::{project, temp_test_dir, with_current_dir};
 
     #[test]
     fn fails_when_source_directory_is_missing() {

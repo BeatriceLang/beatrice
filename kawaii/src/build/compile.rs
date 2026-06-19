@@ -65,8 +65,8 @@ mod tests {
     use super::hash_path;
     use crate::build::{
         KawaiiBuild, KawaiiBuildState,
-        test_support::{project, temp_test_dir, with_current_dir},
     };
+    use crate::test_utils::{project, temp_test_dir, with_current_dir};
 
     #[test]
     fn writes_objects_under_target_with_object_extension() {
