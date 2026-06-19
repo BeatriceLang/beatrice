@@ -1,6 +1,9 @@
 use chumsky::prelude::choice;
 
-use crate::ast::{Block, statement::Statement};
+use crate::{
+    ast::{Block, statement::Statement},
+    parsing::statement::var::var_stmt,
+};
 
 mod assign;
 mod expr;
