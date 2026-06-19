@@ -33,7 +33,7 @@ impl KawaiiBuild {
     }
 }
 
-pub fn build(project: ProjectInfo) -> Result<()> {
+pub fn build(project: &ProjectInfo) -> Result<()> {
     let mut kawaii_build = KawaiiBuild::new(project.clone());
 
     kawaii_build
@@ -45,7 +45,7 @@ pub fn build(project: ProjectInfo) -> Result<()> {
     eprintln!(
         "Built kawaii project `{}` (Artifact at `{}`)",
         project.name.clone(),
-        ProjectLayout::current()?.artifact(&project).display()
+        ProjectLayout::current()?.artifact(project).display()
     );
 
     Ok(())

@@ -22,7 +22,7 @@ fn main() -> Result<()> {
     let arg = Args::parse();
 
     match arg.command {
-        Command::Build => build(ProjectInfo::from_project_toml()?)?,
+        Command::Build => build(&ProjectInfo::from_project_toml()?)?,
         Command::New(args) => new(args)?,
         Command::Run(args) => run(args)?,
     }

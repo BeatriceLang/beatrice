@@ -17,11 +17,10 @@ impl KawaiiBuild {
             let entry = entry?;
 
             if !entry.file_type().is_file()
-                || !entry
+                || entry
                     .clone()
                     .into_path()
-                    .extension()
-                    .is_some_and(|ext| ext == "bt")
+                    .extension().is_none_or(|ext| ext != "bt")
             {
                 continue;
             }

@@ -13,7 +13,7 @@ pub struct RunArgs {
 pub fn run(args: RunArgs) -> Result<()> {
     let project_info = ProjectInfo::from_project_toml()?;
 
-    build(project_info.clone())?;
+    build(&project_info)?;
 
     let output = ProjectLayout::current()?.artifact(&project_info);
 
