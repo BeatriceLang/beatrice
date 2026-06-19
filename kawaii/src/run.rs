@@ -28,3 +28,32 @@ pub fn run(args: RunArgs) -> Result<()> {
             .ok_or_else(|| anyhow!("Failed to get exit code of program"))?,
     );
 }
+
+#[cfg(test)]
+mod tests {
+    use clap::Parser;
+
+    use crate::args::{Args, Command};
+
+    #[test]
+    fn parses_trailing_program_args_after_separator() {
+        let args = Args::parse_from(["kawaii", "run", "--", "hello", "-x", "--flag"]);
+
+        let Command::Run(args) = args.command else {
+            panic!("expected run command");
+        };
+
+        assert_eq!(args.inner_args, ["hello", "-x", "--flag"]);
+    }
+
+    #[test]
+    fn parses_hyphenated_program_args_after_separator() {
+        let args = Args::parse_from(["kawaii", "run", "--", "-x", "--flag"]);
+
+        let Command::Run(args) = args.command else {
+            panic!("expected run command");
+        };
+
+        assert_eq!(args.inner_args, ["-x", "--flag"]);
+    }
+}
