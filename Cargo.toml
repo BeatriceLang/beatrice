@@ -12,3 +12,5 @@ logos = "0.16"
 tap = "1"
 walkdir = "2"
 xshell = "0.2"
+serde = { version = "1", features = ["derive"] }
+toml = "1"

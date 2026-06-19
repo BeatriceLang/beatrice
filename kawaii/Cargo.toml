@@ -9,3 +9,5 @@ walkdir.workspace = true
 tap.workspace = true
 xshell.workspace = true
 anyhow.workspace = true
+serde.workspace = true
+toml.workspace = true

@@ -2,12 +2,15 @@ use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 
+use crate::project_info::ProjectInfo;
+
 mod collect;
 mod compile;
 mod link;
 
 struct KawaiiBuild {
     state: KawaiiBuildState,
+    project: ProjectInfo,
 }
 
 enum KawaiiBuildState {
@@ -17,9 +20,10 @@ enum KawaiiBuildState {
 }
 
 impl KawaiiBuild {
-    pub fn new() -> Self {
+    pub fn new(project: ProjectInfo) -> Self {
         Self {
             state: KawaiiBuildState::Collect,
+            project,
         }
     }
 
@@ -28,8 +32,8 @@ impl KawaiiBuild {
     }
 }
 
-pub fn run() -> Result<()> {
-    let mut kawaii_build = KawaiiBuild::new();
+pub fn build(project: ProjectInfo) -> Result<()> {
+    let mut kawaii_build = KawaiiBuild::new(project);
 
     kawaii_build
         .collect()
