@@ -21,21 +21,20 @@ impl KawaiiBuild {
             .map(|f| f.to_str().unwrap().to_string())
             .collect::<Vec<_>>()
             .join(" ");
-        let output = output();
+        let output = self.output()?;
 
         let sh = Shell::new()?;
         cmd!(sh, "{linker} {objects_str} -o {output}").run()?;
 
         Ok(())
     }
+
+    fn output(&self) -> Result<PathBuf> {
+        Ok(current_dir()?.join(self.project.name.clone()))
+    }
 }
 
 // TODO
 fn link_with_crt() -> bool {
     true
-}
-
-// TODO
-fn output() -> PathBuf {
-    current_dir().unwrap().join("out")
 }
