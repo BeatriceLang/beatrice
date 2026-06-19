@@ -2,7 +2,7 @@ use chumsky::prelude::choice;
 
 use crate::{
     ast::{Block, statement::Statement},
-    parsing::statement::var::var_stmt,
+    parsing::statement::{var::var_stmt, r#while::while_stmt},
 };
 
 mod assign;
@@ -11,6 +11,7 @@ mod r#if;
 mod r#let;
 mod r#return;
 mod var;
+mod r#while;
 
 pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
     choice((
@@ -20,6 +21,7 @@ pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
         r#return::return_stmt(),
         expr::expr_stmt(),
         r#if::if_stmt(block),
+        while_stmt(),
     ))
 }
 
