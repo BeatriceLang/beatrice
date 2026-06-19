@@ -34,7 +34,7 @@ pub fn new(args: NewArgs) -> Result<()> {
     fs::write(main, MAIN)?;
     fs::write(kawaii_toml, format!("name = \"{project_name}\"\n"))?;
 
-    eprintln!("Created new kawaii project {project_name}");
+    eprintln!("Created new kawaii project `{project_name}`");
 
     Ok(())
 }

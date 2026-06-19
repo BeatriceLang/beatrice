@@ -42,7 +42,7 @@ pub fn build(project: ProjectInfo) -> Result<()> {
     kawaii_build.link().context("Failed to link")?;
 
     eprintln!(
-        "Built kawaii project {} (Artifact at {})",
+        "Built kawaii project `{}` (Artifact at `{}`)",
         project.name.clone(),
         current_dir()?.join("target").join(project.name).display()
     );
