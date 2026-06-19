@@ -1,6 +1,7 @@
 use crate::{new::NewArgs, run::RunArgs};
 
 #[derive(clap::Parser, Debug)]
+#[command(about = "Beatrice's package manager and build system")]
 pub struct Args {
     #[command(subcommand)]
     pub command: Command,
