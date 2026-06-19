@@ -60,7 +60,7 @@ impl Codegen<'_> {
                 let local = self.locals.get(ident.as_str()).unwrap();
                 let value = self.compile_expr(value).unwrap();
 
-                self.builder.build_store(local.ptr, value);
+                self.builder.build_store(local.ptr, value).unwrap();
             }
             Statement::While { cond: _, body: _ } => todo!(),
         }
