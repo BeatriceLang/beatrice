@@ -17,7 +17,8 @@ impl KawaiiBuild {
         for entry in WalkDir::new(source_dir) {
             let entry = entry?;
 
-            if !entry.file_type().is_file() {
+            if !entry.file_type().is_file() || !entry.file_name().to_str().unwrap().ends_with(".bt")
+            {
                 continue;
             }
 
