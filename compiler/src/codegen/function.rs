@@ -28,9 +28,7 @@ impl<'a> Codegen<'a> {
             let llvm_param = llvm_function
                 .get_nth_param(u32::try_from(i).unwrap())
                 .unwrap();
-            let local = self.compile_local(param_name, *param_ty, llvm_param);
-
-            self.locals.insert(param_name.as_str().into(), local);
+            self.insert_local(param_name, *param_ty, llvm_param, false);
         }
 
         for statement in &function.body.statements {

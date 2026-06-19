@@ -51,10 +51,13 @@ impl<'a> Codegen<'a> {
 
                 self.builder.position_at_end(end_block);
             }
-            Statement::Let { name, ty, value } | Statement::Var { name, ty, value } => {
+            Statement::Let { name, ty, value } => {
                 let value = self.compile_expr(value).unwrap();
-                let local = self.compile_local(name, *ty, value);
-                self.locals.insert(name.as_str().to_string(), local);
+                self.insert_local(name, *ty, value, false);
+            }
+            Statement::Var { name, ty, value } => {
+                let value = self.compile_expr(value).unwrap();
+                self.insert_local(name, *ty, value, true);
             }
         }
     }
