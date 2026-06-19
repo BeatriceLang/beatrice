@@ -6,11 +6,13 @@ use clap::Parser;
 use crate::{
     args::{Args, Command},
     build::build,
+    new::new,
     project_info::ProjectInfo,
 };
 
 mod args;
 mod build;
+mod new;
 mod project_info;
 
 fn main() -> Result<()> {
@@ -23,6 +25,7 @@ fn main() -> Result<()> {
 
     match arg.command {
         Command::Build => build(project_info)?,
+        Command::New => new()?,
     }
 
     Ok(())

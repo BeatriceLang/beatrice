@@ -7,4 +7,5 @@ pub struct Args {
 #[derive(clap::Subcommand, Debug)]
 pub enum Command {
     Build,
+    New,
 }
