@@ -93,7 +93,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "beatricec"
+name = "beatrice-compiler"
 version = "0.1.0"
 dependencies = [
  "anyhow",
@@ -279,7 +279,7 @@ name = "kawaii"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "beatricec",
+ "beatrice-compiler",
  "clap",
  "serde",
  "tap",

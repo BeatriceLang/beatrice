@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-beatricec.workspace = true
+beatrice-compiler.workspace = true
 clap.workspace = true
 walkdir.workspace = true
 tap.workspace = true

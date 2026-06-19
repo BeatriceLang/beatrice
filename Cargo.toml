@@ -15,4 +15,4 @@ xshell = "0.2"
 serde = { version = "1", features = ["derive"] }
 toml = "1"
 
-beatricec.path = "./compiler"
+beatrice-compiler.path = "./compiler"

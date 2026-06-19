@@ -1,7 +1,7 @@
 use std::{env::current_dir, path::PathBuf};
 
 use anyhow::{Result, bail};
-use beatricec::compile;
+use beatrice_compiler::compile;
 
 use crate::build::{KawaiiBuild, KawaiiBuildState};
 
