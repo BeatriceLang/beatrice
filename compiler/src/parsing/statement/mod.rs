@@ -1,4 +1,4 @@
-use chumsky::{Parser, prelude::choice};
+use chumsky::prelude::choice;
 
 use crate::{
     ast::{Block, statement::Statement},

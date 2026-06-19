@@ -5,11 +5,10 @@ use inkwell::{
     builder::Builder,
     context::Context,
     module::Module,
-    values::{BasicValueEnum, PointerValue},
 };
 
 use crate::{
-    ast::{Item, Program, Type},
+    ast::{Item, Program},
     codegen::local::Local,
     state::{Compiler, CompilerState},
 };

@@ -1,8 +1,8 @@
-use inkwell::values::{self, BasicValueEnum, PointerValue};
+use inkwell::values::{BasicValueEnum, PointerValue};
 
 use crate::{
     ast::{Ident, Type},
-    codegen::{Codegen, ty},
+    codegen::Codegen,
 };
 
 pub struct Local<'a> {

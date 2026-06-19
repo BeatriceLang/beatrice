@@ -2,7 +2,7 @@ use inkwell::types::{BasicMetadataTypeEnum, BasicType, FunctionType};
 
 use crate::{
     ast::{Function, Ident, Type},
-    codegen::{Codegen, Local},
+    codegen::Codegen,
 };
 
 impl<'a> Codegen<'a> {
