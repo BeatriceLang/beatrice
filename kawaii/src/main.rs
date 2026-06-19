@@ -16,15 +16,10 @@ mod new;
 mod project_info;
 
 fn main() -> Result<()> {
-    let project_toml =
-        fs::read_to_string("Kawaii.toml").context("Failed to read project info (Kawaii.toml)")?;
-    let project_info: ProjectInfo =
-        toml::from_str(&project_toml).context("Failed to parse project info")?;
-
     let arg = Args::parse();
 
     match arg.command {
-        Command::Build => build(project_info)?,
+        Command::Build => build(ProjectInfo::from_project_toml()?)?,
         Command::New => new()?,
     }
 
