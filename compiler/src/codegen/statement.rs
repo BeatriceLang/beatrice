@@ -1,6 +1,9 @@
-use inkwell::values::BasicValue;
+use inkwell::values::{BasicValue, BasicValueEnum};
 
-use crate::{ast::statement::Statement, codegen::Codegen};
+use crate::{
+    ast::statement::Statement,
+    codegen::{Codegen, ty},
+};
 
 impl Codegen<'_> {
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
@@ -52,6 +55,16 @@ impl Codegen<'_> {
                 let value = self.compile_expr(value).unwrap();
 
                 self.idents.insert(name.as_str().into(), value);
+            }
+            Statement::Var { name, ty, value } => {
+                let ty = self.to_llvm_type(*ty);
+                let ptr = self.builder.build_alloca(ty, name.as_str()).unwrap();
+                let value = self.compile_expr(value).unwrap();
+
+                self.builder.build_store(ptr, value).unwrap();
+
+                self.idents
+                    .insert(name.as_str().to_string(), BasicValueEnum::PointerValue(ptr));
             }
         }
     }
