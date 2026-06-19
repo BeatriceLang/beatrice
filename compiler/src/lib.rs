@@ -1,5 +1,3 @@
-#![warn(clippy::all, clippy::pedantic, clippy::nursery, clippy::cargo)]
-
 use std::path::{Path, PathBuf};
 
 use anyhow::Result;
