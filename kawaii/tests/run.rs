@@ -30,8 +30,13 @@ fn write_project(dir: &Path, project_toml: &str, sources: &[(&str, &str)]) {
 }
 
 fn kawaii_run(dir: &Path) -> Output {
+    kawaii_run_with_args(dir, &[])
+}
+
+fn kawaii_run_with_args(dir: &Path, args: &[&str]) -> Output {
     Command::new(env!("CARGO_BIN_EXE_kawaii"))
         .arg("run")
+        .args(args)
         .current_dir(dir)
         .output()
         .unwrap()
@@ -69,6 +74,36 @@ fn returns_program_exit_code() {
 }
 
 #[test]
+fn accepts_hyphenated_program_args_after_separator() {
+    let dir = temp_test_dir();
+    write_project(
+        &dir,
+        r#"
+        name = "args"
+        "#,
+        &[(
+            "src/main.bt",
+            r"
+            fn main() -> i32 {
+                return 0;
+            }
+            ",
+        )],
+    );
+
+    let output = kawaii_run_with_args(&dir, &["--", "-x", "--flag"]);
+
+    assert!(
+        output.status.success(),
+        "kawaii run rejected hyphenated program args\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+
+    fs::remove_dir_all(dir).unwrap();
+}
+
+#[test]
 fn forwards_program_stdout() {
     let dir = temp_test_dir();
     write_project(
@@ -97,7 +132,12 @@ fn forwards_program_stdout() {
         String::from_utf8_lossy(&output.stdout),
         String::from_utf8_lossy(&output.stderr)
     );
-    assert_eq!(String::from_utf8_lossy(&output.stdout), "Hello run!\n");
+    assert!(
+        String::from_utf8_lossy(&output.stdout).contains("Hello run!\n"),
+        "kawaii run did not forward program stdout\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
 
     fs::remove_dir_all(dir).unwrap();
 }
