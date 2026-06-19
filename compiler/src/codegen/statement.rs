@@ -5,7 +5,7 @@ use crate::{
     codegen::{Codegen, ty},
 };
 
-impl Codegen<'_> {
+impl<'a> Codegen<'a> {
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
         match statement {
             Statement::Return(expr) => {
