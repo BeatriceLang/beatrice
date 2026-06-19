@@ -12,7 +12,6 @@ impl KawaiiBuild {
         };
 
         let linker = self.linker();
-
         let objects_str: String = objects
             .iter()
             .map(|f| f.to_str().unwrap().to_string())
