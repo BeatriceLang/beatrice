@@ -41,6 +41,7 @@ pub fn new(args: NewArgs) -> Result<()> {
             "#
         ),
     )?;
+    println!("Created new kawaii project {project_name}");
 
     Ok(())
 }
