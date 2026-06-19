@@ -2,7 +2,7 @@ use std::fs;
 
 use anyhow::{Context, Result};
 
-#[derive(serde::Deserialize, Debug)]
+#[derive(serde::Deserialize, Clone, Debug)]
 pub struct ProjectInfo {
     pub name: String,
 
