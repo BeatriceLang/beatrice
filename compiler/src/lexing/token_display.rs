@@ -32,6 +32,7 @@ impl Display for Token {
             Self::Extern => f.write_str("extern"),
             Self::String => f.write_str("string"),
             Self::StringLiteral(text) => write!(f, "\"{text}\""),
+            Self::While => f.write_str("while"),
             Self::Var => f.write_str("var"),
         }
     }

@@ -9,6 +9,9 @@ pub enum Token {
     #[token("if")]
     If,
 
+    #[token("while")]
+    While,
+
     #[token("fn")]
     Fn,
 
