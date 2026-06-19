@@ -3,11 +3,10 @@ use std::{env::current_dir, fs};
 use anyhow::Result;
 
 const GITIGNORE: &str = "/target";
-const MAIN: &str = r#"
-fn main() -> i32 {
+const MAIN: &str = r"fn main() -> i32 {
     return 0;
 }
-"#;
+";
 
 #[derive(clap::Args, Debug)]
 pub struct NewArgs {
@@ -33,14 +32,8 @@ pub fn new(args: NewArgs) -> Result<()> {
 
     fs::write(gitignore, GITIGNORE)?;
     fs::write(main, MAIN)?;
-    fs::write(
-        kawaii_toml,
-        format!(
-            r#"
-                name = "{project_name}"
-            "#
-        ),
-    )?;
+    fs::write(kawaii_toml, format!("name = \"{project_name}\"\n"))?;
+
     println!("Created new kawaii project {project_name}");
 
     Ok(())
@@ -74,17 +67,14 @@ mod tests {
             );
             assert_eq!(
                 fs::read_to_string(project_dir.join("src/main.bt")).unwrap(),
-                r#"
-fn main() -> i32 {
+                r"fn main() -> i32 {
     return 0;
 }
-"#
+"
             );
             assert_eq!(
                 fs::read_to_string(project_dir.join("Kawaii.toml")).unwrap(),
-                r#"
-                name = "hello"
-            "#
+                "name = \"hello\"\n"
             );
         });
 
