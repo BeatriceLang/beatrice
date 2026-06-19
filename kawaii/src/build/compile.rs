@@ -1,10 +1,7 @@
-use std::{
-    env::current_dir,
-    path::PathBuf,
-};
+use std::{env::current_dir, path::PathBuf};
 
 use anyhow::{Result, bail};
-use xshell::{Shell, cmd};
+use beatricec::compile;
 
 use crate::build::{KawaiiBuild, KawaiiBuildState};
 
@@ -20,8 +17,8 @@ impl KawaiiBuild {
         for source in sources {
             let object = object_file_for(source.clone());
 
-            let sh = Shell::new()?;
-            if cmd!(sh, "beatricec {source} -o {object}").run().is_err() {
+            if let Err(err) = compile(source, object.clone()) {
+                eprintln!("Failed to compile {source:?}: {err:#}");
                 failed = true;
             }
 
