@@ -20,7 +20,7 @@ enum KawaiiBuildState {
 }
 
 impl KawaiiBuild {
-    pub fn new(project: ProjectInfo) -> Self {
+    pub const fn new(project: ProjectInfo) -> Self {
         Self {
             state: KawaiiBuildState::Collect,
             project,

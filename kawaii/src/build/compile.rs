@@ -27,7 +27,7 @@ impl KawaiiBuild {
             }
 
             if let Err(err) = compile(source, object.clone()) {
-                eprintln!("Failed to compile {source:?}: {err:#}");
+                eprintln!("Failed to compile {}: {err:#}", source.display());
                 failed = true;
             }
 
@@ -63,9 +63,7 @@ mod tests {
     use std::fs;
 
     use super::hash_path;
-    use crate::build::{
-        KawaiiBuild, KawaiiBuildState,
-    };
+    use crate::build::{KawaiiBuild, KawaiiBuildState};
     use crate::test_utils::{project, temp_test_dir, with_current_dir};
 
     #[test]

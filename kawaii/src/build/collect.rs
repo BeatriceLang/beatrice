@@ -17,7 +17,12 @@ impl KawaiiBuild {
         for entry in WalkDir::new(source_dir) {
             let entry = entry?;
 
-            if !entry.file_type().is_file() || !entry.file_name().to_str().unwrap().ends_with(".bt")
+            if !entry.file_type().is_file()
+                || !entry
+                    .clone()
+                    .into_path()
+                    .extension()
+                    .is_some_and(|ext| ext == "bt")
             {
                 continue;
             }
@@ -35,9 +40,7 @@ impl KawaiiBuild {
 mod tests {
     use std::fs;
 
-    use crate::build::{
-        KawaiiBuild, KawaiiBuildState,
-    };
+    use crate::build::{KawaiiBuild, KawaiiBuildState};
     use crate::test_utils::{project, temp_test_dir, with_current_dir};
 
     #[test]

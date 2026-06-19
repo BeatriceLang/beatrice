@@ -6,7 +6,7 @@ use xshell::{Shell, cmd};
 use crate::build::{KawaiiBuild, KawaiiBuildState};
 
 impl KawaiiBuild {
-    pub(super) fn link(&mut self) -> Result<()> {
+    pub(super) fn link(&self) -> Result<()> {
         let KawaiiBuildState::Link { objects } = &self.state else {
             panic!("Unexpected kawaii build state")
         };
@@ -26,10 +26,11 @@ impl KawaiiBuild {
             .join(self.project.name.clone()))
     }
 
-    fn linker(&self) -> &str {
-        match self.project.freestanding {
-            true => "ld",
-            false => "cc",
+    const fn linker(&self) -> &str {
+        if self.project.freestanding {
+            "ld"
+        } else {
+            "cc"
         }
     }
 }

@@ -18,6 +18,6 @@ pub fn run() -> Result<()> {
         Command::new(output)
             .status()?
             .code()
-            .ok_or(anyhow!("Failed to get exit code of program"))?,
+            .ok_or_else(|| anyhow!("Failed to get exit code of program"))?,
     );
 }
