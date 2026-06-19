@@ -1,9 +1,6 @@
-use core::fmt;
-use std::{env::current_dir, path::PathBuf};
+use std::env::current_dir;
 
 use anyhow::{Result, bail};
-use clap::builder::PathBufValueParser;
-use tap::Tap;
 use walkdir::WalkDir;
 
 use crate::build::KawaiiBuild;

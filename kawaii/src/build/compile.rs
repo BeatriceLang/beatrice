@@ -1,9 +1,9 @@
 use std::{
     env::current_dir,
-    path::{self, PathBuf},
+    path::PathBuf,
 };
 
-use anyhow::{Context, Result, bail};
+use anyhow::{Result, bail};
 use xshell::{Shell, cmd};
 
 use crate::build::{KawaiiBuild, KawaiiBuildState};
