@@ -211,6 +211,38 @@ fn compiles_let_value_return() {
 }
 
 #[test]
+fn compiles_var_assignment_return() {
+    let code = compile_and_run(
+        "var_assignment_return",
+        "
+        fn main() -> i32 {
+            var value: i32 = 1;
+            value = 42;
+            return value;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
+fn compiles_var_assignment_from_previous_value() {
+    let code = compile_and_run(
+        "var_assignment_from_previous_value",
+        "
+        fn main() -> i32 {
+            var value: i32 = 40;
+            value = value + 2;
+            return value;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_puts_hello_world() {
     let output = compile_and_run_output(
         "puts_hello_world",
