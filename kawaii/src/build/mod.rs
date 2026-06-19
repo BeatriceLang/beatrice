@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::build::collect::collect;
+use anyhow::Result;
 
 mod collect;
 mod compile;
@@ -27,8 +27,11 @@ impl KawaiiBuild {
     }
 }
 
-pub fn run() {
+pub fn run() -> Result<()> {
     let mut kawaii_build = KawaiiBuild::new();
 
     kawaii_build.collect();
+    kawaii_build.compile()?;
+
+    Ok(())
 }

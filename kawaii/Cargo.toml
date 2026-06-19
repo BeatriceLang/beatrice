@@ -8,3 +8,4 @@ clap.workspace = true
 walkdir.workspace = true
 tap.workspace = true
 xshell.workspace = true
+anyhow.workspace = true
