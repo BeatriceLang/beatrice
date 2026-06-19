@@ -1,5 +1,6 @@
 use std::{
     env::current_dir,
+    fs,
     hash::{DefaultHasher, Hash, Hasher},
     path::{Path, PathBuf},
 };
@@ -20,6 +21,10 @@ impl KawaiiBuild {
 
         for source in sources {
             let object = object_file_for(source);
+
+            if let Some(parent) = object.parent() {
+                fs::create_dir_all(parent)?;
+            }
 
             if let Err(err) = compile(source, object.clone()) {
                 eprintln!("Failed to compile {source:?}: {err:#}");
@@ -57,6 +62,7 @@ fn hash_path(path: &Path) -> u64 {
 mod tests {
     use std::fs;
 
+    use super::hash_path;
     use crate::build::{
         KawaiiBuild, KawaiiBuildState,
         test_support::{project, temp_test_dir, with_current_dir},
@@ -90,8 +96,13 @@ mod tests {
                 panic!("expected link state after compile");
             };
 
-            assert_eq!(objects, vec![dir.join("target/main.o")]);
-            assert!(dir.join("target/main.o").exists());
+            let expected_object = dir.join("target").join("objects").join(format!(
+                "main.bt-{:016x}.o",
+                hash_path(&dir.join("src/main.bt"))
+            ));
+
+            assert_eq!(objects, vec![expected_object.clone()]);
+            assert!(expected_object.exists());
         });
 
         fs::remove_dir_all(dir).unwrap();
