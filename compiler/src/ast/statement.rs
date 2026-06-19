@@ -9,6 +9,11 @@ pub enum Statement {
         cond: Expression,
         body: Block,
     },
+    Var {
+        name: Ident,
+        ty: Type,
+        value: Expression,
+    },
     Let {
         name: Ident,
         ty: Type,
