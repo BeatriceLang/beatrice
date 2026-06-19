@@ -41,7 +41,7 @@ pub fn build(project: ProjectInfo) -> Result<()> {
     kawaii_build.compile().context("Failed to compile")?;
     kawaii_build.link().context("Failed to link")?;
 
-    println!(
+    eprintln!(
         "Built kawaii project {} (Artifact at {})",
         project.name.clone(),
         current_dir()?.join("target").join(project.name).display()
