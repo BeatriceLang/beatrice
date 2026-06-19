@@ -56,7 +56,12 @@ impl Codegen<'_> {
                 let value = self.compile_expr(value).unwrap();
                 self.insert_local(name, *ty, value, true);
             }
-            Statement::Assign { ident, value } => todo!(),
+            Statement::Assign { ident, value } => {
+                let local = self.locals.get(ident.as_str()).unwrap();
+                let value = self.compile_expr(value).unwrap();
+
+                self.builder.build_store(local.ptr, value);
+            }
         }
     }
 }
