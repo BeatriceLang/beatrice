@@ -19,4 +19,8 @@ pub enum Statement {
         ty: Type,
         value: Expression,
     },
+    Assign {
+        ident: Ident,
+        value: Expression,
+    },
 }

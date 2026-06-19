@@ -1,9 +1,6 @@
 use inkwell::values::BasicValue;
 
-use crate::{
-    ast::statement::Statement,
-    codegen::Codegen,
-};
+use crate::{ast::statement::Statement, codegen::Codegen};
 
 impl Codegen<'_> {
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
@@ -59,6 +56,7 @@ impl Codegen<'_> {
                 let value = self.compile_expr(value).unwrap();
                 self.insert_local(name, *ty, value, true);
             }
+            Statement::Assign { ident, value } => todo!(),
         }
     }
 }
