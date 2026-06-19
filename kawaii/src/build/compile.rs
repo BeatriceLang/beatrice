@@ -36,10 +36,10 @@ impl KawaiiBuild {
 }
 
 fn object_file_for(source: PathBuf) -> PathBuf {
-    let target_dir = current_dir().unwrap().join("target");
+    let object_dir = current_dir().unwrap().join("target").join("objects");
     let source_name = source.file_name().unwrap();
 
-    target_dir.join(source_name)
+    object_dir.join(source_name)
 }
 
 #[cfg(test)]
