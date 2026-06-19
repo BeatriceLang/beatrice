@@ -1,4 +1,8 @@
-use std::{env::current_dir, path::PathBuf};
+use std::{
+    env::current_dir,
+    hash::{DefaultHasher, Hash, Hasher},
+    path::{self, Path, PathBuf},
+};
 
 use anyhow::{Result, bail};
 use beatrice_compiler::compile;
@@ -15,7 +19,7 @@ impl KawaiiBuild {
         let mut failed = false;
 
         for source in sources {
-            let object = object_file_for(source.clone());
+            let object = object_file_for(source);
 
             if let Err(err) = compile(source, object.clone()) {
                 eprintln!("Failed to compile {source:?}: {err:#}");
@@ -35,11 +39,18 @@ impl KawaiiBuild {
     }
 }
 
-fn object_file_for(source: PathBuf) -> PathBuf {
+fn object_file_for(source: &Path) -> PathBuf {
     let object_dir = current_dir().unwrap().join("target").join("objects");
-    let source_name = source.file_name().unwrap();
+    let source_name = source.file_name().unwrap().to_str().unwrap();
+    let hash = hash_path(source);
 
-    object_dir.join(source_name)
+    object_dir.join(format!("{source_name}-{hash:016x}"))
+}
+
+fn hash_path(path: &Path) -> u64 {
+    let mut hasher = DefaultHasher::new();
+    path.hash(&mut hasher);
+    hasher.finish()
 }
 
 #[cfg(test)]
