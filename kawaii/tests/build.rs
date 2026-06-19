@@ -64,7 +64,7 @@ fn builds_basic_project_into_named_executable() {
         String::from_utf8_lossy(&build_output.stderr)
     );
 
-    let executable = dir.join("hello");
+    let executable = dir.join("target").join("hello");
     assert!(executable.exists(), "kawaii did not create the executable");
 
     let run_output = Command::new(executable).output().unwrap();
@@ -112,7 +112,9 @@ fn builds_project_with_imported_source() {
         String::from_utf8_lossy(&build_output.stderr)
     );
 
-    let run_output = Command::new(dir.join("imports")).output().unwrap();
+    let run_output = Command::new(dir.join("target").join("imports"))
+        .output()
+        .unwrap();
     assert_eq!(run_output.status.code(), Some(42));
 
     fs::remove_dir_all(dir).unwrap();
