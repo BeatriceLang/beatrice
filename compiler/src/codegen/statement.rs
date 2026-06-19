@@ -62,6 +62,7 @@ impl Codegen<'_> {
 
                 self.builder.build_store(local.ptr, value);
             }
+            Statement::While { cond, body } => todo!(),
         }
     }
 }

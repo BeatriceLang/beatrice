@@ -9,6 +9,10 @@ pub enum Statement {
         cond: Expression,
         body: Block,
     },
+    While {
+        cond: Expression,
+        body: Block,
+    },
     Var {
         name: Ident,
         ty: Type,
