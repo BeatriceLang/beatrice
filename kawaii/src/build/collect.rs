@@ -15,8 +15,13 @@ impl KawaiiBuild {
         }
 
         for entry in WalkDir::new(source_dir) {
-            let entry_path = entry?.into_path();
-            sources.push(entry_path);
+            let entry = entry?;
+
+            if !entry.file_type().is_file() {
+                continue;
+            }
+
+            sources.push(entry.into_path());
         }
 
         self.advance_to(super::KawaiiBuildState::Compile { sources });
@@ -45,7 +50,10 @@ mod tests {
         });
 
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err().to_string(), "Source directory not found");
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            "Source directory not found"
+        );
 
         fs::remove_dir_all(dir).unwrap();
     }
