@@ -41,3 +41,48 @@ fn object_file_for(source: PathBuf) -> PathBuf {
 
     target_dir.join(source_name)
 }
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+
+    use crate::build::{
+        KawaiiBuild, KawaiiBuildState,
+        test_support::{project, temp_test_dir, with_current_dir},
+    };
+
+    #[test]
+    fn writes_objects_under_target_with_object_extension() {
+        let dir = temp_test_dir();
+        fs::create_dir_all(dir.join("src")).unwrap();
+        fs::write(
+            dir.join("src/main.bt"),
+            r#"
+            fn main() -> i32 {
+                return 42;
+            }
+            "#,
+        )
+        .unwrap();
+
+        with_current_dir(&dir, || {
+            let mut build = KawaiiBuild {
+                state: KawaiiBuildState::Compile {
+                    sources: vec![dir.join("src/main.bt")],
+                },
+                project: project(),
+            };
+
+            build.compile().unwrap();
+
+            let KawaiiBuildState::Link { objects } = build.state else {
+                panic!("expected link state after compile");
+            };
+
+            assert_eq!(objects, vec![dir.join("target/main.o")]);
+            assert!(dir.join("target/main.o").exists());
+        });
+
+        fs::remove_dir_all(dir).unwrap();
+    }
+}
