@@ -1,9 +1,10 @@
 use std::path::PathBuf;
 
-use anyhow::Result;
+use anyhow::{Context, Result};
 
 mod collect;
 mod compile;
+mod link;
 
 struct KawaiiBuild {
     state: KawaiiBuildState,
@@ -30,8 +31,11 @@ impl KawaiiBuild {
 pub fn run() -> Result<()> {
     let mut kawaii_build = KawaiiBuild::new();
 
-    kawaii_build.collect();
-    kawaii_build.compile()?;
+    kawaii_build
+        .collect()
+        .context("Failed to collect source files")?;
+    kawaii_build.compile().context("Failed to compile")?;
+    kawaii_build.link().context("Failed to link")?;
 
     Ok(())
 }
