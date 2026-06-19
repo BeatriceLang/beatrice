@@ -11,10 +11,7 @@ impl KawaiiBuild {
             panic!("Unexpected kawaii build state")
         };
 
-        let linker = match link_with_crt() {
-            true => "cc",
-            false => "ld",
-        };
+        let linker = self.linker();
 
         let objects_str: String = objects
             .iter()
@@ -32,9 +29,11 @@ impl KawaiiBuild {
     fn output(&self) -> Result<PathBuf> {
         Ok(current_dir()?.join(self.project.name.clone()))
     }
-}
 
-// TODO
-fn link_with_crt() -> bool {
-    true
+    fn linker(&self) -> &str {
+        match self.project.freestanding {
+            true => "ld",
+            false => "cc",
+        }
+    }
 }
