@@ -12,3 +12,55 @@ pub(super) fn while_stmt<'a>() -> parser_type!(Statement) {
         .then(block())
         .map(|(cond, body)| Statement::While { cond, body })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        ast::{
+            Block,
+            expression::{BinaryOpKind, Expression},
+            statement::Statement,
+        },
+        parsing::{test_ident, test_parse, test_tokens},
+    };
+
+    #[test]
+    fn parses_while_stmt() {
+        let tokens = test_tokens![
+            Token::While,
+            Token::Ident("n".into()),
+            Token::LessThan,
+            Token::Number(10),
+            Token::LeftBrace,
+            Token::Ident("n".into()),
+            Token::Assign,
+            Token::Ident("n".into()),
+            Token::Add,
+            Token::Number(1),
+            Token::Semicolon,
+            Token::RightBrace,
+        ];
+
+        assert_eq!(
+            test_parse(while_stmt(), &tokens),
+            Statement::While {
+                cond: Expression::BinaryOp {
+                    lhs: Expression::Ident(test_ident("n")).into(),
+                    kind: BinaryOpKind::LessThan,
+                    rhs: Expression::Number(10).into(),
+                },
+                body: Block {
+                    statements: vec![Statement::Assign {
+                        ident: test_ident("n"),
+                        value: Expression::BinaryOp {
+                            lhs: Expression::Ident(test_ident("n")).into(),
+                            kind: BinaryOpKind::Add,
+                            rhs: Expression::Number(1).into(),
+                        },
+                    }],
+                },
+            }
+        );
+    }
+}
