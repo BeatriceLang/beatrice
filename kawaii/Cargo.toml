@@ -5,3 +5,6 @@ edition = "2024"
 
 [dependencies]
 clap.workspace = true
+walkdir.workspace = true
+tap.workspace = true
+xshell.workspace = true
