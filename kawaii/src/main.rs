@@ -1,6 +1,4 @@
-use std::fs;
-
-use anyhow::{Context, Result};
+use anyhow::Result;
 use clap::Parser;
 
 use crate::{
@@ -14,6 +12,8 @@ mod args;
 mod build;
 mod new;
 mod project_info;
+#[cfg(test)]
+mod test_utils;
 
 fn main() -> Result<()> {
     let arg = Args::parse();
