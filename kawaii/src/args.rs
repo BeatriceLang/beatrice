@@ -9,7 +9,12 @@ pub struct Args {
 
 #[derive(clap::Subcommand, Debug)]
 pub enum Command {
+    /// Build the current kawaii project
     Build,
+
+    /// Create a new kawaii project
     New(NewArgs),
+
+    /// Run the current kawaii project
     Run(RunArgs),
 }
