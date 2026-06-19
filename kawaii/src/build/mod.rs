@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{env::current_dir, path::PathBuf};
 
 use anyhow::{Context, Result};
 
@@ -33,13 +33,19 @@ impl KawaiiBuild {
 }
 
 pub fn build(project: ProjectInfo) -> Result<()> {
-    let mut kawaii_build = KawaiiBuild::new(project);
+    let mut kawaii_build = KawaiiBuild::new(project.clone());
 
     kawaii_build
         .collect()
         .context("Failed to collect source files")?;
     kawaii_build.compile().context("Failed to compile")?;
     kawaii_build.link().context("Failed to link")?;
+
+    println!(
+        "Built kawaii project {} (Artifact at {})",
+        project.name.clone(),
+        current_dir()?.join("target").join(project.name).display()
+    );
 
     Ok(())
 }
