@@ -6,12 +6,14 @@ use crate::{
     build::build,
     new::new,
     project_info::ProjectInfo,
+    run::run,
 };
 
 mod args;
 mod build;
 mod new;
 mod project_info;
+mod run;
 #[cfg(test)]
 mod test_utils;
 
@@ -21,6 +23,7 @@ fn main() -> Result<()> {
     match arg.command {
         Command::Build => build(ProjectInfo::from_project_toml()?)?,
         Command::New(args) => new(args)?,
+        Command::Run => run()?,
     }
 
     Ok(())

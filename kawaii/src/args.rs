@@ -10,4 +10,5 @@ pub struct Args {
 pub enum Command {
     Build,
     New(NewArgs),
+    Run,
 }
