@@ -1,13 +1,12 @@
-use std::env::current_dir;
-
 use anyhow::{Result, bail};
 use walkdir::WalkDir;
 
 use crate::build::KawaiiBuild;
+use crate::project_layout::ProjectLayout;
 
 impl KawaiiBuild {
     pub(super) fn collect(&mut self) -> Result<()> {
-        let source_dir = current_dir().unwrap().join("src");
+        let source_dir = ProjectLayout::current()?.src_dir();
         let mut sources = vec![];
 
         if !source_dir.exists() {

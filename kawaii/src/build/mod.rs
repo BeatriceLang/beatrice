@@ -1,8 +1,8 @@
-use std::{env::current_dir, path::PathBuf};
+use std::path::PathBuf;
 
 use anyhow::{Context, Result};
 
-use crate::project_info::ProjectInfo;
+use crate::{project_info::ProjectInfo, project_layout::ProjectLayout};
 
 mod collect;
 mod compile;
@@ -44,7 +44,7 @@ pub fn build(project: ProjectInfo) -> Result<()> {
     eprintln!(
         "Built kawaii project `{}` (Artifact at `{}`)",
         project.name.clone(),
-        current_dir()?.join("target").join(project.name).display()
+        ProjectLayout::current()?.artifact(&project).display()
     );
 
     Ok(())

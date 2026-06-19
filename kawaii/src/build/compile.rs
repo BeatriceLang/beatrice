@@ -1,5 +1,4 @@
 use std::{
-    env::current_dir,
     fs,
     hash::{DefaultHasher, Hash, Hasher},
     path::{Path, PathBuf},
@@ -8,7 +7,10 @@ use std::{
 use anyhow::{Result, bail};
 use beatrice_compiler::compile;
 
-use crate::build::{KawaiiBuild, KawaiiBuildState};
+use crate::{
+    build::{KawaiiBuild, KawaiiBuildState},
+    project_layout::ProjectLayout,
+};
 
 impl KawaiiBuild {
     pub(super) fn compile(&mut self) -> Result<()> {
@@ -20,7 +22,7 @@ impl KawaiiBuild {
         let mut failed = false;
 
         for source in sources {
-            let object = object_file_for(source);
+            let object = object_file_for(source)?;
 
             if let Some(parent) = object.parent() {
                 fs::create_dir_all(parent)?;
@@ -44,12 +46,12 @@ impl KawaiiBuild {
     }
 }
 
-fn object_file_for(source: &Path) -> PathBuf {
-    let object_dir = current_dir().unwrap().join("target").join("objects");
+fn object_file_for(source: &Path) -> Result<PathBuf> {
+    let object_dir = ProjectLayout::current()?.objects_dir();
     let source_name = source.file_name().unwrap().to_str().unwrap();
     let hash = hash_path(source);
 
-    object_dir.join(format!("{source_name}-{hash:016x}.o"))
+    Ok(object_dir.join(format!("{source_name}-{hash:016x}.o")))
 }
 
 fn hash_path(path: &Path) -> u64 {

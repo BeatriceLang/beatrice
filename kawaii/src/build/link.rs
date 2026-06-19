@@ -1,9 +1,8 @@
-use std::{env::current_dir, path::PathBuf};
-
 use anyhow::Result;
 use xshell::{Shell, cmd};
 
 use crate::build::{KawaiiBuild, KawaiiBuildState};
+use crate::project_layout::ProjectLayout;
 
 impl KawaiiBuild {
     pub(super) fn link(&self) -> Result<()> {
@@ -20,10 +19,8 @@ impl KawaiiBuild {
         Ok(())
     }
 
-    fn output(&self) -> Result<PathBuf> {
-        Ok(current_dir()?
-            .join("target")
-            .join(self.project.name.clone()))
+    fn output(&self) -> Result<std::path::PathBuf> {
+        Ok(ProjectLayout::current()?.artifact(&self.project))
     }
 
     const fn linker(&self) -> &str {

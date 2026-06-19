@@ -13,6 +13,7 @@ mod args;
 mod build;
 mod new;
 mod project_info;
+mod project_layout;
 mod run;
 #[cfg(test)]
 mod test_utils;

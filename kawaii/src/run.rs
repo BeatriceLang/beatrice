@@ -1,11 +1,8 @@
-use std::{
-    env::current_dir,
-    process::{Command, exit},
-};
+use std::process::{Command, exit};
 
 use anyhow::{Result, anyhow};
 
-use crate::{build::build, project_info::ProjectInfo};
+use crate::{build::build, project_info::ProjectInfo, project_layout::ProjectLayout};
 
 #[derive(clap::Args, Debug)]
 pub struct RunArgs {
@@ -18,7 +15,7 @@ pub fn run(args: RunArgs) -> Result<()> {
 
     build(project_info.clone())?;
 
-    let output = current_dir()?.join("target").join(project_info.name);
+    let output = ProjectLayout::current()?.artifact(&project_info);
 
     exit(
         Command::new(output)
