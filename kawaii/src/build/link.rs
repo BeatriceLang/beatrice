@@ -21,7 +21,9 @@ impl KawaiiBuild {
     }
 
     fn output(&self) -> Result<PathBuf> {
-        Ok(current_dir()?.join(self.project.name.clone()))
+        Ok(current_dir()?
+            .join("target")
+            .join(self.project.name.clone()))
     }
 
     fn linker(&self) -> &str {
