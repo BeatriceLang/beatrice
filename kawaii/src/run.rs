@@ -4,7 +4,6 @@ use std::{
 };
 
 use anyhow::{Result, anyhow};
-use xshell::{Shell, cmd};
 
 use crate::{build::build, project_info::ProjectInfo};
 
