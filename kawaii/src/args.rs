@@ -1,3 +1,5 @@
+use crate::new::NewArgs;
+
 #[derive(clap::Parser, Debug)]
 pub struct Args {
     #[command(subcommand)]
@@ -7,5 +9,5 @@ pub struct Args {
 #[derive(clap::Subcommand, Debug)]
 pub enum Command {
     Build,
-    New,
+    New(NewArgs),
 }

@@ -20,7 +20,7 @@ fn main() -> Result<()> {
 
     match arg.command {
         Command::Build => build(ProjectInfo::from_project_toml()?)?,
-        Command::New => new()?,
+        Command::New(args) => new(args)?,
     }
 
     Ok(())
