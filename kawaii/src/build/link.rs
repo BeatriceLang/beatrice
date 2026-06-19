@@ -12,15 +12,10 @@ impl KawaiiBuild {
         };
 
         let linker = self.linker();
-        let objects_str: String = objects
-            .iter()
-            .map(|f| f.to_str().unwrap().to_string())
-            .collect::<Vec<_>>()
-            .join(" ");
         let output = self.output()?;
 
         let sh = Shell::new()?;
-        cmd!(sh, "{linker} {objects_str} -o {output}").run()?;
+        cmd!(sh, "{linker} {objects...} -o {output}").run()?;
 
         Ok(())
     }
