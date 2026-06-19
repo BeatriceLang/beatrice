@@ -44,7 +44,7 @@ fn object_file_for(source: &Path) -> PathBuf {
     let source_name = source.file_name().unwrap().to_str().unwrap();
     let hash = hash_path(source);
 
-    object_dir.join(format!("{source_name}-{hash:016x}"))
+    object_dir.join(format!("{source_name}-{hash:016x}.o"))
 }
 
 fn hash_path(path: &Path) -> u64 {
