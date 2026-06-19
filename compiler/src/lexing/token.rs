@@ -24,6 +24,9 @@ pub enum Token {
     #[token("}")]
     RightBrace,
 
+    #[token("var")]
+    Var,
+
     #[token("extern")]
     Extern,
 
