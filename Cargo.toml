@@ -10,3 +10,4 @@ clap = { version = "4", features = ["derive"] }
 inkwell = { version = "0.9", features = ["llvm22-1"] }
 logos = "0.16"
 tap = "1"
+walkdir = "2"
