@@ -1,7 +1,7 @@
 use std::{
     env::current_dir,
     hash::{DefaultHasher, Hash, Hasher},
-    path::{self, Path, PathBuf},
+    path::{Path, PathBuf},
 };
 
 use anyhow::{Result, bail};
