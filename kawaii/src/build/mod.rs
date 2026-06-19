@@ -4,6 +4,7 @@ use anyhow::{Context, Result};
 
 use crate::{project_info::ProjectInfo, project_layout::ProjectLayout};
 
+pub mod build_options;
 mod collect;
 mod compile;
 mod link;

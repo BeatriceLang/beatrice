@@ -121,6 +121,44 @@ fn builds_project_with_imported_source() {
 }
 
 #[test]
+fn passes_configured_link_args_to_linker() {
+    let dir = temp_test_dir();
+    write_project(
+        &dir,
+        r#"
+        name = "link-args"
+
+        [build]
+        link-args = ["-Wl,-Map,target/link.map"]
+        "#,
+        &[(
+            "src/main.bt",
+            r#"
+            fn main() -> i32 {
+                return 42;
+            }
+            "#,
+        )],
+    );
+
+    let build_output = kawaii_build(&dir);
+
+    assert!(
+        build_output.status.success(),
+        "kawaii build failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&build_output.stdout),
+        String::from_utf8_lossy(&build_output.stderr)
+    );
+    assert!(dir.join("target").join("link-args").exists());
+    assert!(
+        dir.join("target").join("link.map").exists(),
+        "linker did not produce the configured map file"
+    );
+
+    fs::remove_dir_all(dir).unwrap();
+}
+
+#[test]
 fn fails_when_source_directory_is_missing() {
     let dir = temp_test_dir();
     fs::write(

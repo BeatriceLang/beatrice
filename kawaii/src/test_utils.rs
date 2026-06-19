@@ -1,12 +1,12 @@
 use std::{
     env, fs,
-    path::{Path, PathBuf},
     panic::{RefUnwindSafe, UnwindSafe, catch_unwind, resume_unwind},
+    path::{Path, PathBuf},
     sync::{Mutex, OnceLock},
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use crate::project_info::ProjectInfo;
+use crate::{build::build_options::BuildOptions, project_info::ProjectInfo};
 
 static CURRENT_DIR_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
 
@@ -47,5 +47,6 @@ pub(crate) fn project() -> ProjectInfo {
     ProjectInfo {
         name: "test".to_string(),
         freestanding: false,
+        build_options: BuildOptions::default(),
     }
 }

@@ -12,9 +12,10 @@ impl KawaiiBuild {
 
         let linker = self.linker();
         let output = self.output()?;
+        let link_args = &self.project.build_options.link_args;
 
         let sh = Shell::new()?;
-        cmd!(sh, "{linker} {objects...} -o {output}").run()?;
+        cmd!(sh, "{linker} {objects...} -o {output} {link_args...}").run()?;
 
         Ok(())
     }

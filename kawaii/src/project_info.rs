@@ -2,12 +2,17 @@ use std::fs;
 
 use anyhow::{Context, Result};
 
+use crate::build::build_options::BuildOptions;
+
 #[derive(serde::Deserialize, Clone, Debug)]
 pub struct ProjectInfo {
     pub name: String,
 
     #[serde(default)]
     pub freestanding: bool,
+
+    #[serde(default, rename = "build")]
+    pub build_options: BuildOptions,
 }
 
 impl ProjectInfo {
