@@ -1,10 +1,8 @@
 use chumsky::prelude::choice;
 
-use crate::{
-    ast::{Block, statement::Statement},
-    parsing::statement::var::var_stmt,
-};
+use crate::ast::{Block, statement::Statement};
 
+mod assign;
 mod expr;
 mod r#if;
 mod r#let;
@@ -15,6 +13,7 @@ pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
     choice((
         var_stmt(),
         r#let::let_stmt(),
+        assign::assign_stmt(),
         r#return::return_stmt(),
         expr::expr_stmt(),
         r#if::if_stmt(block),
