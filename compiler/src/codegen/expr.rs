@@ -59,7 +59,12 @@ impl<'a> Codegen<'a> {
                     .try_as_basic_value()
                     .basic()
             }
-            Expression::Ident(ident) => Some(*self.idents.get(ident.as_str()).unwrap()),
+            Expression::Ident(ident) => {
+                let local = self.locals.get(ident.as_str()).unwrap();
+                let ty = self.to_llvm_type(local.ty);
+
+                self.builder.build_load(ty, local.ptr, ident.as_str()).ok()
+            }
             Expression::StringLiteral(string) => Some(
                 self.builder
                     .build_global_string_ptr(string.as_str(), "_")

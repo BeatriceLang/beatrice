@@ -1,16 +1,23 @@
 use std::{collections::HashMap, mem::take};
 
 use anyhow::{Context as _, Result};
-use inkwell::{builder::Builder, context::Context, module::Module, values::BasicValueEnum};
+use inkwell::{
+    builder::Builder,
+    context::Context,
+    module::Module,
+    values::{BasicValueEnum, PointerValue},
+};
 
 use crate::{
-    ast::{Item, Program},
+    ast::{Item, Program, Type},
+    codegen::local::Local,
     state::{Compiler, CompilerState},
 };
 
 mod emit_obj;
 mod expr;
 mod function;
+mod local;
 mod statement;
 mod ty;
 mod utils;
@@ -20,14 +27,14 @@ pub struct Codegen<'a> {
     module: Module<'a>,
     builder: Builder<'a>,
     program: Program,
-    idents: HashMap<String, BasicValueEnum<'a>>,
+    locals: HashMap<String, Local<'a>>,
 }
 
 impl<'a> Codegen<'a> {
     pub fn new(ctx: &'a Context, module_name: &str, program: Program) -> Self {
         Self {
             ctx,
-            idents: HashMap::new(),
+            locals: HashMap::new(),
             module: ctx.create_module(module_name),
             builder: ctx.create_builder(),
             program,

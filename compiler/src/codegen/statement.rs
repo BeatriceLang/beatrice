@@ -1,8 +1,8 @@
 use inkwell::values::{BasicValue, BasicValueEnum};
 
 use crate::{
-    ast::statement::Statement,
-    codegen::{Codegen, ty},
+    ast::{Ident, Type, expression::Expression, statement::Statement},
+    codegen::{Codegen, local::Local},
 };
 
 impl<'a> Codegen<'a> {
@@ -51,20 +51,10 @@ impl<'a> Codegen<'a> {
 
                 self.builder.position_at_end(end_block);
             }
-            Statement::Let { name, ty: _, value } => {
+            Statement::Let { name, ty, value } | Statement::Var { name, ty, value } => {
                 let value = self.compile_expr(value).unwrap();
-
-                self.idents.insert(name.as_str().into(), value);
-            }
-            Statement::Var { name, ty, value } => {
-                let ty = self.to_llvm_type(*ty);
-                let ptr = self.builder.build_alloca(ty, name.as_str()).unwrap();
-                let value = self.compile_expr(value).unwrap();
-
-                self.builder.build_store(ptr, value).unwrap();
-
-                self.idents
-                    .insert(name.as_str().to_string(), BasicValueEnum::PointerValue(ptr));
+                let local = self.compile_local(name, *ty, value);
+                self.locals.insert(name.as_str().to_string(), local);
             }
         }
     }

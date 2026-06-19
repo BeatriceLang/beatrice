@@ -2,7 +2,7 @@ use inkwell::types::{BasicMetadataTypeEnum, BasicType, FunctionType};
 
 use crate::{
     ast::{Function, Ident, Type},
-    codegen::Codegen,
+    codegen::{Codegen, Local},
 };
 
 impl<'a> Codegen<'a> {
@@ -17,18 +17,20 @@ impl<'a> Codegen<'a> {
     }
 
     pub(super) fn compile_function(&mut self, function: &Function) {
-        self.idents.clear();
+        self.locals.clear();
 
         let llvm_function = self.module.get_function(function.name.as_str()).unwrap();
 
         let entry_block = self.ctx.append_basic_block(llvm_function, "entry");
         self.builder.position_at_end(entry_block);
 
-        for (i, (param_name, _)) in function.params.iter().enumerate() {
+        for (i, (param_name, param_ty)) in function.params.iter().enumerate() {
             let llvm_param = llvm_function
                 .get_nth_param(u32::try_from(i).unwrap())
                 .unwrap();
-            self.idents.insert(param_name.as_str().into(), llvm_param);
+            let local = self.compile_local(param_name, *param_ty, llvm_param);
+
+            self.locals.insert(param_name.as_str().into(), local);
         }
 
         for statement in &function.body.statements {
