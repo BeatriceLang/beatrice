@@ -1,20 +1,29 @@
 use std::{
-    env, fs,
+    env, fs, io,
     path::PathBuf,
     process::Command,
     time::{SystemTime, UNIX_EPOCH},
 };
 
 fn temp_test_dir() -> PathBuf {
-    let suffix = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_nanos();
-    let dir = env::temp_dir().join(format!("beatrice-test-{}-{suffix}", std::process::id()));
+    for attempt in 0..100 {
+        let suffix = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_nanos();
+        let dir = env::temp_dir().join(format!(
+            "beatrice-test-{}-{suffix}-{attempt}",
+            std::process::id()
+        ));
 
-    fs::create_dir(&dir).unwrap();
+        match fs::create_dir(&dir) {
+            Ok(()) => return dir,
+            Err(err) if err.kind() == io::ErrorKind::AlreadyExists => continue,
+            Err(err) => panic!("failed to create temp test dir: {err}"),
+        }
+    }
 
-    dir
+    panic!("failed to create unique temp test dir");
 }
 
 fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::Output {
