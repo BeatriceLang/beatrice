@@ -19,7 +19,7 @@ impl<'a> Codegen<'a> {
         value: BasicValueEnum<'a>,
         mutable: bool,
     ) -> Local<'a> {
-        let llvm_ty = self.to_llvm_type(ty);
+        let llvm_ty = self.to_llvm_type(&ty);
         let ptr = self.builder.build_alloca(llvm_ty, name.as_str()).unwrap();
 
         self.builder.build_store(ptr, value).unwrap();

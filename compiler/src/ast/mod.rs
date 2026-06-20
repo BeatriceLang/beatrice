@@ -27,8 +27,9 @@ pub struct Block {
     pub statements: Vec<Statement>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Type {
     I32,
     String,
+    Ptr(Box<Self>),
 }

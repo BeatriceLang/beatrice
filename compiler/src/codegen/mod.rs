@@ -1,11 +1,7 @@
 use std::{collections::HashMap, mem::take};
 
 use anyhow::{Context as _, Result};
-use inkwell::{
-    builder::Builder,
-    context::Context,
-    module::Module,
-};
+use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
     ast::{Item, Program},
@@ -46,12 +42,12 @@ impl<'a> Codegen<'a> {
                 Item::Function(function) => self.declare_function(
                     function.name.as_str(),
                     &function.params,
-                    function.return_type,
+                    function.return_type.clone(),
                 ),
                 Item::ExternFunction(function) => self.declare_function(
                     function.name.as_str(),
                     &function.params,
-                    function.return_type,
+                    function.return_type.clone(),
                 ),
                 Item::Import(_) => {}
             }

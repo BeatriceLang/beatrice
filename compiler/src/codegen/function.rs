@@ -12,7 +12,7 @@ impl<'a> Codegen<'a> {
         params: &[(Ident, Type)],
         return_type: Option<Type>,
     ) {
-        let function_type = self.function_type(params, return_type);
+        let function_type = self.function_type(params, return_type.as_ref());
         self.module.add_function(name, function_type, None);
     }
 
@@ -28,7 +28,7 @@ impl<'a> Codegen<'a> {
             let llvm_param = llvm_function
                 .get_nth_param(u32::try_from(i).unwrap())
                 .unwrap();
-            self.insert_local(param_name, *param_ty, llvm_param, false);
+            self.insert_local(param_name, param_ty.clone(), llvm_param, false);
         }
 
         for statement in &function.body.statements {
@@ -43,7 +43,7 @@ impl<'a> Codegen<'a> {
     fn function_type(
         &self,
         params: &[(Ident, Type)],
-        return_type: Option<Type>,
+        return_type: Option<&Type>,
     ) -> FunctionType<'a> {
         let params = self.function_params(params);
 
@@ -56,7 +56,7 @@ impl<'a> Codegen<'a> {
     fn function_params(&self, params: &[(Ident, Type)]) -> Vec<BasicMetadataTypeEnum<'a>> {
         params
             .iter()
-            .map(|(_, ty)| self.to_llvm_type(*ty).into())
+            .map(|(_, ty)| self.to_llvm_type(ty).into())
             .collect()
     }
 }

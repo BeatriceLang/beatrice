@@ -18,7 +18,7 @@ impl<'a> Codegen<'a> {
             Expression::FunctionCall { name, args } => self.compile_function_call(name, args),
             Expression::Ident(ident) => {
                 let local = self.locals.get(ident.as_str()).unwrap();
-                let ty = self.to_llvm_type(local.ty);
+                let ty = self.to_llvm_type(&local.ty);
 
                 self.builder.build_load(ty, local.ptr, ident.as_str()).ok()
             }

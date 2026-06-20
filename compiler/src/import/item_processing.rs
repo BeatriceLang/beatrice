@@ -14,7 +14,7 @@ impl ImportProcessor<'_> {
                     .push(Item::ExternFunction(ExternFunction {
                         name: function.name.clone(),
                         params: function.params.clone(),
-                        return_type: function.return_type,
+                        return_type: function.return_type.clone(),
                     }));
             }
             Item::ExternFunction(_) => self.original_program.items.push(imported_item.clone()),

@@ -22,11 +22,11 @@ impl Codegen<'_> {
             Statement::If { cond, body } => self.compile_if(cond, body),
             Statement::Let { name, ty, value } => {
                 let value = self.compile_expr(value).unwrap();
-                self.insert_local(name, *ty, value, false);
+                self.insert_local(name, ty.clone(), value, false);
             }
             Statement::Var { name, ty, value } => {
                 let value = self.compile_expr(value).unwrap();
-                self.insert_local(name, *ty, value, true);
+                self.insert_local(name, ty.clone(), value, true);
             }
             Statement::Assign { ident, value } => {
                 let local = self.locals.get(ident.as_str()).unwrap();
