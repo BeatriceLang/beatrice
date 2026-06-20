@@ -4,7 +4,7 @@ use crate::{
     ast::expression::Expression,
     lexing::token::Token,
     parsing::{
-        expr::{deref_expr, function_call::function_call_expr},
+        expr::{addr_of::addr_of_expr, deref_expr, expr, function_call::function_call_expr},
         ident::ident,
     },
 };
@@ -16,7 +16,12 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
     }
     .or(ident().map(Expression::Ident));
 
-    choice((function_call_expr(expr.clone()), base, deref_expr(expr)))
+    choice((
+        function_call_expr(expr.clone()),
+        base,
+        deref_expr(expr.clone()),
+        addr_of_expr(expr),
+    ))
 }
 
 #[cfg(test)]

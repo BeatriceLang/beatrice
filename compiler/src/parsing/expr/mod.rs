@@ -5,6 +5,7 @@ use crate::{
     parsing::expr::{binary_op::binary_op_expr, deref::deref_expr, primary::primary_expr},
 };
 
+mod addr_of;
 mod binary_op;
 mod deref;
 mod function_call;
