@@ -1,8 +1,8 @@
-use inkwell::values::BasicValueEnum;
+use inkwell::values::BasicMetadataValueEnum;
 
 use crate::{
     ast::{Ident, expression::Expression},
-    codegen::Codegen,
+    codegen::{Codegen, utils::TypedValue},
 };
 
 impl<'a> Codegen<'a> {
@@ -10,17 +10,28 @@ impl<'a> Codegen<'a> {
         &self,
         name: &Ident,
         args: &[Expression],
-    ) -> Option<BasicValueEnum<'a>> {
+    ) -> Option<TypedValue<'a>> {
         let function = self.module.get_function(name.as_str()).unwrap();
-        let args: Vec<_> = args
+        let return_type = self
+            .function_return_types
+            .get(name.as_str())
+            .unwrap()
+            .clone()?;
+        let args: Vec<BasicMetadataValueEnum<'a>> = args
             .iter()
             .map(|arg| self.compile_expr(arg).unwrap().into())
             .collect();
 
-        self.builder
+        let value = self
+            .builder
             .build_call(function, &args, "_")
             .unwrap()
             .try_as_basic_value()
-            .basic()
+            .basic()?;
+
+        Some(TypedValue {
+            value,
+            ty: return_type,
+        })
     }
 }

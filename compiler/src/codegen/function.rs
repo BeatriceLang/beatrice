@@ -7,13 +7,15 @@ use crate::{
 
 impl<'a> Codegen<'a> {
     pub(super) fn declare_function(
-        &self,
+        &mut self,
         name: &str,
         params: &[(Ident, Type)],
         return_type: Option<Type>,
     ) {
         let function_type = self.function_type(params, return_type.as_ref());
         self.module.add_function(name, function_type, None);
+        self.function_return_types
+            .insert(name.to_string(), return_type);
     }
 
     pub(super) fn compile_function(&mut self, function: &Function) {

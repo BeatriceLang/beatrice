@@ -4,7 +4,7 @@ use anyhow::{Context as _, Result};
 use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
-    ast::{Item, Program},
+    ast::{Item, Program, Type},
     codegen::local::Local,
     state::{Compiler, CompilerState},
 };
@@ -23,6 +23,7 @@ pub struct Codegen<'a> {
     builder: Builder<'a>,
     program: Program,
     locals: HashMap<String, Local<'a>>,
+    function_return_types: HashMap<String, Option<Type>>,
 }
 
 impl<'a> Codegen<'a> {
@@ -33,11 +34,14 @@ impl<'a> Codegen<'a> {
             module: ctx.create_module(module_name),
             builder: ctx.create_builder(),
             program,
+            function_return_types: HashMap::new(),
         }
     }
 
     pub fn generate(&mut self) {
-        for item in &self.program.items {
+        let items = take(&mut self.program.items);
+
+        for item in &items {
             match item {
                 Item::Function(function) => self.declare_function(
                     function.name.as_str(),
@@ -53,7 +57,6 @@ impl<'a> Codegen<'a> {
             }
         }
 
-        let items = take(&mut self.program.items);
         for item in &items {
             if let Item::Function(function) = item {
                 self.compile_function(function);
