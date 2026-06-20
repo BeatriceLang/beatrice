@@ -220,6 +220,39 @@ fn compiles_let_value_return() {
 }
 
 #[test]
+fn compiles_address_of_local_value() {
+    let code = compile_and_run(
+        "address_of_local_value",
+        "
+        fn main() -> i32 {
+            let value: i32 = 42;
+            let ptr: *i32 = &value;
+
+            return *ptr;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
+fn compiles_deref_address_of_local_value() {
+    let code = compile_and_run(
+        "deref_address_of_local_value",
+        "
+        fn main() -> i32 {
+            let value: i32 = 42;
+
+            return *&value;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_var_assignment_return() {
     let code = compile_and_run(
         "var_assignment_return",
