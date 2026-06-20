@@ -1,15 +1,15 @@
 use chumsky::{Parser, primitive::just};
 
 use crate::{
-    ast::statement::Statement,
+    ast::{Block, statement::Statement},
     lexing::token::Token,
-    parsing::{block::block, expr::expr},
+    parsing::expr::expr,
 };
 
-pub(super) fn while_stmt<'a>() -> parser_type!(Statement) {
+pub(super) fn while_stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
     just(Token::While)
         .ignore_then(expr())
-        .then(block())
+        .then(block)
         .map(|(cond, body)| Statement::While { cond, body })
 }
 
@@ -22,7 +22,7 @@ mod tests {
             expression::{BinaryOpKind, Expression},
             statement::Statement,
         },
-        parsing::{test_ident, test_parse, test_tokens},
+        parsing::{block::block, test_ident, test_parse, test_tokens},
     };
 
     #[test]
@@ -43,7 +43,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(while_stmt(), &tokens),
+            test_parse(while_stmt(block()), &tokens),
             Statement::While {
                 cond: Expression::BinaryOp {
                     lhs: Expression::Ident(test_ident("n")).into(),
