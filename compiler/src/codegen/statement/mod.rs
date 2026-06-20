@@ -13,7 +13,7 @@ impl Codegen<'_> {
 
                 _ = self
                     .builder
-                    .build_return(Some(&value.value as &dyn BasicValue))
+                    .build_return(Some(&value.inner as &dyn BasicValue))
                     .unwrap();
             }
             Statement::Expression(expr) => {
@@ -22,17 +22,17 @@ impl Codegen<'_> {
             Statement::If { cond, body } => self.compile_if(cond, body),
             Statement::Let { name, ty, value } => {
                 let value = self.compile_expr(value).unwrap();
-                self.insert_local(name, ty.clone(), value.value, false);
+                self.insert_local(name, ty.clone(), value.inner, false);
             }
             Statement::Var { name, ty, value } => {
                 let value = self.compile_expr(value).unwrap();
-                self.insert_local(name, ty.clone(), value.value, true);
+                self.insert_local(name, ty.clone(), value.inner, true);
             }
             Statement::Assign { ident, value } => {
                 let local = self.locals.get(ident.as_str()).unwrap();
                 let value = self.compile_expr(value).unwrap();
 
-                self.builder.build_store(local.ptr, value.value).unwrap();
+                self.builder.build_store(local.ptr, value.inner).unwrap();
             }
             Statement::While { cond, body } => self.compile_while(cond, body),
         }

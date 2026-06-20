@@ -15,7 +15,7 @@ impl Codegen<'_> {
         self.builder.build_unconditional_branch(cond_block).unwrap();
 
         self.builder.position_at_end(cond_block);
-        let cond = self.compile_expr(cond).unwrap().value.into_int_value();
+        let cond = self.compile_expr(cond).unwrap().inner.into_int_value();
 
         self.builder
             .build_conditional_branch(cond, body_block, end_block)

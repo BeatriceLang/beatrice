@@ -10,7 +10,7 @@ impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
             Expression::Number(number) => Some(TypedValue {
-                value: self
+                inner: self
                     .ctx
                     .i32_type()
                     .const_int(number.cast_unsigned(), false)
@@ -30,11 +30,11 @@ impl<'a> Codegen<'a> {
                     .builder
                     .build_load(llvm_ty, local.ptr, ident.as_str())
                     .ok()?;
-                Some(TypedValue { value, ty })
+                Some(TypedValue { inner: value, ty })
             }
             Expression::Deref { ptr } => todo!(),
             Expression::StringLiteral(string) => Some(TypedValue {
-                value: self
+                inner: self
                     .builder
                     .build_global_string_ptr(string.as_str(), "_")
                     .unwrap()

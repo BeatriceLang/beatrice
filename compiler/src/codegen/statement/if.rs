@@ -5,7 +5,7 @@ use crate::{
 
 impl Codegen<'_> {
     pub(super) fn compile_if(&mut self, cond: &Expression, body: &Block) {
-        let cond = self.compile_expr(cond).unwrap().value.into_int_value();
+        let cond = self.compile_expr(cond).unwrap().inner.into_int_value();
 
         let current_block = self.builder.get_insert_block().unwrap();
         let current_function = current_block.get_parent().unwrap();

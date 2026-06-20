@@ -30,7 +30,7 @@ impl<'a> Codegen<'a> {
             .basic()?;
 
         Some(TypedValue {
-            value,
+            inner: value,
             ty: return_type,
         })
     }

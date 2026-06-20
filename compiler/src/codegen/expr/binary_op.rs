@@ -15,8 +15,8 @@ impl<'a> Codegen<'a> {
         kind: BinaryOpKind,
         rhs: &Expression,
     ) -> TypedValue<'a> {
-        let lhs = self.compile_expr(lhs).unwrap().value.into_int_value();
-        let rhs = self.compile_expr(rhs).unwrap().value.into_int_value();
+        let lhs = self.compile_expr(lhs).unwrap().inner.into_int_value();
+        let rhs = self.compile_expr(rhs).unwrap().inner.into_int_value();
 
         let value = match kind {
             BinaryOpKind::Add => self.builder.build_int_add(lhs, rhs, "_").unwrap(),
@@ -39,7 +39,7 @@ impl<'a> Codegen<'a> {
         .into();
 
         TypedValue {
-            value,
+            inner: value,
             ty: Type::I32,
         }
     }
