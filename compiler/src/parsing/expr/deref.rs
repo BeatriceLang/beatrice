@@ -5,5 +5,5 @@ use crate::{ast::expression::Expression, lexing::token::Token, parsing::expr::ex
 pub(super) fn deref_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     just(Token::Multiply)
         .ignore_then(expr)
-        .map(|val| Expression::Deref { val: Box::new(val) })
+        .map(|ptr| Expression::Deref { ptr: Box::new(ptr) })
 }
