@@ -15,6 +15,9 @@ pub enum Expression {
         name: Ident,
         args: Vec<Self>,
     },
+    Deref {
+        val: Box<Expression>,
+    },
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]

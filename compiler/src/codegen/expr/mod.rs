@@ -1,3 +1,4 @@
+use chumsky::primitive::todo;
 use inkwell::values::BasicValueEnum;
 
 use crate::{ast::expression::Expression, codegen::Codegen};
@@ -22,6 +23,7 @@ impl<'a> Codegen<'a> {
 
                 self.builder.build_load(ty, local.ptr, ident.as_str()).ok()
             }
+            Expression::Deref { val } => todo!(),
             Expression::StringLiteral(string) => Some(
                 self.builder
                     .build_global_string_ptr(string.as_str(), "_")
