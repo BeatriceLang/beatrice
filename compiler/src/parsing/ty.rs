@@ -43,4 +43,25 @@ mod tests {
 
         assert_eq!(test_parse(ty(), &tokens), Type::String);
     }
+
+    #[test]
+    fn parses_ptr_ty() {
+        use crate::parsing::{test_parse, test_tokens};
+
+        let tokens = test_tokens![Token::Multiply, Token::I32];
+
+        assert_eq!(test_parse(ty(), &tokens), Type::Ptr(Box::new(Type::I32)));
+    }
+
+    #[test]
+    fn parses_nested_ptr_ty() {
+        use crate::parsing::{test_parse, test_tokens};
+
+        let tokens = test_tokens![Token::Multiply, Token::Multiply, Token::I32];
+
+        assert_eq!(
+            test_parse(ty(), &tokens),
+            Type::Ptr(Box::new(Type::Ptr(Box::new(Type::I32))))
+        );
+    }
 }
