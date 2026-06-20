@@ -66,6 +66,7 @@ pub enum Token {
     #[token("/")]
     Divide,
 
+    // TODO: use a better name cuz it also repersents pointers
     #[token("*")]
     Multiply,
 
