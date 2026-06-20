@@ -16,7 +16,7 @@ pub enum Expression {
         args: Vec<Self>,
     },
     Deref {
-        ptr: Box<Expression>,
+        ptr: Box<Self>,
     },
 }
 

@@ -33,7 +33,7 @@ impl<'a> Codegen<'a> {
                     .ok()?;
                 Some(TypedValue { inner: value, ty })
             }
-            Expression::Deref { ptr } => self.compile_deref(ptr),
+            Expression::Deref { ptr } => Some(self.compile_deref(ptr)),
             Expression::StringLiteral(string) => Some(TypedValue {
                 inner: self
                     .builder
