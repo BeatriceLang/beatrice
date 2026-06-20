@@ -4,7 +4,7 @@ use crate::{
     ast::expression::Expression,
     lexing::token::Token,
     parsing::{
-        expr::{addr_of::addr_of_expr, deref_expr, expr, function_call::function_call_expr},
+        expr::{addr_of::addr_of_expr, deref_expr, function_call::function_call_expr},
         ident::ident,
     },
 };
