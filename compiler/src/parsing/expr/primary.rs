@@ -3,7 +3,10 @@ use chumsky::{Parser, primitive::choice, select};
 use crate::{
     ast::expression::Expression,
     lexing::token::Token,
-    parsing::{expr::function_call::function_call_expr, ident::ident},
+    parsing::{
+        expr::{deref_expr, expr, function_call::function_call_expr},
+        ident::ident,
+    },
 };
 
 pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
@@ -13,7 +16,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
     }
     .or(ident().map(Expression::Ident));
 
-    choice((function_call_expr(expr), base))
+    choice((function_call_expr(expr.clone()), base, deref_expr(expr)))
 }
 
 #[cfg(test)]

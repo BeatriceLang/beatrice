@@ -2,10 +2,11 @@ use chumsky::prelude::{choice, recursive};
 
 use crate::{
     ast::expression::Expression,
-    parsing::expr::{binary_op::binary_op_expr, primary::primary_expr},
+    parsing::expr::{binary_op::binary_op_expr, deref::deref_expr, primary::primary_expr},
 };
 
 mod binary_op;
+mod deref;
 mod function_call;
 mod primary;
 
