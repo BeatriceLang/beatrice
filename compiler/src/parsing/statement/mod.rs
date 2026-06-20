@@ -17,7 +17,7 @@ pub fn stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
         assign::assign_stmt(),
         r#return::return_stmt(),
         expr::expr_stmt(),
-        r#if::if_stmt(block),
+        r#if::if_stmt(block.clone()),
         r#while::while_stmt(block),
     ))
 }
