@@ -7,3 +7,39 @@ pub(super) fn deref_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Exp
         .ignore_then(expr)
         .map(|ptr| Expression::Deref { ptr: Box::new(ptr) })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        ast::expression::Expression,
+        parsing::{expr::expr, test_ident, test_parse, test_tokens},
+    };
+
+    #[test]
+    fn parses_deref_expr() {
+        let tokens = test_tokens![Token::Multiply, Token::Ident("ptr".into())];
+
+        assert_eq!(
+            test_parse(deref_expr(expr()), &tokens),
+            Expression::Deref {
+                ptr: Expression::Ident(test_ident("ptr")).into(),
+            }
+        );
+    }
+
+    #[test]
+    fn parses_nested_deref_expr() {
+        let tokens = test_tokens![Token::Multiply, Token::Multiply, Token::Ident("ptr".into()),];
+
+        assert_eq!(
+            test_parse(deref_expr(expr()), &tokens),
+            Expression::Deref {
+                ptr: Expression::Deref {
+                    ptr: Expression::Ident(test_ident("ptr")).into(),
+                }
+                .into(),
+            }
+        );
+    }
+}
