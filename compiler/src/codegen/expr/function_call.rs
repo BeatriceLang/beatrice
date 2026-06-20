@@ -16,18 +16,18 @@ impl<'a> Codegen<'a> {
             .function_return_types
             .get(name.as_str())
             .unwrap()
-            .clone()?;
+            .clone();
         let args: Vec<BasicMetadataValueEnum<'a>> = args
             .iter()
             .map(|arg| self.compile_expr(arg).unwrap().into())
             .collect();
 
-        let value = self
+        let call = self
             .builder
             .build_call(function, &args, "_")
-            .unwrap()
-            .try_as_basic_value()
-            .basic()?;
+            .unwrap();
+        let return_type = return_type?;
+        let value = call.try_as_basic_value().basic()?;
 
         Some(TypedValue {
             inner: value,
