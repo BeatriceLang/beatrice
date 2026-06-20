@@ -1,3 +1,5 @@
+use inkwell::values::BasicValue;
+
 use crate::{
     ast::{Type, expression::Expression},
     codegen::{Codegen, utils::TypedValue},
@@ -43,7 +45,18 @@ impl<'a> Codegen<'a> {
                     .into(),
                 ty: Type::String,
             }),
-            Expression::AddressOf { value } => todo!(),
+            Expression::AddressOf { value } => {
+                let Expression::Ident(ident) = &**value else {
+                    panic!("Expected ident")
+                };
+
+                let local = self.locals.get(ident.as_str()).unwrap();
+
+                Some(TypedValue {
+                    inner: local.ptr.as_basic_value_enum(),
+                    ty: Type::Ptr(Box::new(local.ty.clone())),
+                })
+            }
         }
     }
 }
