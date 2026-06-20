@@ -1,12 +1,25 @@
-use chumsky::prelude::select;
+use chumsky::{
+    Parser,
+    prelude::select,
+    primitive::{choice, just},
+    recursive::recursive,
+};
 
 use crate::{ast::Type, lexing::token::Token};
 
 pub fn ty<'a>() -> parser_type!(Type) {
-    select! {
-        Token::I32 => Type::I32,
-        Token::String => Type::String
-    }
+    recursive(|ty| {
+        let atom = select! {
+            Token::I32 => Type::I32,
+            Token::String => Type::String
+        };
+
+        let ptr = just(Token::Multiply)
+            .ignore_then(ty)
+            .map(|ty| Type::Ptr(Box::new(ty)));
+
+        choice((atom, ptr))
+    })
 }
 
 #[cfg(test)]
