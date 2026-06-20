@@ -6,8 +6,7 @@ impl<'a> Codegen<'a> {
     pub(super) fn to_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {
         match ty {
             Type::I32 => self.ctx.i32_type().into(),
-            Type::String => self.ctx.ptr_type(AddressSpace::default()).into(),
-            Type::Ptr(_) => self.ctx.ptr_type(AddressSpace::default()).into(),
+            Type::String | Type::Ptr(_) => self.ctx.ptr_type(AddressSpace::default()).into(),
         }
     }
 }
