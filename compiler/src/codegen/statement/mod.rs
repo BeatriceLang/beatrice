@@ -32,6 +32,8 @@ impl Codegen<'_> {
                 let local = self.locals.get(ident.as_str()).unwrap();
                 let value = self.compile_expr(value).unwrap();
 
+                assert!(local.mutable);
+
                 self.builder.build_store(local.ptr, value.inner).unwrap();
             }
             Statement::While { cond, body } => self.compile_while(cond, body),
