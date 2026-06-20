@@ -18,6 +18,9 @@ pub enum Expression {
     Deref {
         ptr: Box<Self>,
     },
+    AddressOf {
+        value: Box<Self>,
+    },
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
