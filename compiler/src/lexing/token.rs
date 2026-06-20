@@ -21,6 +21,9 @@ pub enum Token {
     #[token(")")]
     RightParen,
 
+    #[token("&")]
+    AddressOf,
+
     #[token("{")]
     LeftBrace,
 

@@ -34,6 +34,7 @@ impl Display for Token {
             Self::StringLiteral(text) => write!(f, "\"{text}\""),
             Self::While => f.write_str("while"),
             Self::Var => f.write_str("var"),
+            Self::AddressOf => f.write_str("&"),
         }
     }
 }
