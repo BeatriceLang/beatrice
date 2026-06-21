@@ -7,6 +7,7 @@ repository.workspace = true
 keywords = ["beatrice", "compiler", "language"]
 categories = ["compilers", "command-line-utilities"]
 description = "Compiler for the Beatrice programming language"
+readme = "README.md"
 
 [lints]
 workspace = true

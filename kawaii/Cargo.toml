@@ -7,6 +7,7 @@ repository.workspace = true
 keywords = ["beatrice", "build-system", "package-manager", "cli"]
 categories = ["command-line-utilities", "development-tools", "development-tools::build-utils"]
 description = "Beatrice's package manager and build system"
+readme = "README.md"
 
 [lints]
 workspace = true
