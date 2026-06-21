@@ -2,6 +2,10 @@
 name = "kawaii"
 version = "0.1.0"
 edition = "2024"
+license.workspace = true
+repository.workspace = true
+keywords = ["beatrice", "build-system", "package-manager", "cli"]
+categories = ["command-line-utilities", "development-tools", "development-tools::build-utils"]
 
 [lints]
 workspace = true
