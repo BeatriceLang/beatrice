@@ -6,6 +6,7 @@ license.workspace = true
 repository.workspace = true
 keywords = ["beatrice", "compiler", "language"]
 categories = ["compilers", "command-line-utilities"]
+description = "Compiler for the Beatrice programming language"
 
 [lints]
 workspace = true
