@@ -7,10 +7,11 @@ license = "MIT OR Apache-2.0"
 repository = "https://github.com/BeatriceLang/beatrice"
 
 [workspace.lints.clippy]
-all = "warn"
-pedantic = "warn"
-nursery = "warn"
-cargo = "warn"
+all = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+cargo = { level = "warn", priority = -1 }
+multiple_crate_versions = "allow"
 
 [workspace.dependencies]
 anyhow = "1"
