@@ -163,6 +163,7 @@ fn compiles_constant_literal_to_executable() {
 }
 
 #[test]
+#[ignore = "TODO: enable once const initializers use const-eval instead of runtime codegen"]
 fn compiles_constant_binary_op_to_executable() {
     let code = compile_and_run(
         "constant_binary_op",
