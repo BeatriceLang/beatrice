@@ -19,6 +19,7 @@ impl<'a> Codegen<'a> {
                     function.return_type.clone(),
                 ),
                 Item::Import(_) => {}
+                Item::Const { name, ty, val } => todo!(),
             }
         }
 

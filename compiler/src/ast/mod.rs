@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use crate::ast::{function::ExternFunction, statement::Statement};
+use crate::ast::{expression::Expression, function::ExternFunction, statement::Statement};
 
 pub mod expression;
 pub mod function;
@@ -20,6 +20,11 @@ pub enum Item {
     Function(Function),
     ExternFunction(ExternFunction),
     Import(PathBuf),
+    Const {
+        name: String,
+        ty: Type,
+        val: Expression,
+    },
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

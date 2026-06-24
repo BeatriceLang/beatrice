@@ -21,6 +21,7 @@ impl ImportProcessor<'_> {
             Item::Import(path) => {
                 self.process(path.clone())?;
             }
+            Item::Const { name, ty, val } => todo!(),
         }
 
         Ok(())

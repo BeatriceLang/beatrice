@@ -13,6 +13,7 @@ impl Checker<'_> {
                 Item::Function(function) => &function.name,
                 Item::ExternFunction(function) => &function.name,
                 Item::Import(_) => continue,
+                Item::Const { name, ty, val } => todo!(),
             };
 
             if checked.contains(&name.as_str()) {
