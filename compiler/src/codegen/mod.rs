@@ -12,6 +12,7 @@ use crate::{
 mod emit_obj;
 mod expr;
 mod function;
+mod generate;
 mod ident;
 mod statement;
 mod ty;
@@ -36,33 +37,6 @@ impl<'a> Codegen<'a> {
             program,
             function_return_types: HashMap::new(),
         }
-    }
-
-    pub fn generate(&mut self) {
-        let items = take(&mut self.program.items);
-
-        for item in &items {
-            match item {
-                Item::Function(function) => self.declare_function(
-                    function.name.as_str(),
-                    &function.params,
-                    function.return_type.clone(),
-                ),
-                Item::ExternFunction(function) => self.declare_function(
-                    function.name.as_str(),
-                    &function.params,
-                    function.return_type.clone(),
-                ),
-                Item::Import(_) => {}
-            }
-        }
-
-        for item in &items {
-            if let Item::Function(function) = item {
-                self.compile_function(function);
-            }
-        }
-        self.program.items = items;
     }
 }
 
