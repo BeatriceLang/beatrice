@@ -21,7 +21,7 @@ pub enum Item {
     ExternFunction(ExternFunction),
     Import(PathBuf),
     Const {
-        name: String,
+        name: Ident,
         ty: Type,
         val: Expression,
     },
