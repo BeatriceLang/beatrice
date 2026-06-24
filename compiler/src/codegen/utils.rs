@@ -11,6 +11,7 @@ impl<'a> Codegen<'a> {
     }
 }
 
+#[derive(Clone, Debug)]
 pub struct TypedValue<'a> {
     pub inner: BasicValueEnum<'a>,
     pub ty: Type,
