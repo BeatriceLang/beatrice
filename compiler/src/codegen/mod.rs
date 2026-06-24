@@ -1,10 +1,10 @@
-use std::{collections::HashMap, mem::take};
+use std::collections::HashMap;
 
 use anyhow::{Context as _, Result};
-use inkwell::{builder::Builder, context::Context, module::Module, values::BasicValueEnum};
+use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
-    ast::{Item, Program, Type},
+    ast::{Program, Type},
     codegen::{ident::local::Local, utils::TypedValue},
     state::{Compiler, CompilerState},
 };

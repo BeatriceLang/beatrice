@@ -1,10 +1,8 @@
-use std::ops::Deref;
 
-use inkwell::values::{BasicValue, BasicValueEnum};
 
 use crate::{
     ast::Ident,
-    codegen::{Codegen, ident::local::Local, utils::TypedValue},
+    codegen::{Codegen, utils::TypedValue},
 };
 
 pub mod local;

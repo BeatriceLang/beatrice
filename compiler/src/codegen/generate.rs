@@ -2,7 +2,7 @@ use std::mem::take;
 
 use crate::{
     ast::Item,
-    codegen::{Codegen, utils::TypedValue},
+    codegen::Codegen,
 };
 
 impl Codegen<'_> {
