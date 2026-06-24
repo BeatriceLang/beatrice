@@ -19,7 +19,11 @@ impl Codegen<'_> {
                     function.return_type.clone(),
                 ),
                 Item::Import(_) => {}
-                Item::Const(_) => todo!(),
+                Item::Const(constant) => {
+                    let value = self.compile_expr(&constant.val).unwrap();
+                    self.constants
+                        .insert(constant.name.as_str().to_string(), value.inner);
+                }
             }
         }
 
