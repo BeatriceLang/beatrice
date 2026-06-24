@@ -5,14 +5,14 @@ use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
     ast::{Item, Program, Type},
-    codegen::local::Local,
+    codegen::ident::Local,
     state::{Compiler, CompilerState},
 };
 
 mod emit_obj;
 mod expr;
 mod function;
-mod local;
+mod ident;
 mod statement;
 mod ty;
 mod utils;

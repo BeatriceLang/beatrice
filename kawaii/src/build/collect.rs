@@ -20,7 +20,8 @@ impl KawaiiBuild {
                 || entry
                     .clone()
                     .into_path()
-                    .extension().is_none_or(|ext| ext != "bt")
+                    .extension()
+                    .is_none_or(|ext| ext != "bt")
             {
                 continue;
             }

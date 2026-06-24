@@ -22,10 +22,7 @@ impl<'a> Codegen<'a> {
             .map(|arg| self.compile_expr(arg).unwrap().into())
             .collect();
 
-        let call = self
-            .builder
-            .build_call(function, &args, "_")
-            .unwrap();
+        let call = self.builder.build_call(function, &args, "_").unwrap();
         let return_type = return_type?;
         let value = call.try_as_basic_value().basic()?;
 

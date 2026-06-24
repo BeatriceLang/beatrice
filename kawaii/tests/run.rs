@@ -148,7 +148,10 @@ fn fails_when_project_info_is_missing() {
 
     let output = kawaii_run(&dir);
 
-    assert!(!output.status.success(), "kawaii run succeeded without Kawaii.toml");
+    assert!(
+        !output.status.success(),
+        "kawaii run succeeded without Kawaii.toml"
+    );
     assert!(
         String::from_utf8_lossy(&output.stderr).contains("Failed to read project info"),
         "unexpected stderr:\n{}",
