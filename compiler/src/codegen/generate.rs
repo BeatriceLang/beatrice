@@ -1,6 +1,9 @@
 use std::mem::take;
 
-use crate::{ast::Item, codegen::Codegen};
+use crate::{
+    ast::Item,
+    codegen::{Codegen, utils::TypedValue},
+};
 
 impl Codegen<'_> {
     pub fn generate(&mut self) {
@@ -22,7 +25,7 @@ impl Codegen<'_> {
                 Item::Const(constant) => {
                     let value = self.compile_expr(&constant.val).unwrap();
                     self.constants
-                        .insert(constant.name.as_str().to_string(), value.inner);
+                        .insert(constant.name.as_str().to_string(), value);
                 }
             }
         }

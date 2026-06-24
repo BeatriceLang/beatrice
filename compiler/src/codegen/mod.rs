@@ -5,7 +5,7 @@ use inkwell::{builder::Builder, context::Context, module::Module, values::BasicV
 
 use crate::{
     ast::{Item, Program, Type},
-    codegen::ident::local::Local,
+    codegen::{ident::local::Local, utils::TypedValue},
     state::{Compiler, CompilerState},
 };
 
@@ -24,7 +24,7 @@ pub struct Codegen<'a> {
     builder: Builder<'a>,
     program: Program,
     locals: HashMap<String, Local<'a>>,
-    constants: HashMap<String, BasicValueEnum<'a>>,
+    constants: HashMap<String, TypedValue<'a>>,
     function_return_types: HashMap<String, Option<Type>>,
 }
 

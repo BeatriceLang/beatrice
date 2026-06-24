@@ -24,17 +24,7 @@ impl<'a> Codegen<'a> {
                 Some(self.compile_binary_op(lhs, *kind, rhs))
             }
             Expression::FunctionCall { name, args } => self.compile_function_call(name, args),
-            Expression::Ident(ident) => {
-                let local = self.locals.get(ident.as_str()).unwrap();
-                let ty = local.ty.clone();
-                let llvm_ty = self.to_llvm_type(&ty);
-
-                let value = self
-                    .builder
-                    .build_load(llvm_ty, local.ptr, ident.as_str())
-                    .ok()?;
-                Some(TypedValue { inner: value, ty })
-            }
+            Expression::Ident(ident) => self.resolve_ident(ident),
             Expression::Deref { ptr } => Some(self.compile_deref(ptr)),
             Expression::StringLiteral(string) => Some(TypedValue {
                 inner: self

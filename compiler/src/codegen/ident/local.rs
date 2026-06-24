@@ -2,7 +2,7 @@ use inkwell::values::{BasicValueEnum, PointerValue};
 
 use crate::{
     ast::{Ident, Type},
-    codegen::Codegen,
+    codegen::{Codegen, utils::TypedValue},
 };
 
 pub struct Local<'a> {
@@ -36,5 +36,13 @@ impl<'a> Codegen<'a> {
     ) {
         let local = self.compile_local(name, ty, value, mutable);
         self.locals.insert(name.as_str().to_string(), local);
+    }
+
+    pub(super) fn resolve_local(&self, local: &Local<'a>, name: &str) -> Option<TypedValue<'a>> {
+        let ty = local.ty.clone();
+        let llvm_ty = self.to_llvm_type(&ty);
+
+        let value = self.builder.build_load(llvm_ty, local.ptr, name).ok()?;
+        Some(TypedValue { inner: value, ty })
     }
 }
