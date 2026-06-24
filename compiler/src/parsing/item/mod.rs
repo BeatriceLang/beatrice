@@ -2,9 +2,12 @@ use chumsky::{Parser, primitive::choice};
 
 use crate::{
     ast::Item,
-    parsing::item::{extern_fn::extern_function, function::function, import::import},
+    parsing::item::{
+        constant::constant, extern_fn::extern_function, function::function, import::import,
+    },
 };
 
+mod constant;
 mod extern_fn;
 mod function;
 mod import;
@@ -14,6 +17,7 @@ pub fn item<'a>() -> parser_type!(Item) {
         extern_function().map(Item::ExternFunction),
         function().map(Item::Function),
         import(),
+        constant(),
     ))
 }
 
