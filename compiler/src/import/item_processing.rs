@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use crate::{
-    ast::{Item, function::ExternFunction},
+    ast::{function::ExternFunction, Item},
     import::ImportProcessor,
 };
 
@@ -21,7 +21,7 @@ impl ImportProcessor<'_> {
             Item::Import(path) => {
                 self.process(path.clone())?;
             }
-            Item::Const { name, ty, val } => todo!(),
+            Item::Const(_) => todo!(),
         }
 
         Ok(())
@@ -33,7 +33,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Item, Program, Type, function::ExternFunction},
+        ast::{function::ExternFunction, Block, Function, Ident, Item, Program, Type},
         diagnostic::Diagnostics,
         import::ImportProcessor,
     };

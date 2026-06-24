@@ -20,11 +20,14 @@ pub enum Item {
     Function(Function),
     ExternFunction(ExternFunction),
     Import(PathBuf),
-    Const {
-        name: Ident,
-        ty: Type,
-        val: Expression,
-    },
+    Const(Const),
+}
+
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct Const {
+    pub name: Ident,
+    pub ty: Type,
+    pub val: Expression,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
