@@ -147,6 +147,38 @@ fn compiles_return_binary_op_to_executable() {
 }
 
 #[test]
+fn compiles_constant_literal_to_executable() {
+    let code = compile_and_run(
+        "constant_literal",
+        "
+        const answer: i32 = 42
+
+        fn main() -> i32 {
+            return answer;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
+fn compiles_constant_binary_op_to_executable() {
+    let code = compile_and_run(
+        "constant_binary_op",
+        "
+        const answer: i32 = 40 + 2
+
+        fn main() -> i32 {
+            return answer;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_return_function_call_to_executable() {
     let code = compile_and_run(
         "return_function_call",
