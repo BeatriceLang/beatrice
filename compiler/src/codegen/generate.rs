@@ -2,7 +2,7 @@ use std::mem::take;
 
 use crate::{ast::Item, codegen::Codegen};
 
-impl<'a> Codegen<'a> {
+impl Codegen<'_> {
     pub fn generate(&mut self) {
         let items = take(&mut self.program.items);
 
