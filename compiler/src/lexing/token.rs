@@ -12,6 +12,9 @@ pub enum Token {
     #[token("while")]
     While,
 
+    #[token("const")]
+    Const,
+
     #[token("fn")]
     Fn,
 
