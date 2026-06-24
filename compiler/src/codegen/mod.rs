@@ -5,7 +5,7 @@ use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
     ast::{Item, Program, Type},
-    codegen::ident::Local,
+    codegen::ident::local::Local,
     state::{Compiler, CompilerState},
 };
 

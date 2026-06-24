@@ -27,7 +27,7 @@ impl<'a> Codegen<'a> {
         Local { ptr, ty, mutable }
     }
 
-    pub(super) fn insert_local(
+    pub(crate) fn insert_local(
         &mut self,
         name: &Ident,
         ty: Type,

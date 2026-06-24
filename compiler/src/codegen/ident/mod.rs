@@ -1,7 +1,9 @@
-use crate::{ast::Ident, codegen::Codegen};
+use crate::{
+    ast::Ident,
+    codegen::{Codegen, ident::local::Local},
+};
 
-mod local;
-pub(super) use local::Local;
+pub mod local;
 
 pub(super) enum ResolvedIdent<'ctx, 'cg> {
     Local(&'cg Local<'ctx>),
