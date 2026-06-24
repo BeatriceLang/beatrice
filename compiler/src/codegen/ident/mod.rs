@@ -7,7 +7,6 @@ use crate::{
     codegen::{Codegen, ident::local::Local, utils::TypedValue},
 };
 
-pub mod constant;
 pub mod local;
 
 impl<'a> Codegen<'a> {
