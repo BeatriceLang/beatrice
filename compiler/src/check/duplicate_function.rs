@@ -12,8 +12,7 @@ impl Checker<'_> {
             let name = match item {
                 Item::Function(function) => &function.name,
                 Item::ExternFunction(function) => &function.name,
-                Item::Import(_) => continue,
-                Item::Const(_) => todo!(),
+                _ => continue,
             };
 
             if checked.contains(&name.as_str()) {
