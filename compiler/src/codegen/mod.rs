@@ -26,7 +26,7 @@ pub struct Codegen<'a> {
     program: Program,
     locals: HashMap<String, Local<'a>>,
     constants: HashMap<String, TypedValue<'a>>,
-    structs: Vec<StructType<'a>>,
+    structs: HashMap<String, StructType<'a>>,
     function_return_types: HashMap<String, Option<Type>>,
 }
 
@@ -37,7 +37,7 @@ impl<'a> Codegen<'a> {
             locals: HashMap::new(),
             module: ctx.create_module(module_name),
             builder: ctx.create_builder(),
-            structs: vec![],
+            structs: HashMap::new(),
             constants: HashMap::new(),
             program,
             function_return_types: HashMap::new(),
