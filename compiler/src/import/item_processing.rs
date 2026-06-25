@@ -17,13 +17,12 @@ impl ImportProcessor<'_> {
                         return_type: function.return_type.clone(),
                     }));
             }
-            Item::ExternFunction(_) | Item::Const(_) => {
+            Item::ExternFunction(_) | Item::Const(_) | Item::Struct(_) => {
                 self.original_program.items.push(imported_item.clone());
             }
             Item::Import(path) => {
                 self.process(path.clone())?;
             }
-            Item::Struct(_) => todo!(),
         }
 
         Ok(())
