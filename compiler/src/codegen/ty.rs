@@ -1,4 +1,7 @@
-use inkwell::{AddressSpace, types::BasicTypeEnum};
+use inkwell::{
+    AddressSpace,
+    types::{BasicType, BasicTypeEnum},
+};
 
 use crate::{ast::Type, codegen::Codegen};
 
@@ -6,6 +9,9 @@ impl<'a> Codegen<'a> {
     pub(super) fn to_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {
         match ty {
             Type::I32 => self.ctx.i32_type().into(),
+            Type::Struct(struct_name) => {
+                self.structs.get(struct_name).unwrap().as_basic_type_enum()
+            }
             Type::String | Type::Ptr(_) => self.ctx.ptr_type(AddressSpace::default()).into(),
         }
     }
