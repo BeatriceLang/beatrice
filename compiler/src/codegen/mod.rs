@@ -15,6 +15,7 @@ mod function;
 mod generate;
 mod ident;
 mod statement;
+mod structure;
 mod ty;
 mod utils;
 

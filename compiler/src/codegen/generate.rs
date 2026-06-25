@@ -24,7 +24,7 @@ impl Codegen<'_> {
                     self.constants
                         .insert(constant.name.as_str().to_string(), value);
                 }
-                Item::Struct(_) => todo!(),
+                Item::Struct(structure) => self.declare_struct(structure),
             }
         }
 
