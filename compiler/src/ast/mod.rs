@@ -27,7 +27,7 @@ pub enum Item {
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Struct {
     pub name: Ident,
-    pub fields: HashMap<Ident, Type>,
+    pub fields: Vec<(Ident, Type)>,
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
