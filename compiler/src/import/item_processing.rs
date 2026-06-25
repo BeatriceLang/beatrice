@@ -21,7 +21,7 @@ impl ImportProcessor<'_> {
             Item::Import(path) => {
                 self.process(path.clone())?;
             }
-            Item::Const(constant) => self.original_program.items.push(imported_item.clone()),
+            Item::Const(_) => self.original_program.items.push(imported_item.clone()),
         }
 
         Ok(())
