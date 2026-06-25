@@ -17,7 +17,7 @@ pub fn item<'a>() -> parser_type!(Item) {
         extern_function().map(Item::ExternFunction),
         function().map(Item::Function),
         import(),
-        constant(),
+        constant().map(Item::Const),
     ))
 }
 

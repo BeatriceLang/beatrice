@@ -1,4 +1,4 @@
-use chumsky::{primitive::just, Parser};
+use chumsky::{Parser, primitive::just};
 
 use crate::{
     ast::{Const, Item},
@@ -6,14 +6,14 @@ use crate::{
     parsing::{expr::expr, ident::ident, ty::ty},
 };
 
-pub(super) fn constant<'a>() -> parser_type!(Item) {
+pub(super) fn constant<'a>() -> parser_type!(Const) {
     just(Token::Const)
         .ignore_then(ident())
         .then_ignore(just(Token::Colon))
         .then(ty())
         .then_ignore(just(Token::Assign))
         .then(expr())
-        .map(|((name, ty), val)| Item::Const(Const { name, ty, val }))
+        .map(|((name, ty), val)| Const { name, ty, val })
 }
 
 #[cfg(test)]
@@ -22,7 +22,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{expression::Expression, Const, Type},
+        ast::{Const, Type, expression::Expression},
         parsing::{test_ident, test_input, test_parse, test_tokens},
     };
 
@@ -39,11 +39,11 @@ mod tests {
 
         assert_eq!(
             test_parse(constant(), &tokens),
-            Item::Const(Const {
+            Const {
                 name: test_ident("answer"),
                 ty: Type::I32,
                 val: Expression::Number(42),
-            })
+            }
         );
     }
 
@@ -60,11 +60,11 @@ mod tests {
 
         assert_eq!(
             test_parse(constant(), &tokens),
-            Item::Const(Const {
+            Const {
                 name: test_ident("message"),
                 ty: Type::String,
                 val: Expression::StringLiteral("hello".into()),
-            })
+            }
         );
     }
 
@@ -82,11 +82,11 @@ mod tests {
 
         assert_eq!(
             test_parse(constant(), &tokens),
-            Item::Const(Const {
+            Const {
                 name: test_ident("ptr"),
                 ty: Type::Ptr(Box::new(Type::I32)),
                 val: Expression::Ident(test_ident("value")),
-            })
+            }
         );
     }
 
