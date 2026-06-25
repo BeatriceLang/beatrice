@@ -24,3 +24,67 @@ pub(super) fn structure<'a>(expr: parser_type!(Expression)) -> parser_type!(Expr
             .collect(),
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::{
+        ast::expression::{BinaryOpKind, Expression},
+        parsing::{expr::expr, test_ident, test_parse, test_tokens},
+    };
+
+    #[test]
+    fn parses_empty_struct_expression() {
+        let tokens = test_tokens![
+            Token::Ident("Point".into()),
+            Token::LeftBrace,
+            Token::RightBrace,
+        ];
+
+        assert_eq!(
+            test_parse(structure(expr()), &tokens),
+            Expression::Struct {
+                name: test_ident("Point"),
+                fields: vec![],
+            }
+        );
+    }
+
+    #[test]
+    fn parses_struct_expression_with_fields() {
+        let tokens = test_tokens![
+            Token::Ident("Point".into()),
+            Token::LeftBrace,
+            Token::Ident("x".into()),
+            Token::Colon,
+            Token::Number(1),
+            Token::Comma,
+            Token::Ident("y".into()),
+            Token::Colon,
+            Token::Number(2),
+            Token::Add,
+            Token::Number(3),
+            Token::Comma,
+            Token::RightBrace,
+        ];
+
+        assert_eq!(
+            test_parse(structure(expr()), &tokens),
+            Expression::Struct {
+                name: test_ident("Point"),
+                fields: vec![
+                    (test_ident("x"), Expression::Number(1).into()),
+                    (
+                        test_ident("y"),
+                        Expression::BinaryOp {
+                            lhs: Expression::Number(2).into(),
+                            kind: BinaryOpKind::Add,
+                            rhs: Expression::Number(3).into(),
+                        }
+                        .into(),
+                    ),
+                ],
+            }
+        );
+    }
+}
