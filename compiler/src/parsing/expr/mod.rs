@@ -10,6 +10,7 @@ mod binary_op;
 mod deref;
 mod function_call;
 mod primary;
+mod structure;
 
 pub fn expr<'a>() -> parser_type!(Expression) {
     recursive(|expr| choice((binary_op_expr(expr.clone()), primary_expr(expr.clone()))))
