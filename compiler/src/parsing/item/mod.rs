@@ -30,7 +30,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{Type, function::ExternFunction},
+        ast::{Struct, Type, function::ExternFunction},
         lexing::token::Token,
         parsing::{test_ident, test_parse, test_tokens},
     };
@@ -72,6 +72,32 @@ mod tests {
         assert_eq!(
             test_parse(item(), &tokens),
             Item::Import(PathBuf::from("a.bt"))
+        );
+    }
+
+    #[test]
+    fn parses_struct_item() {
+        let tokens = test_tokens![
+            Token::Struct,
+            Token::Ident("Point".into()),
+            Token::LeftBrace,
+            Token::Ident("x".into()),
+            Token::Colon,
+            Token::I32,
+            Token::Comma,
+            Token::Ident("y".into()),
+            Token::Colon,
+            Token::I32,
+            Token::Comma,
+            Token::RightBrace,
+        ];
+
+        assert_eq!(
+            test_parse(item(), &tokens),
+            Item::Struct(Struct {
+                name: test_ident("Point"),
+                fields: vec![(test_ident("x"), Type::I32), (test_ident("y"), Type::I32)],
+            })
         );
     }
 }
