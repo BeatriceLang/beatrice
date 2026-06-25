@@ -23,6 +23,7 @@ impl ImportProcessor<'_> {
             Item::Import(path) => {
                 self.process(path.clone())?;
             }
+            Item::Struct(_) => todo!(),
         }
 
         Ok(())

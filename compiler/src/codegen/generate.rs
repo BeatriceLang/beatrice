@@ -1,9 +1,6 @@
 use std::mem::take;
 
-use crate::{
-    ast::Item,
-    codegen::Codegen,
-};
+use crate::{ast::Item, codegen::Codegen};
 
 impl Codegen<'_> {
     pub fn generate(&mut self) {
@@ -27,6 +24,7 @@ impl Codegen<'_> {
                     self.constants
                         .insert(constant.name.as_str().to_string(), value);
                 }
+                Item::Struct(_) => todo!(),
             }
         }
 

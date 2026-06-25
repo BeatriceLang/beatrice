@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{collections::HashMap, path::PathBuf};
 
 use crate::ast::{expression::Expression, function::ExternFunction, statement::Statement};
 
@@ -21,6 +21,13 @@ pub enum Item {
     ExternFunction(ExternFunction),
     Import(PathBuf),
     Const(Const),
+    Struct(Struct),
+}
+
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct Struct {
+    pub name: Ident,
+    pub fields: HashMap<Ident, Type>,
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
