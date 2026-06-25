@@ -18,7 +18,7 @@ impl ImportProcessor<'_> {
                     }));
             }
             Item::ExternFunction(_) | Item::Const(_) => {
-                self.original_program.items.push(imported_item.clone())
+                self.original_program.items.push(imported_item.clone());
             }
             Item::Import(path) => {
                 self.process(path.clone())?;
