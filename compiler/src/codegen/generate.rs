@@ -29,8 +29,12 @@ impl Codegen<'_> {
         }
 
         for item in &items {
-            if let Item::Function(function) = item {
-                self.compile_function(function);
+            match item {
+                Item::Function(function) => {
+                    self.compile_function(function);
+                }
+                Item::Struct(structure) => self.define_struct(structure),
+                _ => (),
             }
         }
         self.program.items = items;
