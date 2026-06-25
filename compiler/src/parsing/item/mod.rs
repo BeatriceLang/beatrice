@@ -4,6 +4,7 @@ use crate::{
     ast::Item,
     parsing::item::{
         constant::constant, extern_fn::extern_function, function::function, import::import,
+        structure::structure,
     },
 };
 
@@ -11,6 +12,7 @@ mod constant;
 mod extern_fn;
 mod function;
 mod import;
+mod structure;
 
 pub fn item<'a>() -> parser_type!(Item) {
     choice((
@@ -18,6 +20,7 @@ pub fn item<'a>() -> parser_type!(Item) {
         function().map(Item::Function),
         import(),
         constant().map(Item::Const),
+        structure().map(Item::Struct),
     ))
 }
 
