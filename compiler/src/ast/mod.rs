@@ -1,4 +1,4 @@
-use std::{intrinsics::transmute_unchecked, path::PathBuf};
+use std::path::PathBuf;
 
 use crate::ast::{expression::Expression, function::ExternFunction, statement::Statement};
 
