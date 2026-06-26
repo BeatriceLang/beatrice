@@ -1,7 +1,7 @@
 use chumsky::{Parser, primitive::choice, select};
 
 use crate::{
-    ast::expression::Expression,
+    ast::{Type, expression::Expression},
     lexing::token::Token,
     parsing::{
         expr::{
@@ -15,7 +15,9 @@ use crate::{
 pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     let base = select! {
         Token::Number(value) => Expression::Number(value),
-        Token::StringLiteral(string) => Expression::StringLiteral(string)
+        Token::StringLiteral(string) => Expression::StringLiteral(string),
+        Token::I32Number(value) => Expression::TypedNumber { value, ty: Type::I32 },
+        Token::U32Number(value) => Expression::TypedNumber { value, ty: Type::U32 }
     }
     .or(ident().map(Expression::Ident));
 
