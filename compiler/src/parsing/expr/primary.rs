@@ -6,7 +6,7 @@ use crate::{
     parsing::{
         expr::{
             addr_of::addr_of_expr, create_struct::create_struct, deref_expr,
-            function_call::function_call_expr,
+            field_access::field_access, function_call::function_call_expr,
         },
         ident::ident,
     },
@@ -25,6 +25,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
         deref_expr(expr.clone()),
         addr_of_expr(expr.clone()),
         create_struct(expr),
+        field_access(),
     ))
 }
 
