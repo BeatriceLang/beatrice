@@ -1,11 +1,11 @@
 use std::collections::HashMap;
 
 use anyhow::{Context as _, Result};
-use inkwell::{builder::Builder, context::Context, module::Module, types::StructType};
+use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
     ast::{Program, Type},
-    codegen::{declare_struct::IndexedStruct, ident::local::Local, utils::TypedValue},
+    codegen::{declare_struct::ResolvedStruct, ident::local::Local, utils::TypedValue},
     state::{Compiler, CompilerState},
 };
 
@@ -26,7 +26,7 @@ pub struct Codegen<'a> {
     program: Program,
     locals: HashMap<String, Local<'a>>,
     constants: HashMap<String, TypedValue<'a>>,
-    struct_types: HashMap<String, IndexedStruct<'a>>,
+    struct_types: HashMap<String, ResolvedStruct<'a>>,
     function_return_types: HashMap<String, Option<Type>>,
 }
 

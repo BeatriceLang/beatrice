@@ -1,29 +1,31 @@
 use std::collections::HashMap;
 
-use inkwell::{
-    types::{PointerType, StructType},
-    values::PointerValue,
-};
+use inkwell::{types::StructType, values::PointerValue};
 
 use crate::{
-    ast::{DeclareStruct, Ident},
+    ast::{DeclareStruct, Ident, Type},
     codegen::Codegen,
 };
 
-pub(super) struct IndexedStruct<'a> {
+pub(super) struct ResolvedStruct<'a> {
     pub inner: StructType<'a>,
-    pub indexes: HashMap<Ident, usize>,
+    pub info: HashMap<Ident, FieldInfo>,
+}
+
+pub(super) struct FieldInfo {
+    pub index: usize,
+    pub ty: Type,
 }
 
 impl<'a> Codegen<'a> {
     pub(super) fn struct_field_ptr(
         &self,
-        struct_type: &IndexedStruct<'a>,
+        struct_type: &ResolvedStruct<'a>,
         field_name: &Ident,
         struct_ptr: PointerValue<'a>,
     ) -> PointerValue<'a> {
         let struct_llvm_ty = struct_type.inner;
-        let field_index = *struct_type.indexes.get(field_name).unwrap();
+        let field_index = struct_type.info.get(field_name).unwrap().index;
 
         self.builder
             .build_struct_gep(
@@ -34,22 +36,29 @@ impl<'a> Codegen<'a> {
             )
             .unwrap()
     }
+
     pub(super) fn declare_struct(&mut self, declare_struct: &DeclareStruct) {
         let struct_name = declare_struct.name.as_str();
         let llvm_struct_ty = self.ctx.opaque_struct_type(struct_name);
 
-        let mut indexes = HashMap::new();
+        let mut field_infos = HashMap::new();
 
-        for (i, (field_name, _)) in declare_struct.fields.iter().enumerate() {
-            indexes.insert(field_name.clone(), i);
+        for (index, (field_name, field_ty)) in declare_struct.fields.iter().enumerate() {
+            let info = FieldInfo {
+                index,
+                ty: field_ty.clone(),
+            };
+
+            field_infos.insert(field_name.clone(), info);
         }
 
-        let indexed_struct = IndexedStruct {
+        let resolved_struct = ResolvedStruct {
             inner: llvm_struct_ty,
-            indexes,
+            info: field_infos,
         };
 
-        self.struct_types.insert(struct_name.into(), indexed_struct);
+        self.struct_types
+            .insert(struct_name.into(), resolved_struct);
     }
 
     pub(super) fn define_struct(&mut self, declare_struct: &DeclareStruct) {
