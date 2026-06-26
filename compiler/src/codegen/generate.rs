@@ -7,6 +7,12 @@ impl Codegen<'_> {
         let items = take(&mut self.program.items);
 
         for item in &items {
+            if let Item::DeclareStruct(declare_struct) = item {
+                self.declare_struct(declare_struct);
+            }
+        }
+
+        for item in &items {
             match item {
                 Item::Function(function) => self.declare_function(
                     function.name.as_str(),
@@ -24,7 +30,7 @@ impl Codegen<'_> {
                     self.constants
                         .insert(constant.name.as_str().to_string(), value);
                 }
-                Item::DeclareStruct(declare_struct) => self.declare_struct(declare_struct),
+                Item::DeclareStruct(_) => {}
             }
         }
 
