@@ -1,10 +1,7 @@
 use inkwell::IntPredicate;
 
 use crate::{
-    ast::{
-        Type,
-        expression::{BinaryOpKind, Expression},
-    },
+    ast::expression::{BinaryOpKind, Expression},
     codegen::{Codegen, utils::TypedValue},
 };
 
@@ -22,22 +19,42 @@ impl<'a> Codegen<'a> {
 
         assert_eq!(lhs.ty, rhs.ty);
 
+        let signed = lhs.ty.signed().unwrap();
+
         let value = match kind {
             BinaryOpKind::Add => self.builder.build_int_add(llvm_lhs, llvm_rhs, "_").unwrap(),
             BinaryOpKind::Subtract => self.builder.build_int_sub(llvm_lhs, llvm_rhs, "_").unwrap(),
-            BinaryOpKind::Divide => self
-                .builder
-                .build_int_signed_div(llvm_lhs, llvm_rhs, "_")
-                .unwrap(),
+            BinaryOpKind::Divide => match signed {
+                true => self
+                    .builder
+                    .build_int_signed_div(llvm_lhs, llvm_rhs, "_")
+                    .unwrap(),
+                false => self
+                    .builder
+                    .build_int_unsigned_div(llvm_lhs, llvm_rhs, "_")
+                    .unwrap(),
+            },
             BinaryOpKind::Multiply => self.builder.build_int_mul(llvm_lhs, llvm_rhs, "_").unwrap(),
-            BinaryOpKind::GreaterThan => self
-                .builder
-                .build_int_compare(IntPredicate::SGT, llvm_lhs, llvm_rhs, "_")
-                .unwrap(),
-            BinaryOpKind::LessThan => self
-                .builder
-                .build_int_compare(IntPredicate::SLT, llvm_lhs, llvm_rhs, "_")
-                .unwrap(),
+            BinaryOpKind::GreaterThan => {
+                let predicate = match signed {
+                    true => IntPredicate::SGT,
+                    false => IntPredicate::UGT,
+                };
+
+                self.builder
+                    .build_int_compare(predicate, llvm_lhs, llvm_rhs, "_")
+                    .unwrap()
+            }
+            BinaryOpKind::LessThan => {
+                let predicate = match signed {
+                    true => IntPredicate::SLT,
+                    false => IntPredicate::ULT,
+                };
+
+                self.builder
+                    .build_int_compare(predicate, llvm_lhs, llvm_rhs, "_")
+                    .unwrap()
+            }
             BinaryOpKind::EqualTo => self
                 .builder
                 .build_int_compare(IntPredicate::EQ, llvm_lhs, llvm_rhs, "_")
