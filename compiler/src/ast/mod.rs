@@ -52,10 +52,10 @@ pub enum Type {
 }
 
 impl Type {
-    pub(crate) fn signed(&self) -> Option<bool> {
+    pub(crate) const fn signed(&self) -> Option<bool> {
         match self {
-            Type::U32 => Some(false),
-            Type::I32 => Some(true),
+            Self::U32 => Some(false),
+            Self::I32 => Some(true),
             _ => None,
         }
     }

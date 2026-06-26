@@ -25,7 +25,7 @@ impl<'a> Codegen<'a> {
             Expression::TypedNumber { value, ty } => {
                 let llvm_ty = self.to_llvm_type(ty).into_int_type();
 
-                let value = llvm_ty.const_int(*value as u64, false);
+                let value = llvm_ty.const_int(u64::try_from(*value).unwrap(), false);
 
                 Some(TypedValue {
                     inner: value.into(),

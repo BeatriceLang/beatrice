@@ -24,21 +24,23 @@ impl<'a> Codegen<'a> {
         let value = match kind {
             BinaryOpKind::Add => self.builder.build_int_add(llvm_lhs, llvm_rhs, "_").unwrap(),
             BinaryOpKind::Subtract => self.builder.build_int_sub(llvm_lhs, llvm_rhs, "_").unwrap(),
-            BinaryOpKind::Divide => match signed {
-                true => self
-                    .builder
-                    .build_int_signed_div(llvm_lhs, llvm_rhs, "_")
-                    .unwrap(),
-                false => self
-                    .builder
-                    .build_int_unsigned_div(llvm_lhs, llvm_rhs, "_")
-                    .unwrap(),
-            },
+            BinaryOpKind::Divide => {
+                if signed {
+                    self.builder
+                        .build_int_signed_div(llvm_lhs, llvm_rhs, "_")
+                        .unwrap()
+                } else {
+                    self.builder
+                        .build_int_unsigned_div(llvm_lhs, llvm_rhs, "_")
+                        .unwrap()
+                }
+            }
             BinaryOpKind::Multiply => self.builder.build_int_mul(llvm_lhs, llvm_rhs, "_").unwrap(),
             BinaryOpKind::GreaterThan => {
-                let predicate = match signed {
-                    true => IntPredicate::SGT,
-                    false => IntPredicate::UGT,
+                let predicate = if signed {
+                    IntPredicate::SGT
+                } else {
+                    IntPredicate::UGT
                 };
 
                 self.builder
@@ -46,9 +48,10 @@ impl<'a> Codegen<'a> {
                     .unwrap()
             }
             BinaryOpKind::LessThan => {
-                let predicate = match signed {
-                    true => IntPredicate::SLT,
-                    false => IntPredicate::ULT,
+                let predicate = if signed {
+                    IntPredicate::SLT
+                } else {
+                    IntPredicate::ULT
                 };
 
                 self.builder
