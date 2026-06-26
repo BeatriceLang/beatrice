@@ -1,4 +1,4 @@
-use inkwell::IntPredicate;
+use inkwell::{IntPredicate, values::BasicValue};
 
 use crate::{
     ast::{
@@ -24,10 +24,16 @@ impl<'a> Codegen<'a> {
 
         let signed = lhs.ty.signed().unwrap();
 
-        let value = match kind {
-            BinaryOpKind::Add => self.builder.build_int_add(llvm_lhs, llvm_rhs, "_").unwrap(),
-            BinaryOpKind::Subtract => self.builder.build_int_sub(llvm_lhs, llvm_rhs, "_").unwrap(),
-            BinaryOpKind::Divide => {
+        let (value, ty) = match kind {
+            BinaryOpKind::Add => (
+                self.builder.build_int_add(llvm_lhs, llvm_rhs, "_").unwrap(),
+                lhs.ty,
+            ),
+            BinaryOpKind::Subtract => (
+                self.builder.build_int_sub(llvm_lhs, llvm_rhs, "_").unwrap(),
+                lhs.ty,
+            ),
+            BinaryOpKind::Divide => (
                 if signed {
                     self.builder
                         .build_int_signed_div(llvm_lhs, llvm_rhs, "_")
@@ -36,9 +42,13 @@ impl<'a> Codegen<'a> {
                     self.builder
                         .build_int_unsigned_div(llvm_lhs, llvm_rhs, "_")
                         .unwrap()
-                }
-            }
-            BinaryOpKind::Multiply => self.builder.build_int_mul(llvm_lhs, llvm_rhs, "_").unwrap(),
+                },
+                lhs.ty,
+            ),
+            BinaryOpKind::Multiply => (
+                self.builder.build_int_mul(llvm_lhs, llvm_rhs, "_").unwrap(),
+                lhs.ty,
+            ),
             BinaryOpKind::GreaterThan => {
                 let predicate = if signed {
                     IntPredicate::SGT
@@ -46,9 +56,12 @@ impl<'a> Codegen<'a> {
                     IntPredicate::UGT
                 };
 
-                self.builder
-                    .build_int_compare(predicate, llvm_lhs, llvm_rhs, "_")
-                    .unwrap()
+                (
+                    self.builder
+                        .build_int_compare(predicate, llvm_lhs, llvm_rhs, "_")
+                        .unwrap(),
+                    Type::Bool,
+                )
             }
             BinaryOpKind::LessThan => {
                 let predicate = if signed {
@@ -57,20 +70,24 @@ impl<'a> Codegen<'a> {
                     IntPredicate::ULT
                 };
 
-                self.builder
-                    .build_int_compare(predicate, llvm_lhs, llvm_rhs, "_")
-                    .unwrap()
+                (
+                    self.builder
+                        .build_int_compare(predicate, llvm_lhs, llvm_rhs, "_")
+                        .unwrap(),
+                    Type::Bool,
+                )
             }
-            BinaryOpKind::EqualTo => self
-                .builder
-                .build_int_compare(IntPredicate::EQ, llvm_lhs, llvm_rhs, "_")
-                .unwrap(),
-        }
-        .into();
+            BinaryOpKind::EqualTo => (
+                self.builder
+                    .build_int_compare(IntPredicate::EQ, llvm_lhs, llvm_rhs, "_")
+                    .unwrap(),
+                Type::Bool,
+            ),
+        };
 
         TypedValue {
-            inner: value,
-            ty: Type::Bool,
+            inner: value.as_basic_value_enum(),
+            ty,
         }
     }
 }
