@@ -25,8 +25,13 @@ impl<'a> Codegen<'a> {
                 .unwrap();
         }
 
+        let struct_value = self
+            .builder
+            .build_load(struct_llvm_ty, struct_ptr, "_")
+            .unwrap();
+
         TypedValue {
-            inner: struct_ptr.as_basic_value_enum(),
+            inner: struct_value,
             ty: Type::Struct(name.as_str().to_owned()),
         }
     }
