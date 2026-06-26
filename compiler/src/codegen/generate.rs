@@ -24,13 +24,12 @@ impl Codegen<'_> {
                     &function.params,
                     function.return_type.clone(),
                 ),
-                Item::Import(_) => {}
                 Item::Const(constant) => {
                     let value = self.compile_expr(&constant.val).unwrap();
                     self.constants
                         .insert(constant.name.as_str().to_string(), value);
                 }
-                Item::DeclareStruct(_) => {}
+                Item::Import(_) | Item::DeclareStruct(_) => (),
             }
         }
 
