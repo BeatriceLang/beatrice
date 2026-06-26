@@ -26,4 +26,11 @@ mod tests {
             Statement::Return(Some(Expression::Number(42)))
         );
     }
+
+    #[test]
+    fn parses_return_stmt_without_value() {
+        let tokens = test_tokens![Token::Return, Token::Semicolon];
+
+        assert_eq!(test_parse(return_stmt(), &tokens), Statement::Return(None));
+    }
 }

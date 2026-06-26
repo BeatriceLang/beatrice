@@ -512,6 +512,35 @@ fn compiles_function_without_return_value() {
 }
 
 #[test]
+fn compiles_return_without_value() {
+    let output = compile_and_run_output(
+        "return_without_value",
+        r#"
+        extern fn puts(value: string) -> i32;
+
+        fn say_hello() {
+            puts("before return");
+            return;
+            puts("after return");
+        }
+
+        fn main() -> i32 {
+            say_hello();
+            return 0;
+        }
+        "#,
+    );
+
+    assert!(
+        output.status.success(),
+        "executable failed\nstdout:\n{}\nstderr:\n{}",
+        String::from_utf8_lossy(&output.stdout),
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8_lossy(&output.stdout), "before return\n");
+}
+
+#[test]
 fn compiles_imported_function_call_to_executable() {
     let output = compile_objects_and_run(
         "imported_function_call",
