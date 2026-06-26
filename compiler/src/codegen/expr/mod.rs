@@ -6,9 +6,9 @@ use crate::{
 };
 
 mod binary_op;
+mod create_struct;
 mod deref;
 mod function_call;
-mod structure;
 
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
@@ -48,7 +48,9 @@ impl<'a> Codegen<'a> {
                     ty: Type::Ptr(Box::new(local.ty.clone())),
                 })
             }
-            Expression::Struct { name, fields } => Some(self.compile_struct(name, fields)),
+            Expression::CreateStruct { name, fields } => {
+                Some(self.compile_create_struct(name, fields))
+            }
         }
     }
 }

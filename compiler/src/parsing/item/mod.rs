@@ -3,16 +3,16 @@ use chumsky::{Parser, primitive::choice};
 use crate::{
     ast::Item,
     parsing::item::{
-        constant::constant, extern_fn::extern_function, function::function, import::import,
-        structure::structure,
+        constant::constant, declare_struct::declare_struct, extern_fn::extern_function,
+        function::function, import::import,
     },
 };
 
 mod constant;
+mod declare_struct;
 mod extern_fn;
 mod function;
 mod import;
-mod structure;
 
 pub fn item<'a>() -> parser_type!(Item) {
     choice((
@@ -20,7 +20,7 @@ pub fn item<'a>() -> parser_type!(Item) {
         function().map(Item::Function),
         import(),
         constant().map(Item::Const),
-        structure().map(Item::Struct),
+        declare_struct().map(Item::DeclareStruct),
     ))
 }
 
@@ -30,7 +30,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{Struct, Type, function::ExternFunction},
+        ast::{DeclareStruct, Type, function::ExternFunction},
         lexing::token::Token,
         parsing::{test_ident, test_parse, test_tokens},
     };
@@ -94,7 +94,7 @@ mod tests {
 
         assert_eq!(
             test_parse(item(), &tokens),
-            Item::Struct(Struct {
+            Item::DeclareStruct(DeclareStruct {
                 name: test_ident("Point"),
                 fields: vec![(test_ident("x"), Type::I32), (test_ident("y"), Type::I32)],
             })

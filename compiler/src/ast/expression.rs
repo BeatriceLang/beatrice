@@ -1,5 +1,3 @@
-use clap::Id;
-
 use crate::ast::Ident;
 
 // Expressions can be evaluated into a value
@@ -23,7 +21,7 @@ pub enum Expression {
     AddressOf {
         value: Box<Self>,
     },
-    Struct {
+    CreateStruct {
         name: Ident,
         fields: Vec<(Ident, Box<Self>)>,
     },

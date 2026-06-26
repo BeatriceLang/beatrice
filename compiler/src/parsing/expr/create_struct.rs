@@ -1,12 +1,8 @@
 use chumsky::{IterParser, Parser, primitive::just};
 
-use crate::{
-    ast::expression::Expression,
-    lexing::token::Token,
-    parsing::{expr::expr, ident::ident},
-};
+use crate::{ast::expression::Expression, lexing::token::Token, parsing::ident::ident};
 
-pub(super) fn structure<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
+pub(super) fn create_struct<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     let field = ident()
         .then_ignore(just(Token::Colon))
         .then(expr)
@@ -16,13 +12,15 @@ pub(super) fn structure<'a>(expr: parser_type!(Expression)) -> parser_type!(Expr
         .collect::<Vec<_>>()
         .delimited_by(just(Token::LeftBrace), just(Token::RightBrace));
 
-    ident().then(body).map(|(name, fields)| Expression::Struct {
-        name,
-        fields: fields
-            .into_iter()
-            .map(|(i, expr)| (i, Box::new(expr)))
-            .collect(),
-    })
+    ident()
+        .then(body)
+        .map(|(name, fields)| Expression::CreateStruct {
+            name,
+            fields: fields
+                .into_iter()
+                .map(|(i, expr)| (i, Box::new(expr)))
+                .collect(),
+        })
 }
 
 #[cfg(test)]
@@ -42,8 +40,8 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(structure(expr()), &tokens),
-            Expression::Struct {
+            test_parse(create_struct(expr()), &tokens),
+            Expression::CreateStruct {
                 name: test_ident("Point"),
                 fields: vec![],
             }
@@ -69,8 +67,8 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(structure(expr()), &tokens),
-            Expression::Struct {
+            test_parse(create_struct(expr()), &tokens),
+            Expression::CreateStruct {
                 name: test_ident("Point"),
                 fields: vec![
                     (test_ident("x"), Expression::Number(1).into()),

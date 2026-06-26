@@ -5,8 +5,8 @@ use crate::{
     lexing::token::Token,
     parsing::{
         expr::{
-            addr_of::addr_of_expr, deref_expr, function_call::function_call_expr,
-            structure::structure,
+            addr_of::addr_of_expr, create_struct::create_struct, deref_expr,
+            function_call::function_call_expr,
         },
         ident::ident,
     },
@@ -24,7 +24,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
         base,
         deref_expr(expr.clone()),
         addr_of_expr(expr.clone()),
-        structure(expr),
+        create_struct(expr),
     ))
 }
 

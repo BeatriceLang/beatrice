@@ -21,11 +21,11 @@ pub enum Item {
     ExternFunction(ExternFunction),
     Import(PathBuf),
     Const(Const),
-    Struct(Struct),
+    DeclareStruct(DeclareStruct),
 }
 
 #[derive(Clone, PartialEq, Eq, Debug)]
-pub struct Struct {
+pub struct DeclareStruct {
     pub name: Ident,
     pub fields: Vec<(Ident, Type)>,
 }

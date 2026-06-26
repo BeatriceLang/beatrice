@@ -6,7 +6,7 @@ use crate::{
 };
 
 impl<'a> Codegen<'a> {
-    pub(super) fn compile_struct(
+    pub(super) fn compile_create_struct(
         &self,
         name: &Ident,
         fields: &[(Ident, Box<Expression>)],

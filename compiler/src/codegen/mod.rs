@@ -9,13 +9,13 @@ use crate::{
     state::{Compiler, CompilerState},
 };
 
+mod declare_struct;
 mod emit_obj;
 mod expr;
 mod function;
 mod generate;
 mod ident;
 mod statement;
-mod structure;
 mod ty;
 mod utils;
 
@@ -26,7 +26,7 @@ pub struct Codegen<'a> {
     program: Program,
     locals: HashMap<String, Local<'a>>,
     constants: HashMap<String, TypedValue<'a>>,
-    structs: HashMap<String, StructType<'a>>,
+    struct_types: HashMap<String, StructType<'a>>,
     function_return_types: HashMap<String, Option<Type>>,
 }
 
@@ -37,7 +37,7 @@ impl<'a> Codegen<'a> {
             locals: HashMap::new(),
             module: ctx.create_module(module_name),
             builder: ctx.create_builder(),
-            structs: HashMap::new(),
+            struct_types: HashMap::new(),
             constants: HashMap::new(),
             program,
             function_return_types: HashMap::new(),

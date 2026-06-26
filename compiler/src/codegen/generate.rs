@@ -24,7 +24,7 @@ impl Codegen<'_> {
                     self.constants
                         .insert(constant.name.as_str().to_string(), value);
                 }
-                Item::Struct(structure) => self.declare_struct(structure),
+                Item::DeclareStruct(declare_struct) => self.declare_struct(declare_struct),
             }
         }
 
@@ -33,7 +33,7 @@ impl Codegen<'_> {
                 Item::Function(function) => {
                     self.compile_function(function);
                 }
-                Item::Struct(structure) => self.define_struct(structure),
+                Item::DeclareStruct(declare_struct) => self.define_struct(declare_struct),
                 _ => (),
             }
         }

@@ -1,12 +1,12 @@
 use chumsky::{IterParser, Parser, primitive::just};
 
 use crate::{
-    ast::Struct,
+    ast::DeclareStruct,
     lexing::token::Token,
     parsing::{ident::ident, ty::ty},
 };
 
-pub(super) fn structure<'a>() -> parser_type!(Struct) {
+pub(super) fn declare_struct<'a>() -> parser_type!(DeclareStruct) {
     let field = ident()
         .then_ignore(just(Token::Colon))
         .then(ty())
@@ -19,7 +19,7 @@ pub(super) fn structure<'a>() -> parser_type!(Struct) {
     just(Token::Struct)
         .ignore_then(ident())
         .then(body)
-        .map(|(name, fields)| Struct { name, fields })
+        .map(|(name, fields)| DeclareStruct { name, fields })
 }
 
 #[cfg(test)]
@@ -40,8 +40,8 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(structure(), &tokens),
-            Struct {
+            test_parse(declare_struct(), &tokens),
+            DeclareStruct {
                 name: test_ident("Empty"),
                 fields: vec![],
             }
@@ -71,8 +71,8 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(structure(), &tokens),
-            Struct {
+            test_parse(declare_struct(), &tokens),
+            DeclareStruct {
                 name: test_ident("Point"),
                 fields: vec![
                     (test_ident("x"), Type::I32),
