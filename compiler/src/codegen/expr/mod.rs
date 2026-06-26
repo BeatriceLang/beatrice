@@ -6,6 +6,7 @@ use crate::{
 };
 
 mod binary_op;
+mod cast;
 mod create_struct;
 mod deref;
 mod field_access;
@@ -15,7 +16,7 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
-            Expression::Cast { value, to } => todo!(),
+            Expression::Cast { value, to } => Some(self.compile_cast(value, to)),
             Expression::Number(number) => Some(TypedValue {
                 inner: self
                     .ctx
