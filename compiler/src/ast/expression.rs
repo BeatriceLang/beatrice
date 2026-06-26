@@ -25,6 +25,10 @@ pub enum Expression {
         name: Ident,
         fields: Vec<(Ident, Box<Self>)>,
     },
+    FieldAccess {
+        base: Box<Self>,
+        field: Ident,
+    },
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]

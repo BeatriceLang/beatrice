@@ -51,6 +51,7 @@ impl<'a> Codegen<'a> {
             Expression::CreateStruct { name, fields } => {
                 Some(self.compile_create_struct(name, fields))
             }
+            Expression::FieldAccess { base, field } => todo!(),
         }
     }
 }
