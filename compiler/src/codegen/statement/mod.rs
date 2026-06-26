@@ -1,11 +1,24 @@
 use inkwell::values::BasicValue;
 
-use crate::{ast::statement::Statement, codegen::Codegen};
+use crate::{
+    ast::{Block, statement::Statement},
+    codegen::Codegen,
+};
 
 mod r#if;
 mod r#while;
 
 impl Codegen<'_> {
+    pub(super) fn compile_block(&mut self, block: &Block) {
+        for statement in &block.statements {
+            if self.current_block().get_terminator().is_some() {
+                break;
+            }
+
+            self.compile_statement(statement);
+        }
+    }
+
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
         match statement {
             Statement::Return(expr) => match expr {

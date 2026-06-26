@@ -23,9 +23,7 @@ impl Codegen<'_> {
 
         self.builder.position_at_end(body_block);
 
-        for stmt in &body.statements {
-            self.compile_statement(stmt);
-        }
+        self.compile_block(body);
 
         if self
             .builder

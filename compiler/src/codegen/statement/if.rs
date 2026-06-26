@@ -19,9 +19,7 @@ impl Codegen<'_> {
 
         self.builder.position_at_end(then_block);
 
-        for stmt in &body.statements {
-            self.compile_statement(stmt);
-        }
+        self.compile_block(body);
 
         // Force jump to end_block if then_block does not have a return.
         if self

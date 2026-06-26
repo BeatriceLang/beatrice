@@ -33,9 +33,7 @@ impl<'a> Codegen<'a> {
             self.insert_local(param_name, param_ty.clone(), llvm_param, false);
         }
 
-        for statement in &function.body.statements {
-            self.compile_statement(statement);
-        }
+        self.compile_block(&function.body);
 
         if function.return_type.is_none() && self.current_block().get_terminator().is_none() {
             self.builder.build_return(None).unwrap();
