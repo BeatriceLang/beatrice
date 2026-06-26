@@ -1,7 +1,7 @@
-use chumsky::{primitive::choice, select, Parser};
+use chumsky::{Parser, primitive::choice, select};
 
 use crate::{
-    ast::{expression::Expression, Type},
+    ast::{Type, expression::Expression},
     lexing::token::Token,
     parsing::{
         expr::{
@@ -17,7 +17,8 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
         Token::Number(value) => Expression::Number(value),
         Token::StringLiteral(string) => Expression::StringLiteral(string),
         Token::I32Number(value) => Expression::TypedNumber { value, ty: Type::I32 },
-        Token::U32Number(value) => Expression::TypedNumber { value, ty: Type::U32 }
+        Token::U32Number(value) => Expression::TypedNumber { value, ty: Type::U32 },
+        Token::BoolLiteral(value) => Expression::Bool(value)
     }
     .or(ident().map(Expression::Ident));
 
@@ -34,7 +35,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
 #[cfg(test)]
 mod tests {
     use crate::{
-        ast::{expression::Expression, Type},
+        ast::{Type, expression::Expression},
         lexing::token::Token,
         parsing::{
             expr::{expr, primary::primary_expr},
