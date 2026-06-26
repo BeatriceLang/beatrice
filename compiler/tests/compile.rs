@@ -50,18 +50,12 @@ fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
 }
 
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {
-    let compiler_output = Command::new(env!("CARGO_BIN_EXE_beatricec"))
-        .arg(source)
-        .arg("-o")
-        .arg(object)
-        .output()
-        .unwrap();
+    let compile_result = beatrice_compiler::compile(source, object.clone());
 
     assert!(
-        compiler_output.status.success(),
-        "compiler failed\nstdout:\n{}\nstderr:\n{}",
-        String::from_utf8_lossy(&compiler_output.stdout),
-        String::from_utf8_lossy(&compiler_output.stderr)
+        compile_result.is_ok(),
+        "compiler failed\nerror:\n{:#}",
+        compile_result.unwrap_err()
     );
 
     assert!(object.exists(), "compiler did not create object file");
