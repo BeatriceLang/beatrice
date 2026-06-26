@@ -12,6 +12,9 @@ pub enum Token {
     #[token(".")]
     Dot,
 
+    #[token("u32")]
+    U32,
+
     #[token("while")]
     While,
 

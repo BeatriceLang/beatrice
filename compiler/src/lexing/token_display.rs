@@ -9,6 +9,7 @@ impl Display for Token {
             Self::If => f.write_str("if"),
             Self::Fn => f.write_str("fn"),
             Self::LeftParen => f.write_str("("),
+            Self::U32 => f.write_str("u32"),
             Self::Dot => f.write_str("."),
             Self::Struct => f.write_str("struct"),
             Self::Const => f.write_str("const"),
