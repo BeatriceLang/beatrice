@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use inkwell::types::StructType;
+use inkwell::{
+    types::{PointerType, StructType},
+    values::PointerValue,
+};
 
 use crate::{
     ast::{DeclareStruct, Ident},
@@ -12,7 +15,25 @@ pub(super) struct IndexedStruct<'a> {
     pub indexes: HashMap<Ident, usize>,
 }
 
-impl Codegen<'_> {
+impl<'a> Codegen<'a> {
+    pub(super) fn struct_field_ptr(
+        &self,
+        struct_type: &IndexedStruct<'a>,
+        field_name: &Ident,
+        struct_ptr: PointerValue<'a>,
+    ) -> PointerValue<'a> {
+        let struct_llvm_ty = struct_type.inner;
+        let field_index = *struct_type.indexes.get(field_name).unwrap();
+
+        self.builder
+            .build_struct_gep(
+                struct_llvm_ty,
+                struct_ptr,
+                field_index.try_into().unwrap(),
+                "_",
+            )
+            .unwrap()
+    }
     pub(super) fn declare_struct(&mut self, declare_struct: &DeclareStruct) {
         let struct_name = declare_struct.name.as_str();
         let llvm_struct_ty = self.ctx.opaque_struct_type(struct_name);

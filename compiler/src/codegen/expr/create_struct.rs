@@ -17,16 +17,7 @@ impl<'a> Codegen<'a> {
         let struct_ptr = self.builder.build_alloca(struct_llvm_ty, "_").unwrap();
 
         for (field_name, field_value) in fields {
-            let field_index = *struct_type.indexes.get(field_name).unwrap();
-            let field_ptr = self
-                .builder
-                .build_struct_gep(
-                    struct_llvm_ty,
-                    struct_ptr,
-                    field_index.try_into().unwrap(),
-                    "_",
-                )
-                .unwrap();
+            let field_ptr = self.struct_field_ptr(struct_type, field_name, struct_ptr);
             let field_value = self.compile_expr(field_value).unwrap();
 
             self.builder
