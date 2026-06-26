@@ -9,6 +9,7 @@ impl<'a> Codegen<'a> {
     pub(super) fn to_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {
         match ty {
             Type::I32 => self.ctx.i32_type().into(),
+            Type::U32 => todo!(),
             Type::Struct(struct_name) => self
                 .struct_types
                 .get(struct_name)
