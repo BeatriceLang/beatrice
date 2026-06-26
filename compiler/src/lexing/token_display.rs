@@ -22,6 +22,8 @@ impl Display for Token {
             Self::Comma => f.write_str(","),
             Self::RetArrow => f.write_str("->"),
             Self::I32 => f.write_str("i32"),
+            Self::I32Number(num) => write!(f, "{num}i32"),
+            Self::U32Number(num) => write!(f, "{num}u32"),
             Self::Ident(name) => write!(f, "{name}"),
             Self::Number(value) => write!(f, "{value}"),
             Self::Add => f.write_str("+"),

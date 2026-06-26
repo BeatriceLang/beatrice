@@ -66,6 +66,12 @@ pub enum Token {
     #[token("i32")]
     I32,
 
+    #[regex(r"[0-9]+i32", parse_i32_number)]
+    I32Number(i64),
+
+    #[regex(r"[0-9]+u32", parse_u32_number)]
+    U32Number(u64),
+
     #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*", |lex| lex.slice().to_string())]
     Ident(String),
 
@@ -133,6 +139,14 @@ fn parse_string_literal(lex: &logos::Lexer<Token>) -> String {
     text
 }
 
+fn parse_i32_number(lex: &logos::Lexer<Token>) -> Option<i64> {
+    lex.slice().strip_suffix("i32")?.parse().ok()
+}
+
+fn parse_u32_number(lex: &logos::Lexer<Token>) -> Option<u64> {
+    lex.slice().strip_suffix("u32")?.parse().ok()
+}
+
 #[cfg(test)]
 mod tests {
     use logos::Logos;
@@ -182,6 +196,18 @@ mod tests {
                 Token::Divide,
                 Token::Number(5),
             ]
+        );
+    }
+
+    #[test]
+    fn lexes_suffixed_numbers() {
+        let input = "42 42i32 42u32";
+
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        assert_eq!(
+            tokens,
+            vec![Token::Number(42), Token::I32Number(42), Token::U32Number(42)]
         );
     }
 
