@@ -1,8 +1,8 @@
 use chumsky::{
-    Parser,
     prelude::select,
     primitive::{choice, just},
     recursive::recursive,
+    Parser,
 };
 
 use crate::{ast::Type, lexing::token::Token};
@@ -54,6 +54,15 @@ mod tests {
         let tokens = test_tokens![Token::U32];
 
         assert_eq!(test_parse(ty(), &tokens), Type::U32);
+    }
+
+    #[test]
+    fn parses_bool_ty() {
+        use crate::parsing::{test_parse, test_tokens};
+
+        let tokens = test_tokens![Token::Bool];
+
+        assert_eq!(test_parse(ty(), &tokens), Type::Bool);
     }
 
     #[test]
