@@ -10,6 +10,7 @@ mod create_struct;
 mod deref;
 mod field_access;
 mod function_call;
+mod intrinsic;
 
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
