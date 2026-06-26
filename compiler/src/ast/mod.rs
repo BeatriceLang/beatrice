@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{intrinsics::transmute_unchecked, path::PathBuf};
 
 use crate::ast::{expression::Expression, function::ExternFunction, statement::Statement};
 
@@ -49,4 +49,14 @@ pub enum Type {
     String,
     Ptr(Box<Self>),
     Struct(String),
+}
+
+impl Type {
+    pub(crate) fn signed(&self) -> Option<bool> {
+        match self {
+            Type::U32 => Some(false),
+            Type::I32 => Some(true),
+            _ => None,
+        }
+    }
 }
