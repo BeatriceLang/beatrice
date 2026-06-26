@@ -2,10 +2,10 @@ use inkwell::values::BasicValue;
 
 use crate::{
     ast::{
-        Type::{self},
         expression::Expression,
+        Type::{self},
     },
-    codegen::{Codegen, utils::TypedValue},
+    codegen::{utils::TypedValue, Codegen},
 };
 
 impl<'a> Codegen<'a> {
@@ -20,7 +20,7 @@ impl<'a> Codegen<'a> {
 
         TypedValue {
             inner: is_null_val.as_basic_value_enum(),
-            ty: Type::I32,
+            ty: Type::Bool,
         }
     }
 }
