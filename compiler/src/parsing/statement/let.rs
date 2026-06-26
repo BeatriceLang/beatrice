@@ -1,4 +1,4 @@
-use chumsky::{prelude::just, Parser};
+use chumsky::{Parser, prelude::just};
 
 use crate::{
     ast::statement::Statement,
@@ -21,7 +21,7 @@ pub(super) fn let_stmt<'a>() -> parser_type!(Statement) {
 mod tests {
     use super::*;
     use crate::{
-        ast::{expression::Expression, statement::Statement, Type},
+        ast::{Type, expression::Expression, statement::Statement},
         parsing::{test_ident, test_parse, test_tokens},
     };
 

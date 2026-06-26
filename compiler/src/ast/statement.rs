@@ -1,4 +1,4 @@
-use crate::ast::{expression::Expression, Block, Ident, Type};
+use crate::ast::{Block, Ident, Type, expression::Expression};
 
 // Statements will proform an action (aka do something)
 #[derive(Clone, Debug, PartialEq, Eq)]

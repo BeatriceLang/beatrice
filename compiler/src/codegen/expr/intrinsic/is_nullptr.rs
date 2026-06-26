@@ -2,10 +2,10 @@ use inkwell::values::BasicValue;
 
 use crate::{
     ast::{
-        expression::Expression,
         Type::{self},
+        expression::Expression,
     },
-    codegen::{utils::TypedValue, Codegen},
+    codegen::{Codegen, utils::TypedValue},
 };
 
 impl<'a> Codegen<'a> {

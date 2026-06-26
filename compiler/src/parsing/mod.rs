@@ -1,5 +1,5 @@
 use anyhow::Result;
-use chumsky::{input::Input, span::SimpleSpan, Parser};
+use chumsky::{Parser, input::Input, span::SimpleSpan};
 
 use crate::{
     ast::Program,
@@ -127,9 +127,9 @@ pub fn test_ident(name: &str) -> crate::ast::Ident {
 mod tests {
     use crate::{
         ast::{
+            Block, Function, Item, Program, Type,
             expression::{BinaryOpKind, Expression},
             statement::Statement,
-            Block, Function, Item, Program, Type,
         },
         lexing::token::Token,
         parsing::{parser, test_ident, test_input},

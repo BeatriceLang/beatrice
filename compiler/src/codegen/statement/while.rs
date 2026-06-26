@@ -1,5 +1,5 @@
 use crate::{
-    ast::{expression::Expression, Block, Type},
+    ast::{Block, Type, expression::Expression},
     codegen::Codegen,
 };
 

@@ -1,4 +1,4 @@
-use chumsky::{prelude::just, recursive::recursive, IterParser, Parser};
+use chumsky::{IterParser, Parser, prelude::just, recursive::recursive};
 
 use crate::{ast::Block, lexing::token::Token, parsing::statement::stmt};
 

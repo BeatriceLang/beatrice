@@ -1,4 +1,4 @@
-use chumsky::{primitive::just, Parser};
+use chumsky::{Parser, primitive::just};
 
 use crate::{
     ast::Const,
@@ -23,7 +23,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{expression::Expression, Const, Type},
+        ast::{Const, Type, expression::Expression},
         parsing::{test_ident, test_input, test_parse, test_tokens},
     };
 

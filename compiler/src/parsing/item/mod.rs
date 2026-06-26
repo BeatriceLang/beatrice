@@ -1,4 +1,4 @@
-use chumsky::{primitive::choice, Parser};
+use chumsky::{Parser, primitive::choice};
 
 use crate::{
     ast::Item,
@@ -30,7 +30,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{function::ExternFunction, DeclareStruct, Type},
+        ast::{DeclareStruct, Type, function::ExternFunction},
         lexing::token::Token,
         parsing::{test_ident, test_parse, test_tokens},
     };

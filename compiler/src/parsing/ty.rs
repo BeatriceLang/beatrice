@@ -1,8 +1,8 @@
 use chumsky::{
+    Parser,
     prelude::select,
     primitive::{choice, just},
     recursive::recursive,
-    Parser,
 };
 
 use crate::{ast::Type, lexing::token::Token};

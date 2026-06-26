@@ -1,7 +1,7 @@
-use chumsky::{prelude::just, Parser};
+use chumsky::{Parser, prelude::just};
 
 use crate::{
-    ast::{statement::Statement, Block},
+    ast::{Block, statement::Statement},
     lexing::token::Token,
     parsing::expr::expr,
 };
@@ -18,9 +18,9 @@ mod tests {
     use super::*;
     use crate::{
         ast::{
+            Block,
             expression::{BinaryOpKind, Expression},
             statement::Statement,
-            Block,
         },
         parsing::{block::block, test_ident, test_parse, test_tokens},
     };

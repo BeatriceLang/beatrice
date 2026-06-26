@@ -22,15 +22,16 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
     }
     .or(ident().map(Expression::Ident));
 
-    choice((
-        cast(expr.clone()),
+    let primary = choice((
         field_access(),
         function_call_expr(expr.clone()),
         create_struct(expr.clone()),
         base,
         deref_expr(expr.clone()),
         addr_of_expr(expr),
-    ))
+    ));
+
+    cast(primary)
 }
 
 #[cfg(test)]

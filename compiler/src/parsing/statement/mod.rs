@@ -1,6 +1,6 @@
 use chumsky::prelude::choice;
 
-use crate::ast::{statement::Statement, Block};
+use crate::ast::{Block, statement::Statement};
 
 mod assign;
 mod expr;

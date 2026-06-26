@@ -1,4 +1,4 @@
-use chumsky::{prelude::end, IterParser, Parser};
+use chumsky::{IterParser, Parser, prelude::end};
 
 use crate::{ast::Program, parsing::item::item};
 
