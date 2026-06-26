@@ -8,6 +8,7 @@ use crate::{
 mod binary_op;
 mod create_struct;
 mod deref;
+mod field_access;
 mod function_call;
 
 impl<'a> Codegen<'a> {
@@ -51,7 +52,7 @@ impl<'a> Codegen<'a> {
             Expression::CreateStruct { name, fields } => {
                 Some(self.compile_create_struct(name, fields))
             }
-            Expression::FieldAccess { base, field } => todo!(),
+            Expression::FieldAccess { base, field } => Some(self.compile_field_access(base, field)),
         }
     }
 }
