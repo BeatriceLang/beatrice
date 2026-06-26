@@ -15,6 +15,7 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
+            Expression::Cast { value, to } => todo!(),
             Expression::Number(number) => Some(TypedValue {
                 inner: self
                     .ctx

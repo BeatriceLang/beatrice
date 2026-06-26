@@ -34,6 +34,10 @@ pub enum Expression {
         base: Ident,
         field: Ident,
     },
+    Cast {
+        value: Box<Self>,
+        to: Type,
+    },
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
