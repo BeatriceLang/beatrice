@@ -1,4 +1,4 @@
-use crate::ast::Ident;
+use crate::ast::{Ident, Type};
 
 // Expressions can be evaluated into a value
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -6,6 +6,10 @@ pub enum Expression {
     Ident(Ident),
     Number(i64),
     StringLiteral(String),
+    TypedNumber {
+        value: i64,
+        ty: Type,
+    },
     BinaryOp {
         lhs: Box<Self>,
         kind: BinaryOpKind,

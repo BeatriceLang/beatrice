@@ -22,6 +22,16 @@ impl<'a> Codegen<'a> {
                     .into(),
                 ty: Type::I32,
             }),
+            Expression::TypedNumber { value, ty } => {
+                let llvm_ty = self.to_llvm_type(ty).into_int_type();
+
+                let value = llvm_ty.const_int(*value as u64, false);
+
+                Some(TypedValue {
+                    inner: value.into(),
+                    ty: ty.clone(),
+                })
+            }
             Expression::BinaryOp { lhs, kind, rhs } => {
                 Some(self.compile_binary_op(lhs, *kind, rhs))
             }
