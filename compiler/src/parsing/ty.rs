@@ -1,8 +1,8 @@
 use chumsky::{
+    Parser,
     prelude::select,
     primitive::{choice, just},
     recursive::recursive,
-    Parser,
 };
 
 use crate::{ast::Type, lexing::token::Token};
@@ -13,7 +13,8 @@ pub fn ty<'a>() -> parser_type!(Type) {
             Token::I32 => Type::I32,
             Token::U32 => Type::U32,
             Token::String => Type::String,
-            Token::Ident(ident) => Type::Struct(ident)
+            Token::Ident(ident) => Type::Struct(ident),
+            Token::Bool => Type::Bool,
         };
 
         let ptr = just(Token::Multiply)
