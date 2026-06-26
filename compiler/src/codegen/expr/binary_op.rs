@@ -1,7 +1,10 @@
 use inkwell::IntPredicate;
 
 use crate::{
-    ast::expression::{BinaryOpKind, Expression},
+    ast::{
+        Type,
+        expression::{BinaryOpKind, Expression},
+    },
     codegen::{Codegen, utils::TypedValue},
 };
 
@@ -67,7 +70,7 @@ impl<'a> Codegen<'a> {
 
         TypedValue {
             inner: value,
-            ty: lhs.ty,
+            ty: Type::Bool,
         }
     }
 }
