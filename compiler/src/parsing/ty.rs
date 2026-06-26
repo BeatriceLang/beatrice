@@ -11,6 +11,7 @@ pub fn ty<'a>() -> parser_type!(Type) {
     recursive(|ty| {
         let atom = select! {
             Token::I32 => Type::I32,
+            Token::U32 => Type::U32,
             Token::String => Type::String,
             Token::Ident(ident) => Type::Struct(ident)
         };
