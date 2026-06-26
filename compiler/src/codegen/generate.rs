@@ -34,18 +34,14 @@ impl Codegen<'_> {
         }
 
         for item in &items {
-            match item {
-                Item::DeclareStruct(declare_struct) => self.define_struct(declare_struct),
-                _ => (),
+            if let Item::DeclareStruct(declare_struct) = item {
+                self.define_struct(declare_struct);
             }
         }
 
         for item in &items {
-            match item {
-                Item::Function(function) => {
-                    self.compile_function(function);
-                }
-                _ => (),
+            if let Item::Function(function) = item {
+                self.compile_function(function);
             }
         }
         self.program.items = items;
