@@ -1,6 +1,6 @@
 use chumsky::{
+    Parser,
     primitive::{choice, just},
-    select, Parser,
 };
 
 use crate::{
@@ -59,28 +59,13 @@ fn binary_op(lhs: Expression, (kind, rhs): (BinaryOpKind, Expression)) -> Expres
     }
 }
 
-pub fn binary_op_kind<'a>() -> parser_type!(BinaryOpKind) {
-    select! {
-        Token::Add => BinaryOpKind::Add,
-        Token::Minus => BinaryOpKind::Subtract,
-        Token::Divide => BinaryOpKind::Divide,
-        Token::Multiply => BinaryOpKind::Multiply,
-        Token::LessThan => BinaryOpKind::LessThan,
-        Token::GreaterThan => BinaryOpKind::GreaterThan,
-        Token::Equal => BinaryOpKind::EqualTo,
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
         parsing::{
-            expr::{
-                binary_op::{binary_op_expr, binary_op_kind},
-                expr,
-            },
+            expr::{binary_op::binary_op_expr, expr},
             test_ident, test_parse, test_tokens,
         },
     };
@@ -195,38 +180,6 @@ mod tests {
                 kind: BinaryOpKind::EqualTo,
                 rhs: Expression::Number(3).into(),
             }
-        );
-    }
-
-    #[test]
-    fn parses_binary_op_kind() {
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::Add]),
-            BinaryOpKind::Add
-        );
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::Minus]),
-            BinaryOpKind::Subtract
-        );
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::Divide]),
-            BinaryOpKind::Divide
-        );
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::Multiply]),
-            BinaryOpKind::Multiply
-        );
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::LessThan]),
-            BinaryOpKind::LessThan
-        );
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::GreaterThan]),
-            BinaryOpKind::GreaterThan
-        );
-        assert_eq!(
-            test_parse(binary_op_kind(), &test_tokens![Token::Equal]),
-            BinaryOpKind::EqualTo
         );
     }
 }
