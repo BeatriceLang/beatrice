@@ -343,7 +343,7 @@ fn compiles_struct_field_access_to_executable() {
         }
 
         fn main() -> i32 {
-            let point: Point = Point {
+            let point: Point = new Point {
                 x: 40,
                 y: 2,
             };

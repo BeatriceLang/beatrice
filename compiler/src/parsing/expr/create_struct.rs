@@ -12,7 +12,8 @@ pub(super) fn create_struct<'a>(expr: parser_type!(Expression)) -> parser_type!(
         .collect::<Vec<_>>()
         .delimited_by(just(Token::LeftBrace), just(Token::RightBrace));
 
-    ident()
+    just(Token::New)
+        .ignore_then(ident())
         .then(body)
         .map(|(name, fields)| Expression::CreateStruct {
             name,
@@ -34,6 +35,7 @@ mod tests {
     #[test]
     fn parses_empty_struct_expression() {
         let tokens = test_tokens![
+            Token::New,
             Token::Ident("Point".into()),
             Token::LeftBrace,
             Token::RightBrace,
@@ -51,6 +53,7 @@ mod tests {
     #[test]
     fn parses_struct_expression_with_fields() {
         let tokens = test_tokens![
+            Token::New,
             Token::Ident("Point".into()),
             Token::LeftBrace,
             Token::Ident("x".into()),
