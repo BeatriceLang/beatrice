@@ -29,6 +29,9 @@ pub enum Token {
     #[token("fn")]
     Fn,
 
+    #[token("new")]
+    New,
+
     #[token("(")]
     LeftParen,
 
@@ -177,6 +180,15 @@ mod tests {
                 Token::RightBrace,
             ]
         );
+    }
+
+    #[test]
+    fn lexes_new_keyword() {
+        let input = "new Point";
+
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        assert_eq!(tokens, vec![Token::New, Token::Ident("Point".into())]);
     }
 
     #[test]
