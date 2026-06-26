@@ -12,7 +12,7 @@ impl<'a> Codegen<'a> {
         fields: &[(Ident, Box<Expression>)],
     ) -> TypedValue<'a> {
         let struct_type = self
-            .structs
+            .struct_types
             .get(name.as_str())
             .unwrap()
             .as_basic_type_enum();
