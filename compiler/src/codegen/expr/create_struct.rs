@@ -1,4 +1,4 @@
-use inkwell::{types::BasicType, values::BasicValue};
+use inkwell::types::BasicType;
 
 use crate::{
     ast::{Ident, Type, expression::Expression},
