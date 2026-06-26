@@ -1,5 +1,5 @@
 use crate::{
-    ast::{Block, expression::Expression},
+    ast::{expression::Expression, Block, Type},
     codegen::Codegen,
 };
 
@@ -15,10 +15,12 @@ impl Codegen<'_> {
         self.builder.build_unconditional_branch(cond_block).unwrap();
 
         self.builder.position_at_end(cond_block);
-        let cond = self.compile_expr(cond).unwrap().inner.into_int_value();
+        let cond = self.compile_expr(cond).unwrap();
+
+        assert_eq!(cond.ty, Type::Bool);
 
         self.builder
-            .build_conditional_branch(cond, body_block, end_block)
+            .build_conditional_branch(cond.inner.into_int_value(), body_block, end_block)
             .unwrap();
 
         self.builder.position_at_end(body_block);
