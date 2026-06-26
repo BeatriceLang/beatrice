@@ -26,7 +26,7 @@ pub enum Expression {
         fields: Vec<(Ident, Box<Self>)>,
     },
     FieldAccess {
-        base: Box<Self>,
+        base: Ident,
         field: Ident,
     },
 }
