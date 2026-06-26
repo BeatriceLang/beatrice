@@ -2,6 +2,8 @@ use logos::Logos;
 
 #[derive(Logos, Debug, Clone, PartialEq, Eq)]
 #[logos(skip r"[ \t\n\f]+")]
+#[logos(skip r"//[^\n]*")]
+#[logos(skip r"/\*([^*]|\*[^/])*\*/")]
 pub enum Token {
     #[token("import")]
     Import,
@@ -228,6 +230,30 @@ mod tests {
                 Token::StringLiteral("hello\nworld".into()),
                 Token::StringLiteral("quote: \"".into()),
                 Token::StringLiteral("slash: \\".into()),
+            ]
+        );
+    }
+
+    #[test]
+    fn skips_comments() {
+        let input = "fn /* block */ main() -> i32 { // line\n return 42; }";
+
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        assert_eq!(
+            tokens,
+            vec![
+                Token::Fn,
+                Token::Ident("main".into()),
+                Token::LeftParen,
+                Token::RightParen,
+                Token::RetArrow,
+                Token::I32,
+                Token::LeftBrace,
+                Token::Return,
+                Token::Number(42),
+                Token::Semicolon,
+                Token::RightBrace,
             ]
         );
     }
