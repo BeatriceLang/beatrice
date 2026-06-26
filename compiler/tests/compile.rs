@@ -357,6 +357,32 @@ fn compiles_struct_field_access_to_executable() {
 }
 
 #[test]
+fn compiles_function_with_struct_declared_later() {
+    let code = compile_and_run(
+        "function_with_struct_declared_later",
+        "
+        fn x(point: Point) -> i32 {
+            return point.x;
+        }
+
+        struct Point {
+            x: i32,
+        }
+
+        fn main() -> i32 {
+            let point: Point = new Point {
+                x: 42,
+            };
+
+            return x(point);
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_address_of_local_value() {
     let code = compile_and_run(
         "address_of_local_value",
