@@ -1,4 +1,4 @@
-use chumsky::{Parser, primitive::just};
+use chumsky::{primitive::just, Parser};
 
 use crate::{
     ast::Const,
@@ -13,6 +13,7 @@ pub(super) fn constant<'a>() -> parser_type!(Const) {
         .then(ty())
         .then_ignore(just(Token::Assign))
         .then(expr())
+        .then_ignore(just(Token::Semicolon))
         .map(|((name, ty), val)| Const { name, ty, val })
 }
 
@@ -22,7 +23,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{Const, Type, expression::Expression},
+        ast::{expression::Expression, Const, Type},
         parsing::{test_ident, test_input, test_parse, test_tokens},
     };
 
@@ -35,6 +36,7 @@ mod tests {
             Token::I32,
             Token::Assign,
             Token::Number(42),
+            Token::Semicolon,
         ];
 
         assert_eq!(
@@ -56,6 +58,7 @@ mod tests {
             Token::String,
             Token::Assign,
             Token::StringLiteral("hello".into()),
+            Token::Semicolon,
         ];
 
         assert_eq!(
@@ -78,6 +81,7 @@ mod tests {
             Token::I32,
             Token::Assign,
             Token::Ident("value".into()),
+            Token::Semicolon,
         ];
 
         assert_eq!(
@@ -103,5 +107,21 @@ mod tests {
 
         assert_eq!(errors.len(), 1);
         assert_eq!(errors[0].span().into_range(), 4..5);
+    }
+
+    #[test]
+    fn rejects_constant_item_without_semicolon() {
+        let tokens = test_tokens![
+            Token::Const,
+            Token::Ident("answer".into()),
+            Token::Colon,
+            Token::I32,
+            Token::Assign,
+            Token::Number(42),
+        ];
+        let errors = constant().parse(test_input(&tokens)).into_errors();
+
+        assert_eq!(errors.len(), 1);
+        assert_eq!(errors[0].span().into_range(), 6..6);
     }
 }

@@ -231,7 +231,7 @@ fn compiles_constant_literal_to_executable() {
     let code = compile_and_run(
         "constant_literal",
         "
-        const answer: i32 = 42
+        const answer: i32 = 42;
 
         fn main() -> i32 {
             return answer;
@@ -248,7 +248,7 @@ fn compiles_constant_binary_op_to_executable() {
     let code = compile_and_run(
         "constant_binary_op",
         "
-        const answer: i32 = 40 + 2
+        const answer: i32 = 40 + 2;
 
         fn main() -> i32 {
             return answer;
