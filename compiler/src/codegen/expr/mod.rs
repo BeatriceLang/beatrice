@@ -23,7 +23,14 @@ impl<'a> Codegen<'a> {
                     .into(),
                 ty: Type::I32,
             }),
-            Expression::Bool(value) => todo!(),
+            Expression::Bool(value) => Some(TypedValue {
+                inner: self
+                    .ctx
+                    .bool_type()
+                    .const_int(u64::from(*value), false)
+                    .into(),
+                ty: Type::Bool,
+            }),
             Expression::TypedNumber { value, ty } => {
                 let llvm_ty = self.to_llvm_type(ty).into_int_type();
 
