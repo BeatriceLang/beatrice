@@ -1,7 +1,7 @@
-use chumsky::{Parser, primitive::choice, select};
+use chumsky::{primitive::choice, select, Parser};
 
 use crate::{
-    ast::{Type, expression::Expression},
+    ast::{expression::Expression, Type},
     lexing::token::Token,
     parsing::{
         expr::{
@@ -34,7 +34,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
 #[cfg(test)]
 mod tests {
     use crate::{
-        ast::expression::Expression,
+        ast::{expression::Expression, Type},
         lexing::token::Token,
         parsing::{
             expr::{expr, primary::primary_expr},
@@ -45,12 +45,28 @@ mod tests {
     #[test]
     fn parses_base_expr() {
         let number_tokens = test_tokens![Token::Number(42)];
+        let i32_number_tokens = test_tokens![Token::I32Number(42)];
+        let u32_number_tokens = test_tokens![Token::U32Number(42)];
         let ident_tokens = test_tokens![Token::Ident("x".into())];
         let string_tokens = test_tokens![Token::StringLiteral("hello".into())];
 
         assert_eq!(
             test_parse(primary_expr(expr()), &number_tokens),
             Expression::Number(42)
+        );
+        assert_eq!(
+            test_parse(primary_expr(expr()), &i32_number_tokens),
+            Expression::TypedNumber {
+                value: 42,
+                ty: Type::I32,
+            }
+        );
+        assert_eq!(
+            test_parse(primary_expr(expr()), &u32_number_tokens),
+            Expression::TypedNumber {
+                value: 42,
+                ty: Type::U32,
+            }
         );
         assert_eq!(
             test_parse(primary_expr(expr()), &ident_tokens),
