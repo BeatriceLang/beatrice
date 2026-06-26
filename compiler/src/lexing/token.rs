@@ -35,6 +35,10 @@ pub enum Token {
     #[token("new")]
     New,
 
+    #[token("true", |_| true)]
+    #[token("false", |_| false)]
+    BoolLiteral(bool),
+
     #[token("(")]
     LeftParen,
 
@@ -192,6 +196,15 @@ mod tests {
         let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
 
         assert_eq!(tokens, vec![Token::New, Token::Ident("Point".into())]);
+    }
+
+    #[test]
+    fn lexes_bool_literals() {
+        let input = "true false";
+
+        let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
+
+        assert_eq!(tokens, vec![Token::BoolLiteral(true), Token::BoolLiteral(false)]);
     }
 
     #[test]

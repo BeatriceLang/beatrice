@@ -10,6 +10,7 @@ impl Display for Token {
             Self::Fn => f.write_str("fn"),
             Self::New => f.write_str("new"),
             Self::Bool => f.write_str("bool"),
+            Self::BoolLiteral(value) => write!(f, "{value}"),
             Self::LeftParen => f.write_str("("),
             Self::U32 => f.write_str("u32"),
             Self::Dot => f.write_str("."),
