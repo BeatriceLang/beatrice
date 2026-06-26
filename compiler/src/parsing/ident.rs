@@ -1,9 +1,9 @@
 use chumsky::{
-    Parser,
     error::Rich,
     input::{MapExtra, MappedInput},
     prelude::select,
     span::SimpleSpan,
+    Parser,
 };
 
 use crate::{ast::Ident, lexing::token::Token};

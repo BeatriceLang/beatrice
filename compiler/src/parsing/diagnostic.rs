@@ -50,10 +50,10 @@ fn display_rich_pattern(pattern: &RichPattern<'_, Token>) -> String {
 #[cfg(test)]
 mod tests {
     use chumsky::{
-        Parser,
         error::{Rich, RichPattern},
         prelude::just,
         span::SimpleSpan,
+        Parser,
     };
 
     use crate::{

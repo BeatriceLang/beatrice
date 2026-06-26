@@ -1,7 +1,7 @@
-use chumsky::{Parser, prelude::just};
+use chumsky::{prelude::just, Parser};
 
 use crate::{
-    ast::{Block, statement::Statement},
+    ast::{statement::Statement, Block},
     lexing::token::Token,
     parsing::expr::expr,
 };
@@ -18,9 +18,9 @@ mod tests {
     use super::*;
     use crate::{
         ast::{
-            Block,
             expression::{BinaryOpKind, Expression},
             statement::Statement,
+            Block,
         },
         parsing::{block::block, test_ident, test_parse, test_tokens},
     };
@@ -48,7 +48,7 @@ mod tests {
                     rhs: Expression::Number(2).into(),
                 },
                 body: Block {
-                    statements: vec![Statement::Return(Expression::Ident(test_ident("n")))],
+                    statements: vec![Statement::Return(Some(Expression::Ident(test_ident("n"))))],
                 },
             }
         );

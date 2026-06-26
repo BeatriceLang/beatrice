@@ -1,4 +1,4 @@
-use chumsky::{IterParser, Parser, primitive::just};
+use chumsky::{primitive::just, IterParser, Parser};
 
 use crate::{
     ast::DeclareStruct,

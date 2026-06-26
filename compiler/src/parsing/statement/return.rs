@@ -1,10 +1,10 @@
-use chumsky::{Parser, prelude::just};
+use chumsky::{prelude::just, Parser};
 
 use crate::{ast::statement::Statement, lexing::token::Token, parsing::expr::expr};
 
 pub(super) fn return_stmt<'a>() -> parser_type!(Statement) {
     just(Token::Return)
-        .ignore_then(expr())
+        .ignore_then(expr().or_not())
         .then_ignore(just(Token::Semicolon))
         .map(Statement::Return)
 }
@@ -23,7 +23,7 @@ mod tests {
 
         assert_eq!(
             test_parse(return_stmt(), &tokens),
-            Statement::Return(Expression::Number(42))
+            Statement::Return(Some(Expression::Number(42)))
         );
     }
 }

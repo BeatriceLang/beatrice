@@ -1,6 +1,6 @@
 use chumsky::prelude::choice;
 
-use crate::ast::{Block, statement::Statement};
+use crate::ast::{statement::Statement, Block};
 
 mod assign;
 mod expr;
@@ -37,7 +37,7 @@ mod tests {
 
         assert_eq!(
             test_parse(stmt(block()), &tokens),
-            Statement::Return(Expression::Number(42))
+            Statement::Return(Some(Expression::Number(42)))
         );
     }
 }

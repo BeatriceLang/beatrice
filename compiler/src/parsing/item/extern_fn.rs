@@ -1,4 +1,4 @@
-use chumsky::{IterParser, Parser, prelude::just};
+use chumsky::{prelude::just, IterParser, Parser};
 
 use crate::{
     ast::function::ExternFunction,

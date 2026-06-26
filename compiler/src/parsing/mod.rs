@@ -1,5 +1,5 @@
 use anyhow::Result;
-use chumsky::{Parser, input::Input, span::SimpleSpan};
+use chumsky::{input::Input, span::SimpleSpan, Parser};
 
 use crate::{
     ast::Program,
@@ -127,9 +127,9 @@ pub fn test_ident(name: &str) -> crate::ast::Ident {
 mod tests {
     use crate::{
         ast::{
-            Block, Function, Item, Program, Type,
             expression::{BinaryOpKind, Expression},
             statement::Statement,
+            Block, Function, Item, Program, Type,
         },
         lexing::token::Token,
         parsing::{parser, test_ident, test_input},
@@ -159,7 +159,7 @@ mod tests {
                     params: vec![],
                     return_type: Some(Type::I32),
                     body: Block {
-                        statements: vec![Statement::Return(Expression::Number(42))],
+                        statements: vec![Statement::Return(Some(Expression::Number(42)))],
                     },
                 })],
             }
@@ -181,11 +181,11 @@ mod tests {
                     params: vec![],
                     return_type: Some(Type::I32),
                     body: Block {
-                        statements: vec![Statement::Return(Expression::BinaryOp {
+                        statements: vec![Statement::Return(Some(Expression::BinaryOp {
                             lhs: Expression::Number(1).into(),
                             kind: BinaryOpKind::Add,
                             rhs: Expression::Number(2).into(),
-                        })],
+                        }))],
                     },
                 })],
             }
@@ -210,7 +210,7 @@ mod tests {
                     ],
                     return_type: Some(Type::I32),
                     body: Block {
-                        statements: vec![Statement::Return(Expression::Number(42))],
+                        statements: vec![Statement::Return(Some(Expression::Number(42)))],
                     },
                 })],
             }

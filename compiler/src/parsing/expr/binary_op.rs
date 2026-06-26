@@ -1,6 +1,6 @@
 use chumsky::{
-    Parser,
     primitive::{choice, just},
+    Parser,
 };
 
 use crate::{

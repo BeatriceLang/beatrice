@@ -1,4 +1,4 @@
-use chumsky::{IterParser, Parser, prelude::end};
+use chumsky::{prelude::end, IterParser, Parser};
 
 use crate::{ast::Program, parsing::item::item};
 
@@ -43,9 +43,9 @@ mod tests {
                     params: vec![],
                     return_type: Some(crate::ast::Type::I32),
                     body: crate::ast::Block {
-                        statements: vec![crate::ast::statement::Statement::Return(
+                        statements: vec![crate::ast::statement::Statement::Return(Some(
                             crate::ast::expression::Expression::Number(42)
-                        )],
+                        ))],
                     },
                 })],
             }

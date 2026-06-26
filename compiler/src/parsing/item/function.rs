@@ -1,4 +1,4 @@
-use chumsky::{IterParser, Parser, prelude::just};
+use chumsky::{prelude::just, IterParser, Parser};
 
 use crate::{
     ast::Function,
@@ -57,9 +57,9 @@ mod tests {
                 params: vec![],
                 return_type: Some(crate::ast::Type::I32),
                 body: crate::ast::Block {
-                    statements: vec![crate::ast::statement::Statement::Return(
+                    statements: vec![crate::ast::statement::Statement::Return(Some(
                         crate::ast::expression::Expression::Number(42)
-                    )],
+                    ))],
                 },
             }
         );
@@ -100,9 +100,9 @@ mod tests {
                 ],
                 return_type: Some(crate::ast::Type::I32),
                 body: crate::ast::Block {
-                    statements: vec![crate::ast::statement::Statement::Return(
+                    statements: vec![crate::ast::statement::Statement::Return(Some(
                         crate::ast::expression::Expression::Number(42)
-                    )],
+                    ))],
                 },
             }
         );

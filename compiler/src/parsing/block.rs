@@ -1,4 +1,4 @@
-use chumsky::{IterParser, Parser, prelude::just, recursive::recursive};
+use chumsky::{prelude::just, recursive::recursive, IterParser, Parser};
 
 use crate::{ast::Block, lexing::token::Token, parsing::statement::stmt};
 
@@ -31,9 +31,9 @@ mod tests {
         assert_eq!(
             test_parse(block(), &tokens),
             Block {
-                statements: vec![crate::ast::statement::Statement::Return(
+                statements: vec![crate::ast::statement::Statement::Return(Some(
                     crate::ast::expression::Expression::Number(42)
-                )],
+                ))],
             }
         );
     }

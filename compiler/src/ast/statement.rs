@@ -3,7 +3,7 @@ use crate::ast::{Block, Ident, Type, expression::Expression};
 // Statements will proform an action (aka do something)
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Statement {
-    Return(Expression),
+    Return(Option<Expression>),
     Expression(Expression),
     If {
         cond: Expression,

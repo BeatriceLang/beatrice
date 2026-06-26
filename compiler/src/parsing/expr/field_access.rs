@@ -1,4 +1,4 @@
-use chumsky::{Parser, primitive::just};
+use chumsky::{primitive::just, Parser};
 
 use crate::{ast::expression::Expression, lexing::token::Token, parsing::ident::ident};
 

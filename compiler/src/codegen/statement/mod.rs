@@ -8,14 +8,17 @@ mod r#while;
 impl Codegen<'_> {
     pub(super) fn compile_statement(&mut self, statement: &Statement) {
         match statement {
-            Statement::Return(expr) => {
-                let value = self.compile_expr(expr).unwrap();
+            Statement::Return(expr) => match expr {
+                Some(expr) => {
+                    let value = self.compile_expr(expr).unwrap();
 
-                _ = self
-                    .builder
-                    .build_return(Some(&value.inner as &dyn BasicValue))
-                    .unwrap();
-            }
+                    _ = self
+                        .builder
+                        .build_return(Some(&value.inner as &dyn BasicValue))
+                        .unwrap();
+                }
+                None => _ = self.builder.build_return(None).unwrap(),
+            },
             Statement::Expression(expr) => {
                 _ = self.compile_expr(expr);
             }
