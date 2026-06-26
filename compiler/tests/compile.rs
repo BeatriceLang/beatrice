@@ -220,7 +220,9 @@ fn compiles_unsigned_divide_to_executable() {
         "unsigned_divide",
         "
         fn main() -> i32 {
-            if 4294967295u32 / 2u32 > 100u32 {
+            let half: u32 = 4294967295u32 / 2u32;
+
+            if half > 100u32 {
                 return 42;
             }
 
