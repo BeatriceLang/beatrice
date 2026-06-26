@@ -23,6 +23,7 @@ impl<'a> Codegen<'a> {
                     .into(),
                 ty: Type::I32,
             }),
+            Expression::Bool(value) => todo!(),
             Expression::TypedNumber { value, ty } => {
                 let llvm_ty = self.to_llvm_type(ty).into_int_type();
 

@@ -4,6 +4,7 @@ use crate::ast::{Ident, Type};
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Expression {
     Ident(Ident),
+    Bool(bool),
     Number(i64),
     StringLiteral(String),
     TypedNumber {
