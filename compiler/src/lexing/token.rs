@@ -204,7 +204,10 @@ mod tests {
 
         let tokens: Vec<_> = Token::lexer(input).map(|token| token.unwrap()).collect();
 
-        assert_eq!(tokens, vec![Token::BoolLiteral(true), Token::BoolLiteral(false)]);
+        assert_eq!(
+            tokens,
+            vec![Token::BoolLiteral(true), Token::BoolLiteral(false)]
+        );
     }
 
     #[test]
