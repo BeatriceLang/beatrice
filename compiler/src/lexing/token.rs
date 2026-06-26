@@ -11,6 +11,9 @@ pub enum Token {
     #[token("if")]
     If,
 
+    #[token("bool")]
+    Bool,
+
     #[token(".")]
     Dot,
 
