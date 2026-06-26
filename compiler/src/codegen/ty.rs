@@ -15,6 +15,7 @@ impl<'a> Codegen<'a> {
                 .unwrap()
                 .inner
                 .as_basic_type_enum(),
+            Type::Bool => todo!(),
             Type::String | Type::Ptr(_) => self.ctx.ptr_type(AddressSpace::default()).into(),
         }
     }

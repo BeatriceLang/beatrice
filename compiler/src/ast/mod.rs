@@ -47,6 +47,7 @@ pub enum Type {
     I32,
     U32,
     String,
+    Bool,
     Ptr(Box<Self>),
     Struct(String),
 }
