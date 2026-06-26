@@ -1,4 +1,7 @@
-use chumsky::{Parser, select};
+use chumsky::{
+    primitive::{choice, just},
+    select, Parser,
+};
 
 use crate::{
     ast::expression::{BinaryOpKind, Expression},
@@ -7,14 +10,53 @@ use crate::{
 };
 
 pub fn binary_op_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    primary_expr(expr.clone()).foldl(
-        binary_op_kind().then(expr).repeated(),
-        |lhs, (op_kind, rhs)| Expression::BinaryOp {
-            lhs: lhs.into(),
-            kind: op_kind,
-            rhs: rhs.into(),
-        },
+    let primary = primary_expr(expr);
+
+    let product = primary.clone().foldl(
+        choice((
+            just(Token::Multiply).to(BinaryOpKind::Multiply),
+            just(Token::Divide).to(BinaryOpKind::Divide),
+        ))
+        .then(primary)
+        .repeated(),
+        binary_op,
+    );
+
+    let sum = product.clone().foldl(
+        choice((
+            just(Token::Add).to(BinaryOpKind::Add),
+            just(Token::Minus).to(BinaryOpKind::Subtract),
+        ))
+        .then(product)
+        .repeated(),
+        binary_op,
+    );
+
+    let comparison = sum.clone().foldl(
+        choice((
+            just(Token::LessThan).to(BinaryOpKind::LessThan),
+            just(Token::GreaterThan).to(BinaryOpKind::GreaterThan),
+        ))
+        .then(sum)
+        .repeated(),
+        binary_op,
+    );
+
+    comparison.clone().foldl(
+        just(Token::Equal)
+            .to(BinaryOpKind::EqualTo)
+            .then(comparison)
+            .repeated(),
+        binary_op,
     )
+}
+
+fn binary_op(lhs: Expression, (kind, rhs): (BinaryOpKind, Expression)) -> Expression {
+    Expression::BinaryOp {
+        lhs: lhs.into(),
+        kind,
+        rhs: rhs.into(),
+    }
 }
 
 pub fn binary_op_kind<'a>() -> parser_type!(BinaryOpKind) {
@@ -77,14 +119,81 @@ mod tests {
         assert_eq!(
             test_parse(binary_op_expr(expr()), &chained_tokens),
             Expression::BinaryOp {
+                lhs: Expression::BinaryOp {
+                    lhs: Expression::Number(1).into(),
+                    kind: BinaryOpKind::Add,
+                    rhs: Expression::Number(2).into(),
+                }
+                .into(),
+                kind: BinaryOpKind::Add,
+                rhs: Expression::Number(3).into(),
+            }
+        );
+    }
+
+    #[test]
+    fn parses_binary_op_precedence() {
+        let product_before_sum = test_tokens![
+            Token::Number(1),
+            Token::Add,
+            Token::Number(2),
+            Token::Multiply,
+            Token::Number(3),
+        ];
+        let sum_before_comparison = test_tokens![
+            Token::Number(1),
+            Token::Add,
+            Token::Number(2),
+            Token::GreaterThan,
+            Token::Number(3),
+        ];
+        let comparison_before_equality = test_tokens![
+            Token::Number(1),
+            Token::LessThan,
+            Token::Number(2),
+            Token::Equal,
+            Token::Number(3),
+        ];
+
+        assert_eq!(
+            test_parse(binary_op_expr(expr()), &product_before_sum),
+            Expression::BinaryOp {
                 lhs: Expression::Number(1).into(),
                 kind: BinaryOpKind::Add,
                 rhs: Expression::BinaryOp {
                     lhs: Expression::Number(2).into(),
-                    kind: BinaryOpKind::Add,
+                    kind: BinaryOpKind::Multiply,
                     rhs: Expression::Number(3).into(),
                 }
                 .into(),
+            }
+        );
+
+        assert_eq!(
+            test_parse(binary_op_expr(expr()), &sum_before_comparison),
+            Expression::BinaryOp {
+                lhs: Expression::BinaryOp {
+                    lhs: Expression::Number(1).into(),
+                    kind: BinaryOpKind::Add,
+                    rhs: Expression::Number(2).into(),
+                }
+                .into(),
+                kind: BinaryOpKind::GreaterThan,
+                rhs: Expression::Number(3).into(),
+            }
+        );
+
+        assert_eq!(
+            test_parse(binary_op_expr(expr()), &comparison_before_equality),
+            Expression::BinaryOp {
+                lhs: Expression::BinaryOp {
+                    lhs: Expression::Number(1).into(),
+                    kind: BinaryOpKind::LessThan,
+                    rhs: Expression::Number(2).into(),
+                }
+                .into(),
+                kind: BinaryOpKind::EqualTo,
+                rhs: Expression::Number(3).into(),
             }
         );
     }
