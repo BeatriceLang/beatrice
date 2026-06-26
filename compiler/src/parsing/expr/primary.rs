@@ -1,11 +1,11 @@
-use chumsky::{primitive::choice, select, Parser};
+use chumsky::{Parser, primitive::choice, select};
 
 use crate::{
-    ast::{expression::Expression, Type},
+    ast::{Type, expression::Expression},
     lexing::token::Token,
     parsing::{
         expr::{
-            addr_of::addr_of_expr, create_struct::create_struct, deref_expr,
+            addr_of::addr_of_expr, cast::cast, create_struct::create_struct, deref_expr,
             field_access::field_access, function_call::function_call_expr,
         },
         ident::ident,
@@ -23,6 +23,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
     .or(ident().map(Expression::Ident));
 
     choice((
+        cast(expr.clone()),
         field_access(),
         function_call_expr(expr.clone()),
         create_struct(expr.clone()),
@@ -35,7 +36,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
 #[cfg(test)]
 mod tests {
     use crate::{
-        ast::{expression::Expression, Type},
+        ast::{Type, expression::Expression},
         lexing::token::Token,
         parsing::{
             expr::{expr, primary::primary_expr},
