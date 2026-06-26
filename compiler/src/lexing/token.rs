@@ -70,7 +70,7 @@ pub enum Token {
     I32Number(i64),
 
     #[regex(r"[0-9]+u32", parse_u32_number)]
-    U32Number(u64),
+    U32Number(i64),
 
     #[regex(r"[a-zA-Z_][a-zA-Z0-9_]*", |lex| lex.slice().to_string())]
     Ident(String),
@@ -207,7 +207,11 @@ mod tests {
 
         assert_eq!(
             tokens,
-            vec![Token::Number(42), Token::I32Number(42), Token::U32Number(42)]
+            vec![
+                Token::Number(42),
+                Token::I32Number(42),
+                Token::U32Number(42)
+            ]
         );
     }
 
