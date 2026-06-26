@@ -10,3 +10,51 @@ pub(super) fn cast<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressio
         }
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        ast::{Type, expression::Expression},
+        lexing::token::Token,
+        parsing::{
+            expr::{expr, primary::primary_expr},
+            test_parse, test_tokens,
+        },
+    };
+
+    #[test]
+    fn parses_cast_expr() {
+        let tokens = test_tokens![Token::Number(42), Token::As, Token::I32];
+
+        assert_eq!(
+            test_parse(primary_expr(expr()), &tokens),
+            Expression::Cast {
+                value: Expression::Number(42).into(),
+                to: Type::I32,
+            }
+        );
+    }
+
+    #[test]
+    fn parses_chained_cast_expr() {
+        let tokens = test_tokens![
+            Token::Number(42),
+            Token::As,
+            Token::U32,
+            Token::As,
+            Token::I32,
+        ];
+
+        assert_eq!(
+            test_parse(primary_expr(expr()), &tokens),
+            Expression::Cast {
+                value: Expression::Cast {
+                    value: Expression::Number(42).into(),
+                    to: Type::U32,
+                }
+                .into(),
+                to: Type::I32,
+            }
+        );
+    }
+}
