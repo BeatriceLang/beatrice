@@ -5,7 +5,7 @@ use inkwell::{builder::Builder, context::Context, module::Module, types::StructT
 
 use crate::{
     ast::{Program, Type},
-    codegen::{ident::local::Local, utils::TypedValue},
+    codegen::{declare_struct::IndexedStruct, ident::local::Local, utils::TypedValue},
     state::{Compiler, CompilerState},
 };
 
@@ -26,7 +26,7 @@ pub struct Codegen<'a> {
     program: Program,
     locals: HashMap<String, Local<'a>>,
     constants: HashMap<String, TypedValue<'a>>,
-    struct_types: HashMap<String, StructType<'a>>,
+    struct_types: HashMap<String, IndexedStruct<'a>>,
     function_return_types: HashMap<String, Option<Type>>,
 }
 

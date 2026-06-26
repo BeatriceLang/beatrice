@@ -11,22 +11,27 @@ impl<'a> Codegen<'a> {
         name: &Ident,
         fields: &[(Ident, Box<Expression>)],
     ) -> TypedValue<'a> {
-        let struct_type = self
-            .struct_types
-            .get(name.as_str())
-            .unwrap()
-            .as_basic_type_enum();
-        let struct_ptr = self.builder.build_alloca(struct_type, "_").unwrap();
+        let struct_type = self.struct_types.get(name.as_str()).unwrap();
 
-        // TODO: resolve the proper order from the ident
-        for (i, (_, expr)) in fields.iter().enumerate() {
+        let struct_llvm_ty = struct_type.inner.as_basic_type_enum();
+        let struct_ptr = self.builder.build_alloca(struct_llvm_ty, "_").unwrap();
+
+        for (field_name, field_value) in fields {
+            let field_index = *struct_type.indexes.get(field_name).unwrap();
             let field_ptr = self
                 .builder
-                .build_struct_gep(struct_type, struct_ptr, i.try_into().unwrap(), "_")
+                .build_struct_gep(
+                    struct_llvm_ty,
+                    struct_ptr,
+                    field_index.try_into().unwrap(),
+                    "_",
+                )
                 .unwrap();
-            let value = self.compile_expr(expr).unwrap();
+            let field_value = self.compile_expr(field_value).unwrap();
 
-            self.builder.build_store(field_ptr, value.inner).unwrap();
+            self.builder
+                .build_store(field_ptr, field_value.inner)
+                .unwrap();
         }
 
         TypedValue {
