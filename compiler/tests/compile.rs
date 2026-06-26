@@ -253,6 +253,30 @@ fn compiles_let_value_return() {
 }
 
 #[test]
+fn compiles_struct_field_access_to_executable() {
+    let code = compile_and_run(
+        "struct_field_access",
+        "
+        struct Point {
+            x: i32,
+            y: i32,
+        }
+
+        fn main() -> i32 {
+            let point: Point = Point {
+                x: 40,
+                y: 2,
+            };
+
+            return point.x + point.y;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_address_of_local_value() {
     let code = compile_and_run(
         "address_of_local_value",
