@@ -143,7 +143,7 @@ fn parse_i32_number(lex: &logos::Lexer<Token>) -> Option<i64> {
     lex.slice().strip_suffix("i32")?.parse().ok()
 }
 
-fn parse_u32_number(lex: &logos::Lexer<Token>) -> Option<u64> {
+fn parse_u32_number(lex: &logos::Lexer<Token>) -> Option<i64> {
     lex.slice().strip_suffix("u32")?.parse().ok()
 }
 
