@@ -36,10 +36,16 @@ impl Codegen<'_> {
 
         for item in &items {
             match item {
+                Item::DeclareStruct(declare_struct) => self.define_struct(declare_struct),
+                _ => (),
+            }
+        }
+
+        for item in &items {
+            match item {
                 Item::Function(function) => {
                     self.compile_function(function);
                 }
-                Item::DeclareStruct(declare_struct) => self.define_struct(declare_struct),
                 _ => (),
             }
         }
