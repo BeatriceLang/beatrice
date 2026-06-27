@@ -2,8 +2,8 @@ use inkwell::{IntPredicate, values::BasicValue};
 
 use crate::{
     ast::{
-        Type,
         expression::{BinaryOpKind, Expression},
+        ty::Type,
     },
     codegen::{Codegen, utils::TypedValue},
 };

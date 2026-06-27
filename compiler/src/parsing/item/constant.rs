@@ -23,7 +23,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{Const, Type, expression::Expression},
+        ast::{Const, expression::Expression, ty::Type},
         parsing::{test_ident, test_input, test_parse, test_tokens},
     };
 

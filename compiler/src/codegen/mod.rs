@@ -4,7 +4,7 @@ use anyhow::{Context as _, Result};
 use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
-    ast::{Program, Type},
+    ast::{Program, ty::Type},
     codegen::{declare_struct::ResolvedStruct, ident::local::Local, utils::TypedValue},
     state::{Compiler, CompilerState},
 };

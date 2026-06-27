@@ -5,7 +5,7 @@ use chumsky::{
     recursive::recursive,
 };
 
-use crate::{ast::Type, lexing::token::Token};
+use crate::{ast::ty::Type, lexing::token::Token};
 
 pub fn ty<'a>() -> parser_type!(Type) {
     recursive(|ty| {

@@ -3,7 +3,7 @@ use inkwell::{
     types::{BasicType, BasicTypeEnum},
 };
 
-use crate::{ast::Type, codegen::Codegen};
+use crate::{ast::ty::Type, codegen::Codegen};
 
 impl<'a> Codegen<'a> {
     pub(super) fn to_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {

@@ -1,7 +1,7 @@
 use inkwell::types::BasicType;
 
 use crate::{
-    ast::{Ident, Type, expression::Expression},
+    ast::{Ident, expression::Expression, ty::Type},
     codegen::{Codegen, utils::TypedValue},
 };
 

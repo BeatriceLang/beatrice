@@ -26,7 +26,7 @@ pub(super) fn declare_struct<'a>() -> parser_type!(DeclareStruct) {
 mod tests {
     use super::*;
     use crate::{
-        ast::Type,
+        ast::ty::Type,
         parsing::{test_ident, test_parse, test_tokens},
     };
 

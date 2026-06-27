@@ -41,7 +41,7 @@ mod tests {
                 items: vec![crate::ast::Item::Function(crate::ast::Function {
                     name: test_ident("main"),
                     params: vec![],
-                    return_type: Some(crate::ast::Type::I32),
+                    return_type: Some(crate::ast::ty::Type::I32),
                     body: crate::ast::Block {
                         statements: vec![crate::ast::statement::Statement::Return(Some(
                             crate::ast::expression::Expression::Number(42)

@@ -39,7 +39,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Item, Program, Type},
+        ast::{Block, Function, Ident, Item, Program, ty::Type},
         check::Checker,
         diagnostic::{DiagnosticKind, Diagnostics},
     };

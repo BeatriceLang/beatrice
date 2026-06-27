@@ -34,7 +34,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Item, Program, Type, function::ExternFunction},
+        ast::{Block, Function, Ident, Item, Program, function::ExternFunction, ty::Type},
         diagnostic::Diagnostics,
         import::ImportProcessor,
     };

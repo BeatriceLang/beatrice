@@ -1,4 +1,4 @@
-use crate::ast::{Ident, Type};
+use crate::ast::{Ident, ty::Type};
 
 // Expressions can be evaluated into a value
 #[derive(Clone, Debug, PartialEq, Eq)]

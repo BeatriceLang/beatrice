@@ -1,7 +1,7 @@
 use chumsky::{Parser, primitive::choice, select};
 
 use crate::{
-    ast::{Type, expression::Expression},
+    ast::{expression::Expression, ty::Type},
     lexing::token::Token,
     parsing::{
         expr::{
@@ -38,7 +38,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
 #[cfg(test)]
 mod tests {
     use crate::{
-        ast::{Type, expression::Expression},
+        ast::{expression::Expression, ty::Type},
         lexing::token::Token,
         parsing::{
             expr::{expr, primary::primary_expr},

@@ -30,7 +30,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{DeclareStruct, Type, function::ExternFunction},
+        ast::{DeclareStruct, function::ExternFunction, ty::Type},
         lexing::token::Token,
         parsing::{test_ident, test_parse, test_tokens},
     };

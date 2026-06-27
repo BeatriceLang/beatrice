@@ -1,7 +1,7 @@
 use inkwell::values::BasicValue;
 
 use crate::{
-    ast::{Type, expression::Expression},
+    ast::{expression::Expression, ty::Type},
     codegen::{Codegen, utils::TypedValue},
 };
 

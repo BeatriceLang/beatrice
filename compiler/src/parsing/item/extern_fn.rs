@@ -54,8 +54,8 @@ mod tests {
             test_parse(extern_function(), &tokens),
             ExternFunction {
                 name: test_ident("puts"),
-                params: vec![(test_ident("value"), crate::ast::Type::String)],
-                return_type: Some(crate::ast::Type::I32),
+                params: vec![(test_ident("value"), crate::ast::ty::Type::String)],
+                return_type: Some(crate::ast::ty::Type::I32),
             }
         );
     }

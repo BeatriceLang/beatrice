@@ -3,7 +3,7 @@ use inkwell::{
     values::{BasicMetadataValueEnum, BasicValueEnum},
 };
 
-use crate::{ast::Type, codegen::Codegen};
+use crate::{ast::ty::Type, codegen::Codegen};
 
 impl<'a> Codegen<'a> {
     pub(super) fn current_block(&self) -> BasicBlock<'a> {

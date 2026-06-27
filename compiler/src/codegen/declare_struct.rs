@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use inkwell::{types::StructType, values::PointerValue};
 
 use crate::{
-    ast::{DeclareStruct, Ident, Type},
+    ast::{DeclareStruct, Ident, ty::Type},
     codegen::Codegen,
 };
 

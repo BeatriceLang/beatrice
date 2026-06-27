@@ -100,7 +100,7 @@ mod tests {
                 kind: BinaryOpKind::Add,
                 rhs: Expression::Cast {
                     value: Expression::Number(2).into(),
-                    to: crate::ast::Type::I32,
+                    to: crate::ast::ty::Type::I32,
                 }
                 .into(),
             }

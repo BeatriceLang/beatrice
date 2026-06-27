@@ -14,7 +14,7 @@ pub(super) fn cast<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressio
 #[cfg(test)]
 mod tests {
     use crate::{
-        ast::{Type, expression::Expression},
+        ast::{expression::Expression, ty::Type},
         lexing::token::Token,
         parsing::{
             expr::{expr, primary::primary_expr},

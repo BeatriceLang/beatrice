@@ -1,4 +1,4 @@
-use crate::ast::{Block, Ident, Type};
+use crate::ast::{Block, Ident, ty::Type};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Function {
