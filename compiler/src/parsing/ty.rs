@@ -5,11 +5,7 @@ use chumsky::{
     recursive::recursive,
 };
 
-use crate::{
-    ast::{expression::Expression, ty::Type},
-    lexing::token::Token,
-    parsing::expr::expr,
-};
+use crate::{ast::ty::Type, lexing::token::Token};
 
 pub fn ty<'a>() -> parser_type!(Type) {
     recursive(|ty| {
@@ -77,6 +73,55 @@ mod tests {
         let tokens = test_tokens![Token::Bool];
 
         assert_eq!(test_parse(ty(), &tokens), Type::Bool);
+    }
+
+    #[test]
+    fn parses_array_ty() {
+        use crate::parsing::{test_parse, test_tokens};
+
+        let tokens = test_tokens![
+            Token::LeftSquareBracket,
+            Token::I32,
+            Token::Semicolon,
+            Token::Number(4),
+            Token::RightSquareBracket,
+        ];
+
+        assert_eq!(
+            test_parse(ty(), &tokens),
+            Type::Array {
+                element_ty: Box::new(Type::I32),
+                size: 4,
+            }
+        );
+    }
+
+    #[test]
+    fn parses_nested_array_ty() {
+        use crate::parsing::{test_parse, test_tokens};
+
+        let tokens = test_tokens![
+            Token::LeftSquareBracket,
+            Token::LeftSquareBracket,
+            Token::Bool,
+            Token::Semicolon,
+            Token::Number(2),
+            Token::RightSquareBracket,
+            Token::Semicolon,
+            Token::Number(3),
+            Token::RightSquareBracket,
+        ];
+
+        assert_eq!(
+            test_parse(ty(), &tokens),
+            Type::Array {
+                element_ty: Box::new(Type::Array {
+                    element_ty: Box::new(Type::Bool),
+                    size: 2,
+                }),
+                size: 3,
+            }
+        );
     }
 
     #[test]
