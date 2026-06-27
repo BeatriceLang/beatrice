@@ -1,4 +1,4 @@
-use inkwell::values::BasicValue;
+use inkwell::values::{self, BasicValue};
 
 use crate::{
     ast::{Type, expression::Expression},
@@ -16,6 +16,7 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
+            Expression::Invert(value) => todo!(),
             Expression::Cast { value, to } => Some(self.compile_cast(value, to)),
             Expression::Number(number) => Some(TypedValue {
                 inner: self

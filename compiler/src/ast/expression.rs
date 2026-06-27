@@ -38,6 +38,7 @@ pub enum Expression {
         value: Box<Self>,
         to: Type,
     },
+    Invert(Box<Self>),
 }
 
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
