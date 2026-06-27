@@ -78,6 +78,9 @@ pub enum Token {
     #[token("->")]
     RetArrow,
 
+    #[token("!")]
+    ExclamationMark,
+
     #[token("i32")]
     I32,
 
