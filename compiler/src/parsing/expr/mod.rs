@@ -12,6 +12,7 @@ mod create_struct;
 mod deref;
 mod field_access;
 mod function_call;
+mod invert;
 mod primary;
 
 pub fn expr<'a>() -> parser_type!(Expression) {

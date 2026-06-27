@@ -6,7 +6,7 @@ use crate::{
     parsing::{
         expr::{
             addr_of::addr_of_expr, cast::cast, create_struct::create_struct, deref_expr,
-            field_access::field_access, function_call::function_call_expr,
+            field_access::field_access, function_call::function_call_expr, invert::invert,
         },
         ident::ident,
     },
@@ -23,6 +23,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
     .or(ident().map(Expression::Ident));
 
     let primary = choice((
+        invert(expr.clone()),
         field_access(),
         function_call_expr(expr.clone()),
         create_struct(expr.clone()),
