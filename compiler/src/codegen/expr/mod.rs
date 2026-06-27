@@ -16,6 +16,7 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
+            Expression::CreateArray(array) => todo!(),
             Expression::Invert(value) => {
                 let value = self.compile_expr(value).unwrap();
                 let true_val = self.ctx.bool_type().const_int(1, false);
