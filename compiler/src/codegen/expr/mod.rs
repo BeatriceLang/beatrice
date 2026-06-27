@@ -7,6 +7,7 @@ use crate::{
 
 mod binary_op;
 mod cast;
+mod create_array;
 mod create_struct;
 mod deref;
 mod field_access;
@@ -16,7 +17,7 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
-            Expression::CreateArray(array) => todo!(),
+            Expression::CreateArray(array) => Some(self.compile_create_array(array)),
             Expression::Invert(value) => {
                 let value = self.compile_expr(value).unwrap();
                 let true_val = self.ctx.bool_type().const_int(1, false);
