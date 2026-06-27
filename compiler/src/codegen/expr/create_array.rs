@@ -6,7 +6,7 @@ use crate::{
 };
 
 impl<'a> Codegen<'a> {
-    pub(super) fn compile_create_array(&self, array: &[Box<Expression>]) -> TypedValue<'a> {
+    pub(super) fn compile_create_array(&self, array: &[Expression]) -> TypedValue<'a> {
         let array = array
             .iter()
             .map(|f| self.compile_expr(f).unwrap())

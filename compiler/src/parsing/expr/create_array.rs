@@ -11,7 +11,7 @@ pub(super) fn create_array<'a>(expr: parser_type!(Expression)) -> parser_type!(E
     just(Token::LeftSquareBracket)
         .ignore_then(elements)
         .then_ignore(just(Token::RightSquareBracket))
-        .map(|elements| Expression::CreateArray(elements.into_iter().map(Box::new).collect()))
+        .map(Expression::CreateArray)
 }
 
 #[cfg(test)]

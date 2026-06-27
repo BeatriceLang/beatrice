@@ -30,7 +30,7 @@ pub enum Expression {
         name: Ident,
         fields: Vec<(Ident, Box<Self>)>,
     },
-    CreateArray(Vec<Box<Self>>),
+    CreateArray(Vec<Self>),
     FieldAccess {
         base: Ident,
         field: Ident,
