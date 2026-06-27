@@ -16,7 +16,20 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
-            Expression::Invert(value) => todo!(),
+            Expression::Invert(value) => {
+                let value = self.compile_expr(value).unwrap();
+                let true_val = self.ctx.bool_type().const_int(1, false);
+
+                let inverted = self
+                    .builder
+                    .build_xor(value.inner.into_int_value(), true_val, "_")
+                    .unwrap();
+
+                Some(TypedValue {
+                    inner: inverted.as_basic_value_enum(),
+                    ty: Type::Bool,
+                })
+            }
             Expression::Cast { value, to } => Some(self.compile_cast(value, to)),
             Expression::Number(number) => Some(TypedValue {
                 inner: self
