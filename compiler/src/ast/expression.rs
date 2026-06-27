@@ -35,6 +35,10 @@ pub enum Expression {
         base: Ident,
         field: Ident,
     },
+    ArrayAccess {
+        array: Box<Self>,
+        index: Box<Self>,
+    },
     Cast {
         value: Box<Self>,
         to: Type,
