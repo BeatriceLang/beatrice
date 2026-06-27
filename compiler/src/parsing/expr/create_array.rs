@@ -3,7 +3,10 @@ use chumsky::{IterParser, Parser, primitive::just};
 use crate::{ast::expression::Expression, lexing::token::Token};
 
 pub(super) fn create_array<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    let elements = expr.separated_by(just(Token::Comma)).collect::<Vec<_>>();
+    let elements = expr
+        .separated_by(just(Token::Comma))
+        .at_least(1)
+        .collect::<Vec<_>>();
 
     just(Token::LeftSquareBracket)
         .ignore_then(elements)
@@ -16,17 +19,18 @@ mod tests {
     use super::*;
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
-        parsing::{expr::expr, test_ident, test_parse, test_tokens},
+        parsing::{expr::expr, test_ident, test_input, test_parse, test_tokens},
     };
 
     #[test]
-    fn parses_empty_array_expression() {
+    fn rejects_empty_array_expression() {
         let tokens = test_tokens![Token::LeftSquareBracket, Token::RightSquareBracket];
 
-        assert_eq!(
-            test_parse(create_array(expr()), &tokens),
-            Expression::CreateArray(vec![])
-        );
+        let errors = create_array(expr())
+            .parse(test_input(&tokens))
+            .into_errors();
+
+        assert_eq!(errors.len(), 1);
     }
 
     #[test]
