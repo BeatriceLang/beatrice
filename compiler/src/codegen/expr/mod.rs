@@ -5,6 +5,7 @@ use crate::{
     codegen::{Codegen, utils::TypedValue},
 };
 
+mod array_access;
 mod binary_op;
 mod cast;
 mod create_array;
@@ -17,7 +18,9 @@ mod intrinsic;
 impl<'a> Codegen<'a> {
     pub(super) fn compile_expr(&self, expr: &Expression) -> Option<TypedValue<'a>> {
         match expr {
-            Expression::ArrayAccess { array, index } => todo!(),
+            Expression::ArrayAccess { array, index } => {
+                Some(self.compile_array_access(array, index))
+            }
             Expression::CreateArray(array) => Some(self.compile_create_array(array)),
             Expression::Invert(value) => {
                 let value = self.compile_expr(value).unwrap();
