@@ -26,6 +26,12 @@ pub enum Token {
     #[token("while")]
     While,
 
+    #[token("[")]
+    LeftSquareBracket,
+
+    #[token("]")]
+    RightSquareBracket,
+
     #[token("struct")]
     Struct,
 

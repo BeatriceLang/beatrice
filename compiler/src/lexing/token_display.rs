@@ -9,6 +9,8 @@ impl Display for Token {
             Self::If => f.write_str("if"),
             Self::Fn => f.write_str("fn"),
             Self::New => f.write_str("new"),
+            Self::LeftSquareBracket => f.write_str("["),
+            Self::RightSquareBracket => f.write_str("]"),
             Self::ExclamationMark => f.write_str("!"),
             Self::As => f.write_str("as"),
             Self::Bool => f.write_str("bool"),
