@@ -8,6 +8,7 @@ use crate::{
 mod addr_of;
 mod binary_op;
 mod cast;
+mod create_array;
 mod create_struct;
 mod deref;
 mod field_access;
