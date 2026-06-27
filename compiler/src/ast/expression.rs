@@ -36,7 +36,7 @@ pub enum Expression {
         field: Ident,
     },
     ArrayAccess {
-        array: Ident,
+        array: Box<Self>,
         index: Box<Self>,
     },
     Cast {
