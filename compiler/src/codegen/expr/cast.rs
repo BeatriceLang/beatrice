@@ -1,4 +1,4 @@
-use inkwell::{IntPredicate, values::BasicValue};
+use inkwell::values::BasicValue;
 
 use crate::{
     ast::{Type, expression::Expression},
