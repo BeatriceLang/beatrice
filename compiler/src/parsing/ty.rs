@@ -24,16 +24,11 @@ pub fn ty<'a>() -> parser_type!(Type) {
         let array = just(Token::LeftSquareBracket)
             .ignore_then(ty.clone())
             .then_ignore(just(Token::Semicolon))
-            .then(expr())
+            .then(select! { Token::Number(size) => size })
             .then_ignore(just(Token::RightSquareBracket))
-            .map(|(element_ty, size)| {
-                let Expression::Number(size) = size else {
-                    panic!("Only support number literal for array sizes");
-                };
-                Type::Array {
-                    element_ty: Box::new(element_ty),
-                    size: size.try_into().unwrap(),
-                }
+            .map(|(element_ty, size)| Type::Array {
+                element_ty: Box::new(element_ty),
+                size: size.try_into().unwrap(),
             });
 
         let ptr = just(Token::Multiply)
