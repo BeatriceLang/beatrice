@@ -81,4 +81,28 @@ mod tests {
             }
         );
     }
+
+    #[test]
+    fn parses_cast_with_binary_op_rhs() {
+        let tokens = test_tokens![
+            Token::Number(1),
+            Token::Add,
+            Token::Number(2),
+            Token::As,
+            Token::I32,
+        ];
+
+        assert_eq!(
+            test_parse(expr(), &tokens),
+            Expression::BinaryOp {
+                lhs: Expression::Number(1).into(),
+                kind: BinaryOpKind::Add,
+                rhs: Expression::Cast {
+                    value: Expression::Number(2).into(),
+                    to: crate::ast::Type::I32,
+                }
+                .into(),
+            }
+        );
+    }
 }
