@@ -6,7 +6,7 @@ pub enum Type {
     Bool,
     Ptr(Box<Self>),
     Struct(String),
-    Array { element_ty: Box<Self>, size: usize },
+    Array { element_ty: Box<Self>, size: u32 },
 }
 
 impl Type {
