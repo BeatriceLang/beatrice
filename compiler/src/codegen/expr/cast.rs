@@ -7,34 +7,37 @@ use crate::{
 
 impl<'a> Codegen<'a> {
     pub(super) fn compile_cast(&self, value: &Expression, to: &Type) -> TypedValue<'a> {
-        let value = self.compile_expr(value).unwrap();
+        let from = self.compile_expr(value).unwrap();
         let llvm_to = self.to_llvm_type(to);
 
-        let casted = match to {
-            Type::U32 | Type::I32 => self
+        let casted = match (from.ty, to) {
+            // From int, to int
+            (Type::U32 | Type::I32 | Type::Bool, Type::U32 | Type::I32 | Type::Bool) => self
                 .builder
-                .build_int_cast(value.inner.into_int_value(), llvm_to.into_int_type(), "_")
+                .build_int_cast(from.inner.into_int_value(), llvm_to.into_int_type(), "_")
                 .unwrap()
                 .as_basic_value_enum(),
-            Type::Bool => self
+            // ptr to int
+            (Type::Ptr(_), Type::I32 | Type::U32) => self
                 .builder
-                .build_bit_cast(value.inner.into_int_value(), llvm_to.into_int_type(), "_")
+                .build_ptr_to_int(
+                    from.inner.into_pointer_value(),
+                    llvm_to.into_int_type(),
+                    "_",
+                )
                 .unwrap()
                 .as_basic_value_enum(),
-            Type::String | Type::Ptr(_) => self
+            // int to ptr
+            (Type::I32 | Type::U32, Type::Ptr(_)) => self
                 .builder
-                .build_pointer_cast(
-                    value.inner.into_pointer_value(),
+                .build_int_to_ptr(
+                    from.inner.into_int_value(),
                     llvm_to.into_pointer_type(),
                     "_",
                 )
                 .unwrap()
                 .as_basic_value_enum(),
-            Type::Struct(_) => self
-                .builder
-                .build_bit_cast(value.inner, llvm_to, "_")
-                .unwrap()
-                .as_basic_value_enum(),
+            _ => panic!("Unsupported cast"),
         };
 
         TypedValue {
