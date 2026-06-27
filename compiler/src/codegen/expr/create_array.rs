@@ -30,8 +30,10 @@ impl<'a> Codegen<'a> {
                 .unwrap();
         }
 
+        let array_value = self.builder.build_load(array_ty, array_ptr, "_").unwrap();
+
         TypedValue {
-            inner: array_ptr.as_basic_value_enum(),
+            inner: array_value,
             ty: Type::Array {
                 element_ty: Box::new(element_ty.clone()),
                 size: array.len().try_into().unwrap(),
