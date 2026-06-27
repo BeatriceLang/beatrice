@@ -17,16 +17,6 @@ impl<'a> Codegen<'a> {
                 .build_int_z_extend(from.inner.into_int_value(), llvm_to.into_int_type(), "_")
                 .unwrap()
                 .as_basic_value_enum(),
-            // int to bool
-            (Type::U32 | Type::I32, Type::Bool) => {
-                let value = from.inner.into_int_value();
-                let zero = value.get_type().const_zero();
-
-                self.builder
-                    .build_int_compare(IntPredicate::NE, value, zero, "_")
-                    .unwrap()
-                    .as_basic_value_enum()
-            }
             // int to int, or bool to bool
             (Type::U32 | Type::I32 | Type::Bool, Type::U32 | Type::I32 | Type::Bool) => self
                 .builder
