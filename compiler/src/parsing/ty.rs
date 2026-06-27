@@ -5,7 +5,11 @@ use chumsky::{
     recursive::recursive,
 };
 
-use crate::{ast::ty::Type, lexing::token::Token};
+use crate::{
+    ast::{expression::Expression, ty::Type},
+    lexing::token::Token,
+    parsing::expr::expr,
+};
 
 pub fn ty<'a>() -> parser_type!(Type) {
     recursive(|ty| {
@@ -17,11 +21,26 @@ pub fn ty<'a>() -> parser_type!(Type) {
             Token::Bool => Type::Bool,
         };
 
+        let array = just(Token::LeftSquareBracket)
+            .ignore_then(ty.clone())
+            .then_ignore(just(Token::Semicolon))
+            .then(expr())
+            .then_ignore(just(Token::RightSquareBracket))
+            .map(|(element_ty, size)| {
+                let Expression::Number(size) = size else {
+                    panic!("Only support number literal for array sizes");
+                };
+                Type::Array {
+                    element_ty: Box::new(element_ty),
+                    size: size.try_into().unwrap(),
+                }
+            });
+
         let ptr = just(Token::Multiply)
             .ignore_then(ty)
             .map(|ty| Type::Ptr(Box::new(ty)));
 
-        choice((atom, ptr))
+        choice((array, atom, ptr))
     })
 }
 
