@@ -5,9 +5,9 @@ use crate::{
     lexing::token::Token,
     parsing::{
         expr::{
-            addr_of::addr_of_expr, cast::cast, create_array::create_array,
-            create_struct::create_struct, deref_expr, field_access::field_access,
-            function_call::function_call_expr, invert::invert,
+            addr_of::addr_of_expr, array_access::array_access, cast::cast,
+            create_array::create_array, create_struct::create_struct, deref_expr,
+            field_access::field_access, function_call::function_call_expr, invert::invert,
         },
         ident::ident,
     },
@@ -24,6 +24,7 @@ pub fn primary_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expressi
     .or(ident().map(Expression::Ident));
 
     let primary = choice((
+        array_access(expr.clone()),
         create_array(expr.clone()),
         invert(expr.clone()),
         field_access(),

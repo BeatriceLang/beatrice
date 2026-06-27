@@ -6,6 +6,7 @@ use crate::{
 };
 
 mod addr_of;
+mod array_access;
 mod binary_op;
 mod cast;
 mod create_array;
