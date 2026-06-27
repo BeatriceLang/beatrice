@@ -187,6 +187,26 @@ fn compiles_bool_cast_to_i32_to_executable() {
 }
 
 #[test]
+fn compiles_invert_to_executable() {
+    let code = compile_and_run(
+        "invert",
+        "
+        fn main() -> i32 {
+            if !false {
+                if !!true {
+                    return 42;
+                }
+            }
+
+            return 1;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_unsigned_greater_than_to_executable() {
     let code = compile_and_run(
         "unsigned_greater_than",
