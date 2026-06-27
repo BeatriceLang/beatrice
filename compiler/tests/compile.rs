@@ -173,6 +173,20 @@ fn compiles_u32_number_suffix_to_executable() {
 }
 
 #[test]
+fn compiles_bool_cast_to_i32_to_executable() {
+    let code = compile_and_run(
+        "bool_cast_to_i32",
+        "
+        fn main() -> i32 {
+            return true as i32;
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(1));
+}
+
+#[test]
 fn compiles_unsigned_greater_than_to_executable() {
     let code = compile_and_run(
         "unsigned_greater_than",
