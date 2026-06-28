@@ -108,4 +108,37 @@ mod tests {
         );
     }
 
+    #[test]
+    #[ignore = "array access is not yet part of binary operator operands"]
+    fn parses_binary_op_with_array_access_operands() {
+        let tokens = test_tokens![
+            Token::Ident("values".into()),
+            Token::LeftSquareBracket,
+            Token::Number(0),
+            Token::RightSquareBracket,
+            Token::Equal,
+            Token::Ident("values".into()),
+            Token::LeftSquareBracket,
+            Token::Number(1),
+            Token::RightSquareBracket,
+        ];
+
+        assert_eq!(
+            test_parse(expr(), &tokens),
+            Expression::BinaryOp {
+                lhs: Expression::ArrayAccess {
+                    array: Expression::Ident(test_ident("values")).into(),
+                    index: Expression::Number(0).into(),
+                }
+                .into(),
+                kind: BinaryOpKind::EqualTo,
+                rhs: Expression::ArrayAccess {
+                    array: Expression::Ident(test_ident("values")).into(),
+                    index: Expression::Number(1).into(),
+                }
+                .into(),
+            }
+        );
+    }
+
 }
