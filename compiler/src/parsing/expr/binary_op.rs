@@ -1,5 +1,6 @@
 use chumsky::{
     Parser,
+    pratt::{infix, left},
     primitive::{choice, just},
 };
 
@@ -12,46 +13,46 @@ use crate::{
 pub fn binary_op_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     let primary = primary_expr(expr);
 
-    let product = primary.clone().foldl(
-        choice((
+    primary.pratt((
+        infix(
+            left(4),
             just(Token::Multiply).to(BinaryOpKind::Multiply),
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+        infix(
+            left(4),
             just(Token::Divide).to(BinaryOpKind::Divide),
-        ))
-        .then(primary)
-        .repeated(),
-        binary_op,
-    );
-
-    let sum = product.clone().foldl(
-        choice((
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+        infix(
+            left(3),
             just(Token::Add).to(BinaryOpKind::Add),
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+        infix(
+            left(3),
             just(Token::Minus).to(BinaryOpKind::Subtract),
-        ))
-        .then(product)
-        .repeated(),
-        binary_op,
-    );
-
-    let comparison = sum.clone().foldl(
-        choice((
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+        infix(
+            left(2),
             just(Token::LessThan).to(BinaryOpKind::LessThan),
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+        infix(
+            left(2),
             just(Token::GreaterThan).to(BinaryOpKind::GreaterThan),
-        ))
-        .then(sum)
-        .repeated(),
-        binary_op,
-    );
-
-    comparison.clone().foldl(
-        just(Token::Equal)
-            .to(BinaryOpKind::EqualTo)
-            .then(comparison)
-            .repeated(),
-        binary_op,
-    )
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+        infix(
+            left(1),
+            just(Token::Equal).to(BinaryOpKind::EqualTo),
+            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+        ),
+    ))
 }
 
-fn binary_op(lhs: Expression, (kind, rhs): (BinaryOpKind, Expression)) -> Expression {
+fn binary_op(lhs: Expression, kind: BinaryOpKind, rhs: Expression) -> Expression {
     Expression::BinaryOp {
         lhs: lhs.into(),
         kind,
