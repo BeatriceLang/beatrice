@@ -30,8 +30,7 @@ pub fn atom<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
         Token::I32Number(value) => Expression::TypedNumber { value, ty: Type::I32 },
         Token::U32Number(value) => Expression::TypedNumber { value, ty: Type::U32 },
         Token::BoolLiteral(value) => Expression::Bool(value)
-    }
-    .or(ident().map(Expression::Ident));
+    };
 
     let primary = choice((
         array_access(expr.clone()),
@@ -41,6 +40,7 @@ pub fn atom<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
         function_call(expr.clone()),
         create_struct(expr.clone()),
         base,
+        ident().map(Expression::Ident),
         deref(expr.clone()),
         addr_of(expr),
     ));
