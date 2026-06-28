@@ -7,11 +7,11 @@ use chumsky::{
 use crate::{
     ast::expression::{BinaryOpKind, Expression},
     lexing::token::Token,
-    parsing::expr::primary::primary_expr,
+    parsing::expr::atom::atom_expr,
 };
 
 pub fn binary_op_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    let primary = primary_expr(expr);
+    let primary = atom_expr(expr);
 
     primary.pratt((
         infix(

@@ -17,7 +17,7 @@ mod tests {
         ast::{expression::Expression, ty::Type},
         lexing::token::Token,
         parsing::{
-            expr::{expr, primary::primary_expr},
+            expr::{atom::atom_expr, expr},
             test_parse, test_tokens,
         },
     };
@@ -27,7 +27,7 @@ mod tests {
         let tokens = test_tokens![Token::Number(42), Token::As, Token::I32];
 
         assert_eq!(
-            test_parse(primary_expr(expr()), &tokens),
+            test_parse(atom_expr(expr()), &tokens),
             Expression::Cast {
                 value: Expression::Number(42).into(),
                 to: Type::I32,
@@ -46,7 +46,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(primary_expr(expr()), &tokens),
+            test_parse(atom_expr(expr()), &tokens),
             Expression::Cast {
                 value: Expression::Cast {
                     value: Expression::Number(42).into(),
