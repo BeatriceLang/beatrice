@@ -6,7 +6,7 @@ use crate::{
     parsing::expr::expr,
 };
 
-pub(super) fn while_stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
+pub(super) fn r#while<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
     just(Token::While)
         .ignore_then(expr())
         .then(block)
@@ -43,7 +43,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(while_stmt(block()), &tokens),
+            test_parse(r#while(block()), &tokens),
             Statement::While {
                 cond: Expression::BinaryOp {
                     lhs: Expression::Ident(test_ident("n")).into(),

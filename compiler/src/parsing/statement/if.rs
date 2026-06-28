@@ -6,7 +6,7 @@ use crate::{
     parsing::expr::expr,
 };
 
-pub(super) fn if_stmt<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
+pub(super) fn r#if<'a>(block: parser_type!(Block)) -> parser_type!(Statement) {
     just(Token::If)
         .ignore_then(expr())
         .then(block)
@@ -40,7 +40,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(if_stmt(block()), &tokens),
+            test_parse(r#if(block()), &tokens),
             Statement::If {
                 cond: Expression::BinaryOp {
                     lhs: Expression::Ident(test_ident("n")).into(),

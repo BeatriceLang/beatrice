@@ -6,7 +6,7 @@ use crate::{
     parsing::{expr::expr, ident::ident, ty::ty},
 };
 
-pub(super) fn let_stmt<'a>() -> parser_type!(Statement) {
+pub(super) fn r#let<'a>() -> parser_type!(Statement) {
     just(Token::Let)
         .ignore_then(ident())
         .then_ignore(just(Token::Colon))
@@ -38,7 +38,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(let_stmt(), &tokens),
+            test_parse(r#let(), &tokens),
             Statement::Let {
                 name: test_ident("x"),
                 ty: Type::I32,

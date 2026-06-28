@@ -6,7 +6,7 @@ use crate::{
     parsing::{expr::expr, ident::ident},
 };
 
-pub(super) fn assign_stmt<'a>() -> parser_type!(Statement) {
+pub(super) fn assign<'a>() -> parser_type!(Statement) {
     ident()
         .then_ignore(just(Token::Assign))
         .then(expr())
@@ -32,7 +32,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(assign_stmt(), &tokens),
+            test_parse(assign(), &tokens),
             Statement::Assign {
                 ident: test_ident("x"),
                 value: Expression::Number(42),

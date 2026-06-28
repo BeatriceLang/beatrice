@@ -6,7 +6,7 @@ use crate::{
     parsing::{expr::expr, ident::ident, ty::ty},
 };
 
-pub(super) fn var_stmt<'a>() -> parser_type!(Statement) {
+pub(super) fn var<'a>() -> parser_type!(Statement) {
     just(Token::Var)
         .ignore_then(ident())
         .then_ignore(just(Token::Colon))

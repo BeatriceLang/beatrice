@@ -21,7 +21,7 @@ mod tests {
         let tokens = test_tokens![Token::Number(42), Token::Semicolon];
 
         assert_eq!(
-            test_parse(expr_stmt(), &tokens),
+            test_parse(expr(), &tokens),
             Statement::Expression(Expression::Number(42))
         );
     }
