@@ -1,6 +1,6 @@
 use inkwell::{
     basic_block::BasicBlock,
-    types::{BasicTypeEnum, PointerType},
+    types::BasicTypeEnum,
     values::{BasicMetadataValueEnum, BasicValueEnum, IntValue, PointerValue},
 };
 

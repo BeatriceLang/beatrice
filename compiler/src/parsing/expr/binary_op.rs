@@ -1,7 +1,7 @@
 use chumsky::{
     Parser,
     pratt::{infix, left},
-    primitive::{choice, just},
+    primitive::just,
 };
 
 use crate::{
