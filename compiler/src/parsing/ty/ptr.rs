@@ -2,7 +2,7 @@ use chumsky::{Parser, prelude::just};
 
 use crate::{ast::ty::Type, lexing::token::Token};
 
-pub(super) fn ptr_ty<'a>(ty: parser_type!(Type)) -> parser_type!(Type) {
+pub(super) fn ptr<'a>(ty: parser_type!(Type)) -> parser_type!(Type) {
     just(Token::Multiply)
         .ignore_then(ty)
         .map(|ty| Type::Ptr(Box::new(ty)))
@@ -18,7 +18,7 @@ mod tests {
         let tokens = test_tokens![Token::Multiply, Token::I32];
 
         assert_eq!(
-            test_parse(ptr_ty(ty()), &tokens),
+            test_parse(ptr(ty()), &tokens),
             Type::Ptr(Box::new(Type::I32))
         );
     }
@@ -28,7 +28,7 @@ mod tests {
         let tokens = test_tokens![Token::Multiply, Token::Multiply, Token::I32];
 
         assert_eq!(
-            test_parse(ptr_ty(ty()), &tokens),
+            test_parse(ptr(ty()), &tokens),
             Type::Ptr(Box::new(Type::Ptr(Box::new(Type::I32))))
         );
     }

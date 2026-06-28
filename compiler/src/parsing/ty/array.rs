@@ -5,7 +5,7 @@ use chumsky::{
 
 use crate::{ast::ty::Type, lexing::token::Token};
 
-pub(super) fn array_ty<'a>(ty: parser_type!(Type)) -> parser_type!(Type) {
+pub(super) fn array<'a>(ty: parser_type!(Type)) -> parser_type!(Type) {
     just(Token::LeftSquareBracket)
         .ignore_then(ty)
         .then_ignore(just(Token::Semicolon))
@@ -33,7 +33,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(array_ty(ty()), &tokens),
+            test_parse(array(ty()), &tokens),
             Type::Array {
                 element_ty: Box::new(Type::I32),
                 size: 4,
@@ -56,7 +56,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(array_ty(ty()), &tokens),
+            test_parse(array(ty()), &tokens),
             Type::Array {
                 element_ty: Box::new(Type::Array {
                     element_ty: Box::new(Type::Bool),

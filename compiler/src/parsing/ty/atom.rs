@@ -2,7 +2,7 @@ use chumsky::prelude::select;
 
 use crate::{ast::ty::Type, lexing::token::Token};
 
-pub(super) fn atom_ty<'a>() -> parser_type!(Type) {
+pub(super) fn atom<'a>() -> parser_type!(Type) {
     select! {
         Token::I32 => Type::I32,
         Token::U32 => Type::U32,
@@ -21,27 +21,27 @@ mod tests {
     fn parses_i32_ty() {
         let tokens = test_tokens![Token::I32];
 
-        assert_eq!(test_parse(atom_ty(), &tokens), Type::I32);
+        assert_eq!(test_parse(atom(), &tokens), Type::I32);
     }
 
     #[test]
     fn parses_string_ty() {
         let tokens = test_tokens![Token::String];
 
-        assert_eq!(test_parse(atom_ty(), &tokens), Type::String);
+        assert_eq!(test_parse(atom(), &tokens), Type::String);
     }
 
     #[test]
     fn parses_u32_ty() {
         let tokens = test_tokens![Token::U32];
 
-        assert_eq!(test_parse(atom_ty(), &tokens), Type::U32);
+        assert_eq!(test_parse(atom(), &tokens), Type::U32);
     }
 
     #[test]
     fn parses_bool_ty() {
         let tokens = test_tokens![Token::Bool];
 
-        assert_eq!(test_parse(atom_ty(), &tokens), Type::Bool);
+        assert_eq!(test_parse(atom(), &tokens), Type::Bool);
     }
 }
