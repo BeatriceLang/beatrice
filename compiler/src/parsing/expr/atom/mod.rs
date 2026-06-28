@@ -32,7 +32,7 @@ pub fn atom<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
         Token::BoolLiteral(value) => Expression::Bool(value)
     };
 
-    let primary = choice((
+    let atom = choice((
         array_access(expr.clone()),
         create_array(expr.clone()),
         invert(expr.clone()),
@@ -45,7 +45,7 @@ pub fn atom<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
         addr_of(expr),
     ));
 
-    cast(primary)
+    cast(atom)
 }
 
 #[cfg(test)]

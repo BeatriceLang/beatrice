@@ -11,9 +11,9 @@ use crate::{
 };
 
 pub fn binary_op<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    let primary = atom(expr);
+    let atom = atom(expr);
 
-    primary.pratt((
+    atom.pratt((
         infix(
             left(4),
             just(Token::Multiply).to(BinaryOpKind::Multiply),
