@@ -4,14 +4,24 @@ use crate::{
     ast::{expression::Expression, ty::Type},
     lexing::token::Token,
     parsing::{
-        expr::{
+        expr::atom::{
             addr_of::addr_of_expr, array_access::array_access, cast::cast,
-            create_array::create_array, create_struct::create_struct, deref_expr,
+            create_array::create_array, create_struct::create_struct, deref::deref_expr,
             field_access::field_access, function_call::function_call_expr, invert::invert,
         },
         ident::ident,
     },
 };
+
+mod addr_of;
+mod array_access;
+mod cast;
+mod create_array;
+mod create_struct;
+mod deref;
+mod field_access;
+mod function_call;
+mod invert;
 
 pub fn atom_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     let base = select! {
