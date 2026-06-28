@@ -12,7 +12,7 @@ pub(super) fn expr_stmt<'a>() -> parser_type!(Statement) {
 mod tests {
     use super::*;
     use crate::{
-        ast::expression::Expression,
+        ast::{expression::Expression, statement::Statement},
         parsing::{test_parse, test_tokens},
     };
 
@@ -20,6 +20,9 @@ mod tests {
     fn parses_expr_stmt() {
         let tokens = test_tokens![Token::Number(42), Token::Semicolon];
 
-        assert_eq!(test_parse(expr(), &tokens), Expression::Number(42));
+        assert_eq!(
+            test_parse(expr_stmt(), &tokens),
+            Statement::Expression(Expression::Number(42))
+        );
     }
 }
