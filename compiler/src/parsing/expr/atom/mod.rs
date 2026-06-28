@@ -5,16 +5,14 @@ use crate::{
     lexing::token::Token,
     parsing::{
         expr::atom::{
-            addr_of::addr_of, array_access::array_access, cast::cast, create_array::create_array,
-            create_struct::create_struct, deref::deref, field_access::field_access,
-            function_call::function_call, invert::invert,
+            addr_of::addr_of, cast::cast, create_array::create_array, create_struct::create_struct,
+            deref::deref, field_access::field_access, function_call::function_call, invert::invert,
         },
         ident::ident,
     },
 };
 
 mod addr_of;
-mod array_access;
 mod cast;
 mod create_array;
 mod create_struct;
@@ -33,7 +31,6 @@ pub fn atom<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     };
 
     let atom = choice((
-        array_access(expr.clone()),
         create_array(expr.clone()),
         invert(expr.clone()),
         field_access(),

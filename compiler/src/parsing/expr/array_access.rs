@@ -2,9 +2,11 @@ use chumsky::{Parser, primitive::just};
 
 use crate::{ast::expression::Expression, lexing::token::Token};
 
-pub(super) fn array_access<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    expr.clone()
-        .then_ignore(just(Token::LeftSquareBracket))
+pub(super) fn array_access<'a>(
+    atom: parser_type!(Expression),
+    expr: parser_type!(Expression),
+) -> parser_type!(Expression) {
+    atom.then_ignore(just(Token::LeftSquareBracket))
         .then(expr)
         .then_ignore(just(Token::RightSquareBracket))
         .map(|(array, index)| Expression::ArrayAccess {
@@ -18,7 +20,10 @@ mod tests {
     use super::*;
     use crate::{
         ast::expression::{BinaryOpKind, Expression},
-        parsing::{expr::expr, test_ident, test_parse, test_tokens},
+        parsing::{
+            expr::{atom::atom, expr},
+            test_ident, test_parse, test_tokens,
+        },
     };
 
     #[test]
@@ -31,7 +36,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(array_access(expr()), &tokens),
+            test_parse(array_access(atom(expr()), expr()), &tokens),
             Expression::ArrayAccess {
                 array: Expression::Ident(test_ident("items")).into(),
                 index: Expression::Number(0).into(),
@@ -51,7 +56,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(array_access(expr()), &tokens),
+            test_parse(array_access(atom(expr()), expr()), &tokens),
             Expression::ArrayAccess {
                 array: Expression::Ident(test_ident("items")).into(),
                 index: Expression::BinaryOp {
