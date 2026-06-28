@@ -16,7 +16,7 @@ mod tests {
         ast::expression::Expression,
         lexing::token::Token,
         parsing::{
-            expr::{expr, function_call::function_call},
+            expr::{atom::function_call::function_call, expr},
             test_ident, test_parse, test_tokens,
         },
     };
