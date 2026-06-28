@@ -2,7 +2,7 @@ use chumsky::{Parser, primitive::just};
 
 use crate::{ast::expression::Expression, lexing::token::Token};
 
-pub(super) fn addr_of_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
+pub(super) fn addr_of<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     just(Token::AddressOf)
         .ignore_then(expr)
         .map(|value| Expression::AddressOf {
@@ -23,7 +23,7 @@ mod tests {
         let tokens = test_tokens![Token::AddressOf, Token::Ident("value".into())];
 
         assert_eq!(
-            test_parse(addr_of_expr(expr()), &tokens),
+            test_parse(addr_of(expr()), &tokens),
             Expression::AddressOf {
                 value: Expression::Ident(test_ident("value")).into(),
             }
@@ -39,7 +39,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(addr_of_expr(expr()), &tokens),
+            test_parse(addr_of(expr()), &tokens),
             Expression::AddressOf {
                 value: Expression::AddressOf {
                     value: Expression::Ident(test_ident("value")).into(),

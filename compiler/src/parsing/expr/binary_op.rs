@@ -7,52 +7,52 @@ use chumsky::{
 use crate::{
     ast::expression::{BinaryOpKind, Expression},
     lexing::token::Token,
-    parsing::expr::atom::atom_expr,
+    parsing::expr::atom::atom,
 };
 
-pub fn binary_op_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    let primary = atom_expr(expr);
+pub fn binary_op<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
+    let primary = atom(expr);
 
     primary.pratt((
         infix(
             left(4),
             just(Token::Multiply).to(BinaryOpKind::Multiply),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
         infix(
             left(4),
             just(Token::Divide).to(BinaryOpKind::Divide),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
         infix(
             left(3),
             just(Token::Add).to(BinaryOpKind::Add),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
         infix(
             left(3),
             just(Token::Minus).to(BinaryOpKind::Subtract),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
         infix(
             left(2),
             just(Token::LessThan).to(BinaryOpKind::LessThan),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
         infix(
             left(2),
             just(Token::GreaterThan).to(BinaryOpKind::GreaterThan),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
         infix(
             left(1),
             just(Token::Equal).to(BinaryOpKind::EqualTo),
-            |lhs, kind, rhs, _| binary_op(lhs, kind, rhs),
+            |lhs, kind, rhs, _| build_binary_op(lhs, kind, rhs),
         ),
     ))
 }
 
-fn binary_op(lhs: Expression, kind: BinaryOpKind, rhs: Expression) -> Expression {
+fn build_binary_op(lhs: Expression, kind: BinaryOpKind, rhs: Expression) -> Expression {
     Expression::BinaryOp {
         lhs: lhs.into(),
         kind,
@@ -66,7 +66,7 @@ mod tests {
         ast::expression::{BinaryOpKind, Expression},
         lexing::token::Token,
         parsing::{
-            expr::{binary_op::binary_op_expr, expr},
+            expr::{binary_op::binary_op, expr},
             test_ident, test_parse, test_tokens,
         },
     };
@@ -85,7 +85,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(binary_op_expr(expr()), &tokens),
+            test_parse(binary_op(expr()), &tokens),
             Expression::BinaryOp {
                 lhs: Expression::Number(8).into(),
                 kind: BinaryOpKind::Divide,
@@ -94,7 +94,7 @@ mod tests {
         );
 
         assert_eq!(
-            test_parse(binary_op_expr(expr()), &condition_tokens),
+            test_parse(binary_op(expr()), &condition_tokens),
             Expression::BinaryOp {
                 lhs: Expression::Ident(test_ident("n")).into(),
                 kind: BinaryOpKind::LessThan,
@@ -103,7 +103,7 @@ mod tests {
         );
 
         assert_eq!(
-            test_parse(binary_op_expr(expr()), &chained_tokens),
+            test_parse(binary_op(expr()), &chained_tokens),
             Expression::BinaryOp {
                 lhs: Expression::BinaryOp {
                     lhs: Expression::Number(1).into(),
@@ -142,7 +142,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(binary_op_expr(expr()), &product_before_sum),
+            test_parse(binary_op(expr()), &product_before_sum),
             Expression::BinaryOp {
                 lhs: Expression::Number(1).into(),
                 kind: BinaryOpKind::Add,
@@ -156,7 +156,7 @@ mod tests {
         );
 
         assert_eq!(
-            test_parse(binary_op_expr(expr()), &sum_before_comparison),
+            test_parse(binary_op(expr()), &sum_before_comparison),
             Expression::BinaryOp {
                 lhs: Expression::BinaryOp {
                     lhs: Expression::Number(1).into(),
@@ -170,7 +170,7 @@ mod tests {
         );
 
         assert_eq!(
-            test_parse(binary_op_expr(expr()), &comparison_before_equality),
+            test_parse(binary_op(expr()), &comparison_before_equality),
             Expression::BinaryOp {
                 lhs: Expression::BinaryOp {
                     lhs: Expression::Number(1).into(),

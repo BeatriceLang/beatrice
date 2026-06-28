@@ -2,7 +2,7 @@ use chumsky::{Parser, primitive::just};
 
 use crate::{ast::expression::Expression, lexing::token::Token};
 
-pub(super) fn deref_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
+pub(super) fn deref<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     just(Token::Multiply)
         .ignore_then(expr)
         .map(|ptr| Expression::Deref { ptr: Box::new(ptr) })
@@ -21,7 +21,7 @@ mod tests {
         let tokens = test_tokens![Token::Multiply, Token::Ident("ptr".into())];
 
         assert_eq!(
-            test_parse(deref_expr(expr()), &tokens),
+            test_parse(deref(expr()), &tokens),
             Expression::Deref {
                 ptr: Expression::Ident(test_ident("ptr")).into(),
             }
@@ -33,7 +33,7 @@ mod tests {
         let tokens = test_tokens![Token::Multiply, Token::Multiply, Token::Ident("ptr".into()),];
 
         assert_eq!(
-            test_parse(deref_expr(expr()), &tokens),
+            test_parse(deref(expr()), &tokens),
             Expression::Deref {
                 ptr: Expression::Deref {
                     ptr: Expression::Ident(test_ident("ptr")).into(),

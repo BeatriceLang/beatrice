@@ -2,7 +2,7 @@ use chumsky::{IterParser, Parser, prelude::just};
 
 use crate::{ast::expression::Expression, lexing::token::Token, parsing::ident::ident};
 
-pub fn function_call_expr<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
+pub fn function_call<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
     ident()
         .then_ignore(just(Token::LeftParen))
         .then(expr.separated_by(just(Token::Comma)).collect())
@@ -16,7 +16,7 @@ mod tests {
         ast::expression::Expression,
         lexing::token::Token,
         parsing::{
-            expr::{expr, function_call::function_call_expr},
+            expr::{expr, function_call::function_call},
             test_ident, test_parse, test_tokens,
         },
     };
@@ -30,7 +30,7 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(function_call_expr(expr()), &tokens),
+            test_parse(function_call(expr()), &tokens),
             Expression::FunctionCall {
                 name: test_ident("test"),
                 args: vec![]
@@ -56,14 +56,14 @@ mod tests {
         ];
 
         assert_eq!(
-            test_parse(function_call_expr(expr()), &single_arg_tokens),
+            test_parse(function_call(expr()), &single_arg_tokens),
             Expression::FunctionCall {
                 name: test_ident("test"),
                 args: vec![Expression::Number(42)]
             }
         );
         assert_eq!(
-            test_parse(function_call_expr(expr()), &multiple_arg_tokens),
+            test_parse(function_call(expr()), &multiple_arg_tokens),
             Expression::FunctionCall {
                 name: test_ident("test"),
                 args: vec![Expression::Number(1), Expression::Ident(test_ident("x"))]
