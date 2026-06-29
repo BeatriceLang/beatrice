@@ -20,10 +20,8 @@ impl<'a> Codegen<'a> {
         let array_ptr = self.builder.build_alloca(array_ty, "_").unwrap();
 
         for (i, element) in array.iter().enumerate() {
-            let element_ptr = self
-                .builder
-                .build_struct_gep(array_ty, array_ptr, i.try_into().unwrap(), "_")
-                .unwrap();
+            let i = self.ctx.i32_type().const_int(i.try_into().unwrap(), false);
+            let element_ptr = self.gep_ptr(array_ty.as_basic_type_enum(), array_ptr, i);
 
             self.builder
                 .build_store(element_ptr, element.inner)
