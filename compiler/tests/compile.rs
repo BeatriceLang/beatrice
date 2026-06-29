@@ -474,6 +474,22 @@ fn compiles_nested_array_access_to_executable() {
 }
 
 #[test]
+fn compiles_array_access_with_nested_index_to_executable() {
+    let code = compile_and_run(
+        "array_access_nested_index",
+        "
+        fn main() -> i32 {
+            let matrix: [[i32; 3]; 2] = [[1, 2, 3], [4, 42, 6]];
+
+            return matrix[1][1];
+        }
+        ",
+    );
+
+    assert_eq!(code, Some(42));
+}
+
+#[test]
 fn compiles_function_with_struct_declared_later() {
     let code = compile_and_run(
         "function_with_struct_declared_later",
