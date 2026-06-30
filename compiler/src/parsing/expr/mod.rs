@@ -102,7 +102,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "array access is not yet part of binary operator operands"]
     fn parses_binary_op_with_array_access_operands() {
         let tokens = test_tokens![
             Token::Ident("values".into()),
