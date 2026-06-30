@@ -1,8 +1,8 @@
-use super::compile_and_run;
+use super::assert_returns_42;
 
 #[test]
 fn compiles_array_access_on_local_array_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let values: [i32; 3] = [1, 42, 3];
@@ -11,26 +11,22 @@ fn compiles_array_access_on_local_array_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_array_access_on_array_literal_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             return [1, 42, 3][1];
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_array_access_with_expression_index_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let values: [i32; 4] = [1, 2, 42, 4];
@@ -39,13 +35,11 @@ fn compiles_array_access_with_expression_index_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_array_access_with_runtime_index_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn pick(index: i32) -> i32 {
             let values: [i32; 4] = [1, 2, 42, 4];
@@ -58,13 +52,11 @@ fn compiles_array_access_with_runtime_index_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_nested_array_access_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let matrix: [[i32; 2]; 2] = [[1, 2], [42, 4]];
@@ -74,13 +66,11 @@ fn compiles_nested_array_access_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_array_access_with_nested_index_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let matrix: [[i32; 3]; 2] = [[1, 2, 3], [4, 42, 6]];
@@ -89,6 +79,4 @@ fn compiles_array_access_with_nested_index_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }

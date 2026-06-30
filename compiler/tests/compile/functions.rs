@@ -1,8 +1,8 @@
-use super::{compile_and_run, compile_and_run_output};
+use super::{assert_returns_42, compile_and_run, compile_and_run_output};
 
 #[test]
 fn compiles_return_function_call_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn test() -> i32 {
             return 42;
@@ -13,13 +13,11 @@ fn compiles_return_function_call_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_function_params_as_idents() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn add(lhs: i32, rhs: i32) -> i32 {
             return lhs + rhs;
@@ -30,8 +28,6 @@ fn compiles_function_params_as_idents() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]

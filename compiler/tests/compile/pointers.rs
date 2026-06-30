@@ -1,8 +1,8 @@
-use super::compile_and_run;
+use super::assert_returns_42;
 
 #[test]
 fn compiles_address_of_local_value() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let value: i32 = 42;
@@ -12,13 +12,11 @@ fn compiles_address_of_local_value() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_is_nullptr_intrinsic_for_non_null_pointer() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let value: i32 = 42;
@@ -31,13 +29,11 @@ fn compiles_is_nullptr_intrinsic_for_non_null_pointer() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_deref_address_of_local_value() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             let value: i32 = 42;
@@ -46,6 +42,4 @@ fn compiles_deref_address_of_local_value() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }

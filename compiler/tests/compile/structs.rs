@@ -1,8 +1,8 @@
-use super::compile_and_run;
+use super::assert_returns_42;
 
 #[test]
 fn compiles_struct_field_access_to_executable() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         struct Point {
             x: i32,
@@ -19,13 +19,11 @@ fn compiles_struct_field_access_to_executable() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_function_with_struct_declared_later() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn x(point: Point) -> i32 {
             return point.x;
@@ -44,6 +42,4 @@ fn compiles_function_with_struct_declared_later() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }

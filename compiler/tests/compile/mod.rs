@@ -27,6 +27,10 @@ fn compile_and_run(source_code: &str) -> Option<i32> {
     compile_and_run_output(source_code).status.code()
 }
 
+fn assert_returns_42(source_code: &str) {
+    assert_eq!(compile_and_run(source_code), Some(42));
+}
+
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {
     beatrice_compiler::compile(source, object.clone()).unwrap();
 }

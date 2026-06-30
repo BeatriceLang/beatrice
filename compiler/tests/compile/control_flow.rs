@@ -1,8 +1,8 @@
-use super::compile_and_run;
+use super::assert_returns_42;
 
 #[test]
 fn compiles_while_loop() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             var value: i32 = 0;
@@ -15,13 +15,11 @@ fn compiles_while_loop() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_while_loop_with_initially_false_condition() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             var value: i32 = 42;
@@ -34,13 +32,11 @@ fn compiles_while_loop_with_initially_false_condition() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_var_assignment_return() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             var value: i32 = 1;
@@ -49,13 +45,11 @@ fn compiles_var_assignment_return() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
 
 #[test]
 fn compiles_var_assignment_from_previous_value() {
-    let code = compile_and_run(
+    assert_returns_42(
         "
         fn main() -> i32 {
             var value: i32 = 40;
@@ -64,6 +58,4 @@ fn compiles_var_assignment_from_previous_value() {
         }
         ",
     );
-
-    assert_eq!(code, Some(42));
 }
