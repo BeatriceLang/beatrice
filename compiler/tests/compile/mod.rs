@@ -1,36 +1,18 @@
 use std::{
-    env, fs, io,
+    fs,
     path::PathBuf,
     process::Command,
-    time::{SystemTime, UNIX_EPOCH},
 };
 
-fn temp_test_dir() -> PathBuf {
-    for attempt in 0..100 {
-        let suffix = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .unwrap()
-            .as_nanos();
-        let dir = env::temp_dir().join(format!(
-            "beatrice-test-{}-{suffix}-{attempt}",
-            std::process::id()
-        ));
-
-        match fs::create_dir(&dir) {
-            Ok(()) => return dir,
-            Err(err) if err.kind() == io::ErrorKind::AlreadyExists => continue,
-            Err(err) => panic!("failed to create temp test dir: {err}"),
-        }
-    }
-
-    panic!("failed to create unique temp test dir");
+fn temp_test_dir() -> tempfile::TempDir {
+    tempfile::tempdir().expect("failed to create temp test dir")
 }
 
 fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::Output {
     let dir = temp_test_dir();
-    let source = dir.join(format!("{test_name}.bt"));
-    let object = dir.join(format!("{test_name}.o"));
-    let executable = dir.join(test_name);
+    let source = dir.path().join(format!("{test_name}.bt"));
+    let object = dir.path().join(format!("{test_name}.o"));
+    let executable = dir.path().join(test_name);
 
     fs::write(&source, source_code).unwrap();
 
@@ -39,8 +21,6 @@ fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::O
     link_executable(&[object], &executable);
 
     let output = Command::new(&executable).output().unwrap();
-
-    fs::remove_dir_all(dir).unwrap();
 
     output
 }
@@ -81,10 +61,10 @@ fn compile_objects_and_run(
     objects_to_link: &[&str],
 ) -> std::process::Output {
     let dir = temp_test_dir();
-    let executable = dir.join(test_name);
+    let executable = dir.path().join(test_name);
 
     for (name, source_code) in sources {
-        let path = dir.join(name);
+        let path = dir.path().join(name);
         if let Some(parent) = path.parent() {
             fs::create_dir_all(parent).unwrap();
         }
@@ -94,8 +74,8 @@ fn compile_objects_and_run(
     let objects = objects_to_link
         .iter()
         .map(|name| {
-            let source = dir.join(format!("{name}.bt"));
-            let object = dir.join(format!("{name}.o"));
+            let source = dir.path().join(format!("{name}.bt"));
+            let object = dir.path().join(format!("{name}.o"));
 
             compile_to_object(&source, &object);
 
@@ -106,8 +86,6 @@ fn compile_objects_and_run(
     link_executable(&objects, &executable);
 
     let output = Command::new(&executable).output().unwrap();
-
-    fs::remove_dir_all(dir).unwrap();
 
     output
 }
