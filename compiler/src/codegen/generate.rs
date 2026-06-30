@@ -27,10 +27,9 @@ impl Codegen<'_> {
                 } => self.declare_function(name.as_str(), params, return_type.clone()),
                 Item::Const { name, val, .. } => {
                     let value = self.compile_expr(val).unwrap();
-                    self.constants
-                        .insert(name.as_str().to_string(), value);
+                    self.constants.insert(name.as_str().to_string(), value);
                 }
-                Item::Import(_) | Item::DeclareStruct { .. } => (),
+                Item::TypeAlias { .. } | Item::Import(_) | Item::DeclareStruct { .. } => (),
             }
         }
 

@@ -1,9 +1,6 @@
 use anyhow::Result;
 
-use crate::{
-    ast::item::Item,
-    import::ImportProcessor,
-};
+use crate::{ast::item::Item, import::ImportProcessor};
 
 impl ImportProcessor<'_> {
     pub(super) fn process_imported_item(&mut self, imported_item: &Item) -> Result<()> {
@@ -14,15 +11,16 @@ impl ImportProcessor<'_> {
                 return_type,
                 ..
             } => {
-                self.original_program
-                    .items
-                    .push(Item::ExternFunction {
-                        name: name.clone(),
-                        params: params.clone(),
-                        return_type: return_type.clone(),
-                    });
+                self.original_program.items.push(Item::ExternFunction {
+                    name: name.clone(),
+                    params: params.clone(),
+                    return_type: return_type.clone(),
+                });
             }
-            Item::ExternFunction { .. } | Item::Const { .. } | Item::DeclareStruct { .. } => {
+            Item::TypeAlias { .. }
+            | Item::ExternFunction { .. }
+            | Item::Const { .. }
+            | Item::DeclareStruct { .. } => {
                 self.original_program.items.push(imported_item.clone());
             }
             Item::Import(path) => {
@@ -39,12 +37,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{
-            Block, Program,
-            ident::Ident,
-            item::Item,
-            ty::Type,
-        },
+        ast::{Block, Program, ident::Ident, item::Item, ty::Type},
         diagnostic::Diagnostics,
         import::ImportProcessor,
     };

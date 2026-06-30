@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use super::{expression::Expression, ident::Ident, Block, ty::Type};
+use super::{Block, expression::Expression, ident::Ident, ty::Type};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Item {
@@ -24,5 +24,9 @@ pub enum Item {
     DeclareStruct {
         name: Ident,
         fields: Vec<(Ident, Type)>,
+    },
+    TypeAlias {
+        alias: Ident,
+        ty: Type,
     },
 }
