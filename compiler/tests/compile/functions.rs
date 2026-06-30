@@ -52,14 +52,13 @@ fn compiles_recursive_fibonacci_to_executable() {
 
 #[test]
 fn compiles_let_value_return() {
-    assert_returns_number(
+    assert_returns_42(
         "
         fn main() -> i32 {
-            let hello: i32 = 40;
+            let hello: i32 = 42;
             return hello;
         }
         ",
-        40,
     );
 }
 
