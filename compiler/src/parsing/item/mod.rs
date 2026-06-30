@@ -1,4 +1,4 @@
-use chumsky::{Parser, primitive::choice};
+use chumsky::primitive::choice;
 
 use crate::{
     ast::item::Item,
