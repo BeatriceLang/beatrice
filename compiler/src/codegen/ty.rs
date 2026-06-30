@@ -26,7 +26,7 @@ impl<'a> Codegen<'a> {
         }
 
         if let Some(alias) = self.type_alias.get(name) {
-            return Some(*alias);
+            return Some(self.to_llvm_type(alias));
         }
 
         None

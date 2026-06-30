@@ -12,8 +12,7 @@ impl Codegen<'_> {
                     self.declare_struct(name, fields);
                 }
                 Item::TypeAlias { alias, ty } => {
-                    let ty = self.to_llvm_type(ty);
-                    self.type_alias.insert(alias.as_str().to_string(), ty);
+                    self.type_alias.insert(alias.as_str().to_string(), ty.clone());
                 }
                 _ => (),
             }

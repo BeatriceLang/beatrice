@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use anyhow::{Context as _, Result};
-use inkwell::{builder::Builder, context::Context, module::Module, types::BasicTypeEnum};
+use inkwell::{builder::Builder, context::Context, module::Module};
 
 use crate::{
     ast::{Program, ty::Type},
@@ -27,7 +27,7 @@ pub struct Codegen<'a> {
     locals: HashMap<String, Local<'a>>,
     constants: HashMap<String, TypedValue<'a>>,
     struct_types: HashMap<String, ResolvedStruct<'a>>,
-    type_alias: HashMap<String, BasicTypeEnum<'a>>,
+    type_alias: HashMap<String, Type>,
     function_return_types: HashMap<String, Option<Type>>,
 }
 
