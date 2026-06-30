@@ -7,13 +7,13 @@ use chumsky::{
 use crate::{
     ast::expression::{BinaryOpKind, Expression},
     lexing::token::Token,
-    parsing::expr::atom::atom,
+    parsing::expr::{atom::atom, postfix_expr},
 };
 
 pub fn binary_op<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
-    let atom = atom(expr);
+    let operand = postfix_expr(expr);
 
-    atom.pratt((
+    operand.pratt((
         infix(
             left(4),
             just(Token::Multiply).to(BinaryOpKind::Multiply),
