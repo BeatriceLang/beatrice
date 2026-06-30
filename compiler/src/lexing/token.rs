@@ -11,6 +11,9 @@ pub enum Token {
     #[token("if")]
     If,
 
+    #[token("type")]
+    Type,
+
     #[token("as")]
     As,
 
