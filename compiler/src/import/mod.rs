@@ -124,7 +124,12 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Item, Program, ty::Type},
+        ast::{
+            Block, Program,
+            ident::Ident,
+            item::{Function, Item},
+            ty::Type,
+        },
         import::imports_of,
     };
 

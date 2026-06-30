@@ -127,8 +127,9 @@ pub fn test_ident(name: &str) -> crate::ast::ident::Ident {
 mod tests {
     use crate::{
         ast::{
-            Block, Function, Item, Program,
+            Block, Program,
             expression::{BinaryOpKind, Expression},
+            item::{Function, Item},
             statement::Statement,
             ty::Type,
         },
