@@ -1,8 +1,11 @@
-use std::{
-    fs,
-    path::PathBuf,
-    process::Command,
-};
+use std::{fs, path::PathBuf};
+
+macro_rules! shell_cmd {
+    ($($cmd:tt)*) => {{
+        let sh = Box::leak(Box::new(xshell::Shell::new().unwrap()));
+        xshell::cmd!(sh, $($cmd)*)
+    }};
+}
 
 fn temp_test_dir() -> tempfile::TempDir {
     tempfile::tempdir().expect("failed to create temp test dir")
@@ -20,9 +23,7 @@ fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::O
 
     link_executable(&[object], &executable);
 
-    let output = Command::new(&executable).output().unwrap();
-
-    output
+    shell_cmd!("{executable}").ignore_status().output().unwrap()
 }
 
 fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
@@ -42,17 +43,7 @@ fn compile_to_object(source: &PathBuf, object: &PathBuf) {
 }
 
 fn link_executable(objects: &[PathBuf], executable: &PathBuf) {
-    let mut command = Command::new("cc");
-    command.args(objects).arg("-o").arg(executable);
-
-    let linker_output = command.output().unwrap();
-
-    assert!(
-        linker_output.status.success(),
-        "linker failed\nstdout:\n{}\nstderr:\n{}",
-        String::from_utf8_lossy(&linker_output.stdout),
-        String::from_utf8_lossy(&linker_output.stderr)
-    );
+    shell_cmd!("cc {objects...} -o {executable}").run().unwrap();
 }
 
 fn compile_objects_and_run(
@@ -85,9 +76,7 @@ fn compile_objects_and_run(
 
     link_executable(&objects, &executable);
 
-    let output = Command::new(&executable).output().unwrap();
-
-    output
+    shell_cmd!("{executable}").ignore_status().output().unwrap()
 }
 
 mod array_access;

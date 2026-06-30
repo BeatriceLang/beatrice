@@ -104,6 +104,7 @@ dependencies = [
  "logos",
  "tap",
  "tempfile",
+ "xshell",
 ]
 
 [[package]]

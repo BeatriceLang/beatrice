@@ -26,4 +26,5 @@ logos.workspace = true
 tap.workspace = true
 
 [dev-dependencies]
+xshell.workspace = true
 tempfile = "3"
