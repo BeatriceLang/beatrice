@@ -11,6 +11,7 @@ pub(super) fn type_alias<'a>() -> parser_type!(Item) {
         .ignore_then(ident())
         .then_ignore(just(Token::Assign))
         .then(ty())
+        .then_ignore(just(Token::Semicolon))
         .map(|(alias, ty)| Item::TypeAlias { alias, ty })
 }
 
@@ -31,6 +32,7 @@ mod tests {
             Token::Ident("Count".into()),
             Token::Assign,
             Token::I32,
+            Token::Semicolon
         ];
 
         assert_eq!(
@@ -48,6 +50,7 @@ mod tests {
             Token::Type,
             Token::Ident("Count".into()),
             Token::I32,
+            Token::Semicolon
         ];
 
         let errors = type_alias().parse(test_input(&tokens)).into_errors();
