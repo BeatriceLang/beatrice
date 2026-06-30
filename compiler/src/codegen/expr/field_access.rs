@@ -6,7 +6,7 @@ use crate::{
 impl<'a> Codegen<'a> {
     pub(super) fn compile_field_access(&self, base: &Ident, field: &Ident) -> TypedValue<'a> {
         let structure = self.locals.get(base.as_str()).unwrap();
-        let Type::Struct(ref struct_ty_name) = structure.ty else {
+        let Type::Named(ref struct_ty_name) = structure.ty else {
             panic!()
         };
 

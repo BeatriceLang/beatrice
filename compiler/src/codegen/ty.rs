@@ -9,12 +9,7 @@ impl<'a> Codegen<'a> {
     pub(super) fn to_llvm_type(&self, ty: &Type) -> BasicTypeEnum<'a> {
         match ty {
             Type::I32 | Type::U32 => self.ctx.i32_type().into(),
-            Type::Struct(struct_name) => self
-                .struct_types
-                .get(struct_name)
-                .unwrap()
-                .inner
-                .as_basic_type_enum(),
+            Type::Named(ty_name) => self.resolve_named_type(ty_name).unwrap(),
             Type::Bool => self.ctx.bool_type().into(),
             Type::String | Type::Ptr(_) => self.ctx.ptr_type(AddressSpace::default()).into(),
             Type::Array { element_ty, size } => {
@@ -23,6 +18,14 @@ impl<'a> Codegen<'a> {
                 element_ty.array_type(*size).as_basic_type_enum()
             }
         }
+    }
+
+    fn resolve_named_type(&self, name: &str) -> Option<BasicTypeEnum<'a>> {
+        if let Some(struct_type) = self.struct_types.get(name) {
+            return Some(struct_type.inner.as_basic_type_enum());
+        }
+
+        None
     }
 }
 

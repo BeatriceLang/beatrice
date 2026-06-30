@@ -32,7 +32,7 @@ impl<'a> Codegen<'a> {
 
         TypedValue {
             inner: struct_value,
-            ty: Type::Struct(name.as_str().to_owned()),
+            ty: Type::Named(name.as_str().to_owned()),
         }
     }
 }

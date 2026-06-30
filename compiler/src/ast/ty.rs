@@ -5,7 +5,7 @@ pub enum Type {
     String,
     Bool,
     Ptr(Box<Self>),
-    Struct(String),
+    Named(String),
     Array { element_ty: Box<Self>, size: u32 },
 }
 
@@ -34,6 +34,6 @@ mod tests {
         assert_eq!(Type::String.signed(), None);
         assert_eq!(Type::Bool.signed(), None);
         assert_eq!(Type::Ptr(Box::new(Type::I32)).signed(), None);
-        assert_eq!(Type::Struct("Point".into()).signed(), None);
+        assert_eq!(Type::Named("Point".into()).signed(), None);
     }
 }
