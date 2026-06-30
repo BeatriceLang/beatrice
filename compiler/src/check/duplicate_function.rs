@@ -9,9 +9,8 @@ impl Checker<'_> {
         let mut checked = vec![];
 
         for item in &self.program.items {
-            let name = match item {
-                Item::Function { name, .. } | Item::ExternFunction { name, .. } => name,
-                _ => continue,
+            let (Item::Function { name, .. } | Item::ExternFunction { name, .. }) = item else {
+                continue;
             };
 
             if checked.contains(&name.as_str()) {
