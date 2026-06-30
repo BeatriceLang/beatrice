@@ -1,10 +1,6 @@
 use chumsky::{Parser, primitive::just};
 
-use crate::{
-    ast::expression::Expression,
-    lexing::token::Token,
-    parsing::expr::postfix::Postfix,
-};
+use crate::{ast::expression::Expression, lexing::token::Token, parsing::expr::postfix::Postfix};
 
 pub(super) fn array_access<'a>(expr: parser_type!(Expression)) -> parser_type!(Postfix) {
     just(Token::LeftSquareBracket)
@@ -47,13 +43,11 @@ mod tests {
 
         assert_eq!(
             test_parse(array_access(expr()), &tokens),
-            Postfix::ArrayAccess(
-                Expression::BinaryOp {
-                    lhs: Expression::Number(1).into(),
-                    kind: BinaryOpKind::Add,
-                    rhs: Expression::Number(2).into(),
-                }
-            )
+            Postfix::ArrayAccess(Expression::BinaryOp {
+                lhs: Expression::Number(1).into(),
+                kind: BinaryOpKind::Add,
+                rhs: Expression::Number(2).into(),
+            })
         );
     }
 }
