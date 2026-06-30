@@ -127,7 +127,7 @@ mod tests {
         ast::{
             Block, Program,
             ident::Ident,
-            item::{Function, Item},
+            item::Item,
             ty::Type,
         },
         import::imports_of,
@@ -137,20 +137,16 @@ mod tests {
         Ident::new(name.into(), 0..name.len())
     }
 
-    fn function(name: &str) -> Function {
-        Function {
-            name: ident(name),
-            params: vec![(ident("value"), Type::I32)],
-            return_type: Some(Type::I32),
-            body: Block { statements: vec![] },
-        }
-    }
-
     #[test]
     fn imports_of_returns_import_paths_in_order() {
         let program = Program {
             items: vec![
-                Item::Function(function("main")),
+                Item::Function {
+                    name: ident("main"),
+                    params: vec![(ident("value"), Type::I32)],
+                    return_type: Some(Type::I32),
+                    body: Block { statements: vec![] },
+                },
                 Item::Import(PathBuf::from("first.bt")),
                 Item::Import(PathBuf::from("second.bt")),
             ],

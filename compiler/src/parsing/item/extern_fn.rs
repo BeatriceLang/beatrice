@@ -1,12 +1,12 @@
 use chumsky::{IterParser, Parser, prelude::just};
 
 use crate::{
-    ast::item::ExternFunction,
+    ast::{ident::Ident, item::Item, ty::Type},
     lexing::token::Token,
     parsing::{ident::ident, ty::ty},
 };
 
-pub fn extern_function<'a>() -> parser_type!(ExternFunction) {
+pub fn extern_function<'a>() -> parser_type!(Item) {
     just(Token::Extern)
         .then_ignore(just(Token::Fn))
         .ignore_then(ident())
@@ -21,7 +21,7 @@ pub fn extern_function<'a>() -> parser_type!(ExternFunction) {
         .then_ignore(just(Token::RightParen))
         .then(just(Token::RetArrow).ignore_then(ty()).or_not())
         .then_ignore(just(Token::Semicolon))
-        .map(|((name, params), return_type)| ExternFunction {
+        .map(|((name, params), return_type)| Item::ExternFunction {
             name,
             params,
             return_type,
@@ -31,6 +31,7 @@ pub fn extern_function<'a>() -> parser_type!(ExternFunction) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::item::Item;
 
     #[test]
     fn parses_extern_function() {
@@ -52,7 +53,7 @@ mod tests {
 
         assert_eq!(
             test_parse(extern_function(), &tokens),
-            ExternFunction {
+            Item::ExternFunction {
                 name: test_ident("puts"),
                 params: vec![(test_ident("value"), crate::ast::ty::Type::String)],
                 return_type: Some(crate::ast::ty::Type::I32),
@@ -75,7 +76,7 @@ mod tests {
 
         assert_eq!(
             test_parse(extern_function(), &tokens),
-            ExternFunction {
+            Item::ExternFunction {
                 name: test_ident("flush"),
                 params: vec![],
                 return_type: None,

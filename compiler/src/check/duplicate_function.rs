@@ -10,8 +10,8 @@ impl Checker<'_> {
 
         for item in &self.program.items {
             let name = match item {
-                Item::Function(function) => &function.name,
-                Item::ExternFunction(function) => &function.name,
+                Item::Function { name, .. } => name,
+                Item::ExternFunction { name, .. } => name,
                 _ => continue,
             };
 
@@ -39,22 +39,13 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Program, ident::Ident, item::{Function, Item}, ty::Type},
+        ast::{Block, Program, ident::Ident, item::Item, ty::Type},
         check::Checker,
         diagnostic::{DiagnosticKind, Diagnostics},
     };
 
     fn ident(name: &str, span: std::ops::Range<usize>) -> Ident {
         Ident::new(name.into(), span)
-    }
-
-    fn function(name: Ident) -> Function {
-        Function {
-            name,
-            params: vec![],
-            return_type: Some(Type::I32),
-            body: Block { statements: vec![] },
-        }
     }
 
     fn check_duplicate_function(program: &Program) -> Diagnostics {
@@ -73,8 +64,18 @@ mod tests {
     fn duplicate_function_reports_second_function_name_span() {
         let program = Program {
             items: vec![
-                Item::Function(function(ident("main", 3..7))),
-                Item::Function(function(ident("main", 20..24))),
+                Item::Function {
+                    name: ident("main", 3..7),
+                    params: vec![],
+                    return_type: Some(Type::I32),
+                    body: Block { statements: vec![] },
+                },
+                Item::Function {
+                    name: ident("main", 20..24),
+                    params: vec![],
+                    return_type: Some(Type::I32),
+                    body: Block { statements: vec![] },
+                },
             ],
         };
 
@@ -94,8 +95,18 @@ mod tests {
     fn unique_functions_do_not_report_diagnostics() {
         let program = Program {
             items: vec![
-                Item::Function(function(ident("main", 3..7))),
-                Item::Function(function(ident("add", 20..23))),
+                Item::Function {
+                    name: ident("main", 3..7),
+                    params: vec![],
+                    return_type: Some(Type::I32),
+                    body: Block { statements: vec![] },
+                },
+                Item::Function {
+                    name: ident("add", 20..23),
+                    params: vec![],
+                    return_type: Some(Type::I32),
+                    body: Block { statements: vec![] },
+                },
             ],
         };
 

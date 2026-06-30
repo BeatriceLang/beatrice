@@ -7,41 +7,48 @@ impl Codegen<'_> {
         let items = take(&mut self.program.items);
 
         for item in &items {
-            if let Item::DeclareStruct(declare_struct) = item {
-                self.declare_struct(declare_struct);
+            if let Item::DeclareStruct { name, fields } = item {
+                self.declare_struct(name, fields);
             }
         }
 
         for item in &items {
             match item {
-                Item::Function(function) => self.declare_function(
-                    function.name.as_str(),
-                    &function.params,
-                    function.return_type.clone(),
-                ),
-                Item::ExternFunction(function) => self.declare_function(
-                    function.name.as_str(),
-                    &function.params,
-                    function.return_type.clone(),
-                ),
-                Item::Const(constant) => {
-                    let value = self.compile_expr(&constant.val).unwrap();
+                Item::Function {
+                    name,
+                    params,
+                    return_type,
+                    ..
+                } => self.declare_function(name.as_str(), params, return_type.clone()),
+                Item::ExternFunction {
+                    name,
+                    params,
+                    return_type,
+                } => self.declare_function(name.as_str(), params, return_type.clone()),
+                Item::Const { name, val, .. } => {
+                    let value = self.compile_expr(val).unwrap();
                     self.constants
-                        .insert(constant.name.as_str().to_string(), value);
+                        .insert(name.as_str().to_string(), value);
                 }
-                Item::Import(_) | Item::DeclareStruct(_) => (),
+                Item::Import(_) | Item::DeclareStruct { .. } => (),
             }
         }
 
         for item in &items {
-            if let Item::DeclareStruct(declare_struct) = item {
-                self.define_struct(declare_struct);
+            if let Item::DeclareStruct { name, fields } = item {
+                self.define_struct(name, fields);
             }
         }
 
         for item in &items {
-            if let Item::Function(function) = item {
-                self.compile_function(function);
+            if let Item::Function {
+                name,
+                params,
+                return_type,
+                body,
+            } = item
+            {
+                self.compile_function(name, params, return_type, body);
             }
         }
         self.program.items = items;

@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use inkwell::{types::StructType, values::PointerValue};
 
 use crate::{
-    ast::{ident::Ident, item::DeclareStruct, ty::Type},
+    ast::{ident::Ident, ty::Type},
     codegen::Codegen,
 };
 
@@ -37,13 +37,13 @@ impl<'a> Codegen<'a> {
             .unwrap()
     }
 
-    pub(super) fn declare_struct(&mut self, declare_struct: &DeclareStruct) {
-        let struct_name = declare_struct.name.as_str();
+    pub(super) fn declare_struct(&mut self, name: &Ident, fields: &[(Ident, Type)]) {
+        let struct_name = name.as_str();
         let llvm_struct_ty = self.ctx.opaque_struct_type(struct_name);
 
         let mut field_infos = HashMap::new();
 
-        for (index, (field_name, field_ty)) in declare_struct.fields.iter().enumerate() {
+        for (index, (field_name, field_ty)) in fields.iter().enumerate() {
             let info = FieldInfo {
                 index,
                 ty: field_ty.clone(),
@@ -61,10 +61,9 @@ impl<'a> Codegen<'a> {
             .insert(struct_name.into(), resolved_struct);
     }
 
-    pub(super) fn define_struct(&mut self, declare_struct: &DeclareStruct) {
-        let struct_name = declare_struct.name.as_str();
-        let field_types: Vec<_> = declare_struct
-            .fields
+    pub(super) fn define_struct(&mut self, name: &Ident, fields: &[(Ident, Type)]) {
+        let struct_name = name.as_str();
+        let field_types: Vec<_> = fields
             .iter()
             .map(|(_, ty)| self.to_llvm_type(ty))
             .collect();

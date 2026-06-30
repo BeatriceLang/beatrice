@@ -1,12 +1,12 @@
 use chumsky::{IterParser, Parser, primitive::just};
 
 use crate::{
-    ast::item::DeclareStruct,
+    ast::{ident::Ident, item::Item, ty::Type},
     lexing::token::Token,
     parsing::{ident::ident, ty::ty},
 };
 
-pub(super) fn declare_struct<'a>() -> parser_type!(DeclareStruct) {
+pub(super) fn declare_struct<'a>() -> parser_type!(Item) {
     let field = ident()
         .then_ignore(just(Token::Colon))
         .then(ty())
@@ -19,14 +19,14 @@ pub(super) fn declare_struct<'a>() -> parser_type!(DeclareStruct) {
     just(Token::Struct)
         .ignore_then(ident())
         .then(body)
-        .map(|(name, fields)| DeclareStruct { name, fields })
+        .map(|(name, fields)| Item::DeclareStruct { name, fields })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::{
-        ast::ty::Type,
+        ast::{item::Item, ty::Type},
         parsing::{test_ident, test_parse, test_tokens},
     };
 
@@ -41,7 +41,7 @@ mod tests {
 
         assert_eq!(
             test_parse(declare_struct(), &tokens),
-            DeclareStruct {
+            Item::DeclareStruct {
                 name: test_ident("Empty"),
                 fields: vec![],
             }
@@ -72,7 +72,7 @@ mod tests {
 
         assert_eq!(
             test_parse(declare_struct(), &tokens),
-            DeclareStruct {
+            Item::DeclareStruct {
                 name: test_ident("Point"),
                 fields: vec![
                     (test_ident("x"), Type::I32),

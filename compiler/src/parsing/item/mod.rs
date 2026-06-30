@@ -16,11 +16,11 @@ mod import;
 
 pub fn item<'a>() -> parser_type!(Item) {
     choice((
-        extern_function().map(Item::ExternFunction),
-        function().map(Item::Function),
+        extern_function(),
+        function(),
         import(),
-        constant().map(Item::Const),
-        declare_struct().map(Item::DeclareStruct),
+        constant(),
+        declare_struct(),
     ))
 }
 
@@ -30,7 +30,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{item::DeclareStruct, item::ExternFunction, ty::Type},
+        ast::{item::Item, ty::Type},
         lexing::token::Token,
         parsing::{test_ident, test_parse, test_tokens},
     };
@@ -53,11 +53,11 @@ mod tests {
 
         assert_eq!(
             test_parse(item(), &tokens),
-            Item::ExternFunction(ExternFunction {
+            Item::ExternFunction {
                 name: test_ident("puts"),
                 params: vec![(test_ident("value"), Type::String)],
                 return_type: Some(Type::I32),
-            })
+            }
         );
     }
 
@@ -94,10 +94,10 @@ mod tests {
 
         assert_eq!(
             test_parse(item(), &tokens),
-            Item::DeclareStruct(DeclareStruct {
+            Item::DeclareStruct {
                 name: test_ident("Point"),
                 fields: vec![(test_ident("x"), Type::I32), (test_ident("y"), Type::I32)],
-            })
+            }
         );
     }
 }

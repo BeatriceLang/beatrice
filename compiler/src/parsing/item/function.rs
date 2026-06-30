@@ -1,12 +1,12 @@
 use chumsky::{IterParser, Parser, prelude::just};
 
 use crate::{
-    ast::item::Function,
+    ast::{ident::Ident, item::Item, ty::Type},
     lexing::token::Token,
     parsing::{block::block, ident::ident, ty::ty},
 };
 
-pub fn function<'a>() -> parser_type!(Function) {
+pub fn function<'a>() -> parser_type!(Item) {
     just(Token::Fn)
         .ignore_then(ident())
         .then_ignore(just(Token::LeftParen))
@@ -20,7 +20,7 @@ pub fn function<'a>() -> parser_type!(Function) {
         .then_ignore(just(Token::RightParen))
         .then(just(Token::RetArrow).ignore_then(ty()).or_not())
         .then(block())
-        .map(|(((name, params), return_type), body)| Function {
+        .map(|(((name, params), return_type), body)| Item::Function {
             name,
             params,
             return_type,
@@ -31,6 +31,7 @@ pub fn function<'a>() -> parser_type!(Function) {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::ast::item::Item;
 
     #[test]
     fn parses_function() {
@@ -52,7 +53,7 @@ mod tests {
 
         assert_eq!(
             test_parse(function(), &tokens),
-            Function {
+            Item::Function {
                 name: test_ident("main"),
                 params: vec![],
                 return_type: Some(crate::ast::ty::Type::I32),
@@ -92,7 +93,7 @@ mod tests {
 
         assert_eq!(
             test_parse(function(), &tokens),
-            Function {
+            Item::Function {
                 name: test_ident("add"),
                 params: vec![
                     (test_ident("lhs"), crate::ast::ty::Type::I32),
@@ -123,7 +124,7 @@ mod tests {
 
         assert_eq!(
             test_parse(function(), &tokens),
-            Function {
+            Item::Function {
                 name: test_ident("log"),
                 params: vec![],
                 return_type: None,

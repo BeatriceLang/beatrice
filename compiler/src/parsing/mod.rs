@@ -129,7 +129,7 @@ mod tests {
         ast::{
             Block, Program,
             expression::{BinaryOpKind, Expression},
-            item::{Function, Item},
+            item::Item,
             statement::Statement,
             ty::Type,
         },
@@ -156,14 +156,14 @@ mod tests {
         assert_eq!(
             program,
             Program {
-                items: vec![Item::Function(Function {
+                items: vec![Item::Function {
                     name: test_ident("main"),
                     params: vec![],
                     return_type: Some(Type::I32),
                     body: Block {
                         statements: vec![Statement::Return(Some(Expression::Number(42)))],
                     },
-                })],
+                }],
             }
         );
     }
@@ -178,7 +178,7 @@ mod tests {
         assert_eq!(
             program,
             Program {
-                items: vec![Item::Function(Function {
+                items: vec![Item::Function {
                     name: test_ident("main"),
                     params: vec![],
                     return_type: Some(Type::I32),
@@ -189,7 +189,7 @@ mod tests {
                             rhs: Expression::Number(2).into(),
                         }))],
                     },
-                })],
+                }],
             }
         );
     }
@@ -204,7 +204,7 @@ mod tests {
         assert_eq!(
             program,
             Program {
-                items: vec![Item::Function(Function {
+                items: vec![Item::Function {
                     name: test_ident("add"),
                     params: vec![
                         (test_ident("lhs"), Type::I32),
@@ -214,7 +214,7 @@ mod tests {
                     body: Block {
                         statements: vec![Statement::Return(Some(Expression::Number(42)))],
                     },
-                })],
+                }],
             }
         );
     }
