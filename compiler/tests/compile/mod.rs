@@ -27,8 +27,12 @@ fn compile_and_run(source_code: &str) -> Option<i32> {
     compile_and_run_output(source_code).status.code()
 }
 
+fn assert_returns_number(source_code: &str, number: i32) {
+    assert_eq!(compile_and_run(source_code), Some(number));
+}
+
 fn assert_returns_42(source_code: &str) {
-    assert_eq!(compile_and_run(source_code), Some(42));
+    assert_returns_number(source_code, 42);
 }
 
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {

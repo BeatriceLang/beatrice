@@ -1,4 +1,4 @@
-use super::{assert_returns_42, compile_and_run};
+use super::{assert_returns_42, assert_returns_number};
 
 #[test]
 fn compiles_return_42_to_executable() {
@@ -50,15 +50,14 @@ fn compiles_u32_number_suffix_to_executable() {
 
 #[test]
 fn compiles_bool_cast_to_i32_to_executable() {
-    let code = compile_and_run(
+    assert_returns_number(
         "
         fn main() -> i32 {
             return true as i32;
         }
         ",
+        1,
     );
-
-    assert_eq!(code, Some(1));
 }
 
 #[test]

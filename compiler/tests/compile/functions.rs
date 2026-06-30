@@ -1,4 +1,4 @@
-use super::{assert_returns_42, compile_and_run, compile_and_run_output};
+use super::{assert_returns_42, assert_returns_number, compile_and_run_output};
 
 #[test]
 fn compiles_return_function_call_to_executable() {
@@ -32,7 +32,7 @@ fn compiles_function_params_as_idents() {
 
 #[test]
 fn compiles_recursive_fibonacci_to_executable() {
-    let code = compile_and_run(
+    assert_returns_number(
         "
         fn fib(n: i32) -> i32 {
             if n < 2 {
@@ -46,23 +46,21 @@ fn compiles_recursive_fibonacci_to_executable() {
             return fib(10);
         }
         ",
+        55,
     );
-
-    assert_eq!(code, Some(55));
 }
 
 #[test]
 fn compiles_let_value_return() {
-    let code = compile_and_run(
+    assert_returns_number(
         "
         fn main() -> i32 {
             let hello: i32 = 40;
             return hello;
         }
         ",
+        40,
     );
-
-    assert_eq!(code, Some(40));
 }
 
 #[test]
