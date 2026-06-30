@@ -31,15 +31,7 @@ fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
 }
 
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {
-    let compile_result = beatrice_compiler::compile(source, object.clone());
-
-    assert!(
-        compile_result.is_ok(),
-        "compiler failed\nerror:\n{:#}",
-        compile_result.unwrap_err()
-    );
-
-    assert!(object.exists(), "compiler did not create object file");
+    beatrice_compiler::compile(source, object.clone()).unwrap();
 }
 
 fn link_executable(objects: &[PathBuf], executable: &PathBuf) {
