@@ -1,5 +1,7 @@
 use std::{fs, path::PathBuf};
 
+use tempfile::{env::temp_dir, tempdir};
+
 macro_rules! shell_cmd {
     ($($cmd:tt)*) => {{
         let sh = Box::leak(Box::new(xshell::Shell::new().unwrap()));
@@ -7,12 +9,8 @@ macro_rules! shell_cmd {
     }};
 }
 
-fn temp_test_dir() -> tempfile::TempDir {
-    tempfile::tempdir().expect("failed to create temp test dir")
-}
-
 fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::Output {
-    let dir = temp_test_dir();
+    let dir = tempdir().unwrap();
     let source = dir.path().join(format!("{test_name}.bt"));
     let object = dir.path().join(format!("{test_name}.o"));
     let executable = dir.path().join(test_name);
@@ -43,7 +41,7 @@ fn compile_objects_and_run(
     sources: &[(&str, &str)],
     objects_to_link: &[&str],
 ) -> std::process::Output {
-    let dir = temp_test_dir();
+    let dir = tempdir().unwrap();
     let executable = dir.path().join(test_name);
 
     for (name, source_code) in sources {
