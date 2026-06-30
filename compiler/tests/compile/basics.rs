@@ -136,6 +136,19 @@ fn compiles_constant_literal_to_executable() {
 }
 
 #[test]
+fn compiles_type_alias_to_executable() {
+    assert_returns_42(
+        "
+        type Answer = i32;
+
+        fn main() -> Answer {
+            return 42;
+        }
+        ",
+    );
+}
+
+#[test]
 #[ignore = "TODO: enable once const initializers use const-eval instead of runtime codegen"]
 fn compiles_constant_binary_op_to_executable() {
     assert_returns_42(
