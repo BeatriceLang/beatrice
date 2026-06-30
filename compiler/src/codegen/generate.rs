@@ -7,8 +7,15 @@ impl Codegen<'_> {
         let items = take(&mut self.program.items);
 
         for item in &items {
-            if let Item::DeclareStruct { name, fields } = item {
-                self.declare_struct(name, fields);
+            match item {
+                Item::DeclareStruct { name, fields } => {
+                    self.declare_struct(name, fields);
+                }
+                Item::TypeAlias { alias, ty } => {
+                    let ty = self.to_llvm_type(ty);
+                    self.type_alias.insert(alias.as_str().to_string(), ty);
+                }
+                _ => (),
             }
         }
 

@@ -25,6 +25,10 @@ impl<'a> Codegen<'a> {
             return Some(struct_type.inner.as_basic_type_enum());
         }
 
+        if let Some(alias) = self.type_alias.get(name) {
+            return Some(*alias);
+        }
+
         None
     }
 }
