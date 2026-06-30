@@ -3,7 +3,6 @@ use super::compile_and_run;
 #[test]
 fn compiles_struct_field_access_to_executable() {
     let code = compile_and_run(
-        "struct_field_access",
         "
         struct Point {
             x: i32,
@@ -27,7 +26,6 @@ fn compiles_struct_field_access_to_executable() {
 #[test]
 fn compiles_function_with_struct_declared_later() {
     let code = compile_and_run(
-        "function_with_struct_declared_later",
         "
         fn x(point: Point) -> i32 {
             return point.x;

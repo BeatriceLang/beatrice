@@ -1,6 +1,6 @@
 use std::{fs, path::PathBuf};
 
-use tempfile::{env::temp_dir, tempdir};
+use tempfile::{NamedTempFile, tempdir};
 
 macro_rules! shell_cmd {
     ($($cmd:tt)*) => {{
@@ -9,11 +9,10 @@ macro_rules! shell_cmd {
     }};
 }
 
-fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::Output {
-    let dir = tempdir().unwrap();
-    let source = dir.path().join(format!("{test_name}.bt"));
-    let object = dir.path().join(format!("{test_name}.o"));
-    let executable = dir.path().join(test_name);
+fn compile_and_run_output(source_code: &str) -> std::process::Output {
+    let source = random_file();
+    let object = random_file();
+    let executable = random_file();
 
     fs::write(&source, source_code).unwrap();
 
@@ -24,8 +23,8 @@ fn compile_and_run_output(test_name: &str, source_code: &str) -> std::process::O
     shell_cmd!("{executable}").ignore_status().output().unwrap()
 }
 
-fn compile_and_run(test_name: &str, source_code: &str) -> Option<i32> {
-    compile_and_run_output(test_name, source_code).status.code()
+fn compile_and_run(source_code: &str) -> Option<i32> {
+    compile_and_run_output(source_code).status.code()
 }
 
 fn compile_to_object(source: &PathBuf, object: &PathBuf) {
@@ -37,12 +36,11 @@ fn link_executable(objects: &[PathBuf], executable: &PathBuf) {
 }
 
 fn compile_objects_and_run(
-    test_name: &str,
     sources: &[(&str, &str)],
     objects_to_link: &[&str],
 ) -> std::process::Output {
     let dir = tempdir().unwrap();
-    let executable = dir.path().join(test_name);
+    let executable = random_file();
 
     for (name, source_code) in sources {
         let path = dir.path().join(name);
@@ -67,6 +65,14 @@ fn compile_objects_and_run(
     link_executable(&objects, &executable);
 
     shell_cmd!("{executable}").ignore_status().output().unwrap()
+}
+
+fn random_file() -> PathBuf {
+    NamedTempFile::new()
+        .unwrap()
+        .into_temp_path()
+        .keep()
+        .unwrap()
 }
 
 mod array_access;

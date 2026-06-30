@@ -3,7 +3,6 @@ use super::compile_and_run;
 #[test]
 fn compiles_address_of_local_value() {
     let code = compile_and_run(
-        "address_of_local_value",
         "
         fn main() -> i32 {
             let value: i32 = 42;
@@ -20,7 +19,6 @@ fn compiles_address_of_local_value() {
 #[test]
 fn compiles_is_nullptr_intrinsic_for_non_null_pointer() {
     let code = compile_and_run(
-        "is_nullptr_intrinsic_non_null",
         "
         fn main() -> i32 {
             let value: i32 = 42;
@@ -40,7 +38,6 @@ fn compiles_is_nullptr_intrinsic_for_non_null_pointer() {
 #[test]
 fn compiles_deref_address_of_local_value() {
     let code = compile_and_run(
-        "deref_address_of_local_value",
         "
         fn main() -> i32 {
             let value: i32 = 42;

@@ -3,7 +3,6 @@ use super::compile_objects_and_run;
 #[test]
 fn compiles_imported_function_call_to_executable() {
     let output = compile_objects_and_run(
-        "imported_function_call",
         &[
             (
                 "main.bt",
@@ -33,7 +32,6 @@ fn compiles_imported_function_call_to_executable() {
 #[test]
 fn resolves_imports_relative_to_importing_file() {
     let output = compile_objects_and_run(
-        "relative_imports",
         &[
             (
                 "src/main.bt",
@@ -69,7 +67,6 @@ fn resolves_imports_relative_to_importing_file() {
 #[test]
 fn compiles_nested_imported_function_call_to_executable() {
     let output = compile_objects_and_run(
-        "nested_imported_function_call",
         &[
             (
                 "main.bt",
@@ -105,7 +102,6 @@ fn compiles_nested_imported_function_call_to_executable() {
 #[test]
 fn compiles_imported_extern_function_call_to_executable() {
     let output = compile_objects_and_run(
-        "imported_extern_function_call",
         &[
             (
                 "main.bt",

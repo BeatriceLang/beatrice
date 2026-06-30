@@ -3,7 +3,6 @@ use super::{compile_and_run, compile_and_run_output};
 #[test]
 fn compiles_return_function_call_to_executable() {
     let code = compile_and_run(
-        "return_function_call",
         "
         fn test() -> i32 {
             return 42;
@@ -21,7 +20,6 @@ fn compiles_return_function_call_to_executable() {
 #[test]
 fn compiles_function_params_as_idents() {
     let code = compile_and_run(
-        "function_params_as_idents",
         "
         fn add(lhs: i32, rhs: i32) -> i32 {
             return lhs + rhs;
@@ -39,7 +37,6 @@ fn compiles_function_params_as_idents() {
 #[test]
 fn compiles_recursive_fibonacci_to_executable() {
     let code = compile_and_run(
-        "recursive_fibonacci",
         "
         fn fib(n: i32) -> i32 {
             if n < 2 {
@@ -61,7 +58,6 @@ fn compiles_recursive_fibonacci_to_executable() {
 #[test]
 fn compiles_let_value_return() {
     let code = compile_and_run(
-        "let_return",
         "
         fn main() -> i32 {
             let hello: i32 = 40;
@@ -76,7 +72,6 @@ fn compiles_let_value_return() {
 #[test]
 fn compiles_puts_hello_world() {
     let output = compile_and_run_output(
-        "puts_hello_world",
         r#"
         extern fn puts(value: string) -> i32;
 
@@ -99,7 +94,6 @@ fn compiles_puts_hello_world() {
 #[test]
 fn compiles_function_without_return_value() {
     let output = compile_and_run_output(
-        "function_without_return_value",
         r#"
         extern fn puts(value: string) -> i32;
 
@@ -126,7 +120,6 @@ fn compiles_function_without_return_value() {
 #[test]
 fn compiles_return_without_value() {
     let output = compile_and_run_output(
-        "return_without_value",
         r#"
         extern fn puts(value: string) -> i32;
 
