@@ -19,8 +19,8 @@ impl Codegen<'_> {
                     params,
                     return_type,
                     ..
-                } => self.declare_function(name.as_str(), params, return_type.clone()),
-                Item::ExternFunction {
+                }
+                | Item::ExternFunction {
                     name,
                     params,
                     return_type,
@@ -48,7 +48,7 @@ impl Codegen<'_> {
                 body,
             } = item
             {
-                self.compile_function(name, params, return_type, body);
+                self.compile_function(name, params, return_type.as_ref(), body);
             }
         }
         self.program.items = items;

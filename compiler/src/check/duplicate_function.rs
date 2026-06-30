@@ -10,8 +10,7 @@ impl Checker<'_> {
 
         for item in &self.program.items {
             let name = match item {
-                Item::Function { name, .. } => name,
-                Item::ExternFunction { name, .. } => name,
+                Item::Function { name, .. } | Item::ExternFunction { name, .. } => name,
                 _ => continue,
             };
 

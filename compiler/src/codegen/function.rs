@@ -22,7 +22,7 @@ impl<'a> Codegen<'a> {
         &mut self,
         name: &Ident,
         params: &[(Ident, Type)],
-        return_type: &Option<Type>,
+        return_type: Option<&Type>,
         body: &crate::ast::Block,
     ) {
         self.locals.clear();
