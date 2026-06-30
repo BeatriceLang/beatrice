@@ -38,7 +38,7 @@ mod tests {
         assert_eq!(
             test_parse(program(), &tokens),
             Program {
-                items: vec![crate::ast::Item::Function(crate::ast::Function {
+                items: vec![crate::ast::item::Item::Function(crate::ast::item::Function {
                     name: test_ident("main"),
                     params: vec![],
                     return_type: Some(crate::ast::ty::Type::I32),

@@ -1,6 +1,6 @@
 use std::mem::take;
 
-use crate::{ast::Item, codegen::Codegen};
+use crate::{ast::item::Item, codegen::Codegen};
 
 impl Codegen<'_> {
     pub fn generate(&mut self) {

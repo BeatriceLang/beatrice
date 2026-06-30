@@ -1,5 +1,5 @@
 use crate::{
-    ast::Ident,
+    ast::ident::Ident,
     codegen::{Codegen, utils::TypedValue},
 };
 

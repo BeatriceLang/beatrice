@@ -1,7 +1,7 @@
 use chumsky::{Parser, primitive::just};
 
 use crate::{
-    ast::Const,
+    ast::item::Const,
     lexing::token::Token,
     parsing::{expr::expr, ident::ident, ty::ty},
 };
@@ -23,7 +23,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{Const, expression::Expression, ty::Type},
+        ast::{expression::Expression, item::Const, ty::Type},
         parsing::{test_ident, test_input, test_parse, test_tokens},
     };
 

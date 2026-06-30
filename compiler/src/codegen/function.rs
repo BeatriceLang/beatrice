@@ -1,7 +1,7 @@
 use inkwell::types::{BasicMetadataTypeEnum, BasicType, FunctionType};
 
 use crate::{
-    ast::{Function, Ident, ty::Type},
+    ast::{ident::Ident, item::Function, ty::Type},
     codegen::Codegen,
 };
 

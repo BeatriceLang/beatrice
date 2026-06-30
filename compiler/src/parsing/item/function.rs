@@ -1,7 +1,7 @@
 use chumsky::{IterParser, Parser, prelude::just};
 
 use crate::{
-    ast::Function,
+    ast::item::Function,
     lexing::token::Token,
     parsing::{block::block, ident::ident, ty::ty},
 };

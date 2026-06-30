@@ -1,7 +1,7 @@
 use chumsky::{Parser, primitive::choice};
 
 use crate::{
-    ast::Item,
+    ast::item::Item,
     parsing::item::{
         constant::constant, declare_struct::declare_struct, extern_fn::extern_function,
         function::function, import::import,
@@ -30,7 +30,7 @@ mod tests {
 
     use super::*;
     use crate::{
-        ast::{DeclareStruct, function::ExternFunction, ty::Type},
+        ast::{item::DeclareStruct, item::ExternFunction, ty::Type},
         lexing::token::Token,
         parsing::{test_ident, test_parse, test_tokens},
     };

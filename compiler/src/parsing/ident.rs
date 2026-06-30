@@ -6,7 +6,7 @@ use chumsky::{
     span::SimpleSpan,
 };
 
-use crate::{ast::Ident, lexing::token::Token};
+use crate::{ast::ident::Ident, lexing::token::Token};
 
 type IdentInput<'a> = MappedInput<'a, Token, SimpleSpan, &'a [(Token, SimpleSpan)]>;
 type IdentMapExtra<'a, 'parse> =

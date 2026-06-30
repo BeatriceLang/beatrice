@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use crate::{
-    ast::{Item, function::ExternFunction},
+    ast::{item::ExternFunction, item::Item},
     import::ImportProcessor,
 };
 
@@ -34,7 +34,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Item, Program, function::ExternFunction, ty::Type},
+        ast::{Block, Program, ident::Ident, item::{ExternFunction, Function, Item}, ty::Type},
         diagnostic::Diagnostics,
         import::ImportProcessor,
     };

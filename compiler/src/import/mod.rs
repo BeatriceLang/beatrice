@@ -3,7 +3,7 @@ use std::{collections::HashSet, path::PathBuf};
 use anyhow::{Context, Ok, Result};
 
 use crate::{
-    ast::{Item, Program},
+    ast::{Program, item::Item},
     diagnostic::Diagnostics,
     import::visit_check::VisitState,
     state::{Compiler, CompilerState},

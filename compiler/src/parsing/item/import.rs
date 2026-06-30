@@ -1,6 +1,6 @@
 use chumsky::{Parser, primitive::just, select};
 
-use crate::{ast::Item, lexing::token::Token};
+use crate::{ast::item::Item, lexing::token::Token};
 
 pub(super) fn import<'a>() -> parser_type!(Item) {
     just(Token::Import)

@@ -119,8 +119,8 @@ pub fn test_parse<'a, O>(
 }
 
 #[cfg(test)]
-pub fn test_ident(name: &str) -> crate::ast::Ident {
-    crate::ast::Ident::new(name.into(), 0..0)
+pub fn test_ident(name: &str) -> crate::ast::ident::Ident {
+    crate::ast::ident::Ident::new(name.into(), 0..0)
 }
 
 #[cfg(test)]

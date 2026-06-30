@@ -1,5 +1,5 @@
 use crate::{
-    ast::{Ident, Item},
+    ast::{ident::Ident, item::Item},
     check::Checker,
     diagnostic::{Diagnostic, DiagnosticKind},
 };
@@ -39,7 +39,7 @@ mod tests {
     use std::path::PathBuf;
 
     use crate::{
-        ast::{Block, Function, Ident, Item, Program, ty::Type},
+        ast::{Block, Program, ident::Ident, item::{Function, Item}, ty::Type},
         check::Checker,
         diagnostic::{DiagnosticKind, Diagnostics},
     };

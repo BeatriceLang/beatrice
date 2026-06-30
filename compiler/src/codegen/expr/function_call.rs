@@ -1,7 +1,7 @@
 use inkwell::values::BasicMetadataValueEnum;
 
 use crate::{
-    ast::{Ident, expression::Expression},
+    ast::{expression::Expression, ident::Ident},
     codegen::{Codegen, expr::intrinsic::is_intrinsic, utils::TypedValue},
 };
 
