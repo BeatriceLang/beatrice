@@ -1,8 +1,8 @@
-use chumsky::prelude::{choice, recursive};
+use chumsky::prelude::recursive;
 
 use crate::{
     ast::expression::Expression,
-    parsing::expr::{atom::atom, binary_op::binary_op, postfix::postfix_expr},
+    parsing::expr::{binary_op::binary_op, postfix::postfix_expr},
 };
 
 mod atom;

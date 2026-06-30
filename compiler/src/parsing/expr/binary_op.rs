@@ -7,7 +7,7 @@ use chumsky::{
 use crate::{
     ast::expression::{BinaryOpKind, Expression},
     lexing::token::Token,
-    parsing::expr::{atom::atom, postfix_expr},
+    parsing::expr::postfix_expr,
 };
 
 pub fn binary_op<'a>(expr: parser_type!(Expression)) -> parser_type!(Expression) {
